@@ -50,7 +50,7 @@ spring:
     data:
         elasticsearch:
             cluster-name:
-            cluster-nodes: localhost:9300
+            cluster-nodes: 35.204.175.149:9300
             properties:
                 path:
                     logs: target/elasticsearch/log

@@ -97,17 +97,6 @@ public class NetflixdbApp implements ApplicationRunner {
             env.getActiveProfiles());
     }
 
-    @Bean
-    public Executor asyncExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(2);
-        executor.setQueueCapacity(5);
-        executor.setThreadNamePrefix("Netflixdb-");
-        executor.initialize();
-        return executor;
-    }
-
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("Application was executed with args:");
