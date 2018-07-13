@@ -1,5 +1,11 @@
 package pl.kogx.netflixdb;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.config.DefaultProfileUtil;
 
@@ -12,23 +18,31 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
+import pl.kogx.netflixdb.service.NetflixSyncService;
 
 import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
+import java.util.concurrent.Executor;
 
 @SpringBootApplication
+@EnableAsync
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
-public class NetflixdbApp {
+public class NetflixdbApp implements ApplicationRunner {
 
     private static final Logger log = LoggerFactory.getLogger(NetflixdbApp.class);
 
+    private final NetflixSyncService netflixSyncService;
+
     private final Environment env;
 
-    public NetflixdbApp(Environment env) {
+    @Autowired
+    public NetflixdbApp(Environment env, NetflixSyncService netflixSyncService) {
         this.env = env;
-    }
+        this.netflixSyncService = netflixSyncService;
+     }
 
     /**
      * Initializes netflixdb.
@@ -81,5 +95,41 @@ public class NetflixdbApp {
             hostAddress,
             env.getProperty("server.port"),
             env.getActiveProfiles());
+    }
+
+    @Bean
+    public Executor asyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(2);
+        executor.setMaxPoolSize(2);
+        executor.setQueueCapacity(5);
+        executor.setThreadNamePrefix("Netflixdb-");
+        executor.initialize();
+        return executor;
+    }
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        log.info("Application was executed with args:");
+        for(String opt: args.getOptionNames()) {
+            log.info("{}={}", opt, args.getOptionValues(opt));
+        }
+
+        for(String opt : args.getOptionNames()) {
+            switch(opt) {
+                case "scheduled": {
+                    netflixSyncService.setScheduled(getBooleanOptionValue(args, opt));
+                    break;
+                }
+                case "sync": {
+                    netflixSyncService.syncMovies();
+                    break;
+                }
+            }
+        }
+    }
+
+    private boolean getBooleanOptionValue(ApplicationArguments args, String opt) {
+        return args.getOptionValues(opt).isEmpty() ? false : Boolean.valueOf(args.getOptionValues(opt).get(0));
     }
 }
