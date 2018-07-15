@@ -2,8 +2,6 @@ package pl.kogx.netflixdb.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * Properties specific to Netflixdb.
  * <p>
@@ -23,7 +21,25 @@ public class ApplicationProperties {
 
         private String sessionCookie;
 
-        private String shaktiBuildId;
+        private String shaktiUrl;
+
+        private String genreById;
+
+        public String getShaktiUrl() {
+            return shaktiUrl;
+        }
+
+        public void setShaktiUrl(String shaktiUrl) {
+            this.shaktiUrl = shaktiUrl;
+        }
+
+        public String getGenreById() {
+            return genreById;
+        }
+
+        public void setGenreById(String genreById) {
+            this.genreById = genreById;
+        }
 
         public String getSessionCookie() {
             return sessionCookie;
@@ -31,14 +47,6 @@ public class ApplicationProperties {
 
         public void setSessionCookie(String sessionCookie) {
             this.sessionCookie = sessionCookie;
-        }
-
-        public String getShaktiBuildId() {
-            return shaktiBuildId;
-        }
-
-        public void setShaktiBuildId(String shaktiBuildId) {
-            this.shaktiBuildId = shaktiBuildId;
         }
     }
 }

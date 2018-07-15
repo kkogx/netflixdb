@@ -1,31 +1,20 @@
 package pl.kogx.netflixdb.service;
 
-import com.sun.xml.internal.ws.util.CompletedFuture;
-import io.github.jhipster.config.JHipsterProperties;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
+import com.google.common.base.Splitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 
-import java.io.StringWriter;
-import java.util.concurrent.CompletableFuture;
+import java.util.Map;
 
 @Service
 public class NetflixSyncService {
@@ -33,14 +22,18 @@ public class NetflixSyncService {
     private static final Logger log = LoggerFactory.getLogger(NetflixSyncService.class);
 
     @Autowired
-    private final ApplicationProperties applicationProperties;
+    private final NetflixRequestBuilder requestBuilder;
+
+    @Autowired
+    ApplicationProperties applicationProperties;
 
     @Autowired
     private RestTemplate shaktiRestTemplate;
 
     private boolean scheduled = false;
 
-    public NetflixSyncService(ApplicationProperties applicationProperties) {
+    public NetflixSyncService(NetflixRequestBuilder requestBuilder, ApplicationProperties applicationProperties) {
+        this.requestBuilder = requestBuilder;
         this.applicationProperties = applicationProperties;
     }
 
@@ -49,30 +42,22 @@ public class NetflixSyncService {
     }
 
     public void syncMovies() {
-        VelocityEngine ve = new VelocityEngine();
-        ve.init();
-        Template t = ve.getTemplate( "netflix/quote_by_genre_az.json.vm" );
-        VelocityContext context = new VelocityContext();
-        context.put("genreid", "3063");
-        StringWriter writer = new StringWriter();
-        t.merge( context, writer );
+        Map<String, String> genreByIdMap = Splitter.on(",").withKeyValueSeparator("=").split(applicationProperties.getNetflixSync().getGenreById());
+        for (Map.Entry<String, String> genreById : genreByIdMap.entrySet()) {
+            syncByGenre(genreById.getKey(), genreById.getValue());
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException ignore) {
+            }
+        }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0");
-        headers.add(HttpHeaders.COOKIE, applicationProperties.getNetflixSync().getSessionCookie());
-        headers.add(HttpHeaders.ACCEPT, "application/json, text/javascript, */*");
-        headers.add(HttpHeaders.ACCEPT_LANGUAGE, "en-GB,en;q=0.5");
-        headers.add(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate, br");
-        headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
-        headers.add("DNT", "1");
-        headers.add(HttpHeaders.REFERER, "https://www.netflix.com");
-        HttpEntity<String> request = new HttpEntity<>(writer.toString(), headers);
+    }
 
-        String url = String.format("https://www.netflix.com/api/shakti/%s/pathEvaluator?isWatchlistEnabled=false&isShortformEnabled=false&isVolatileBillboardsEnabled=false&falcor_server=0.1.0&withSize=true&materialize=true",
-            applicationProperties.getNetflixSync().getShaktiBuildId());
-
-        ResponseEntity<String> response = shaktiRestTemplate.exchange(url, HttpMethod.POST, request, String.class);
-        System.out.println(response);
+    private void syncByGenre(String genreId, String genreName) {
+        log.info("Fetching by genre id={} name={}", genreId, genreName);
+        HttpEntity<String> request = requestBuilder.body(genreId).build();
+        ResponseEntity<String> response = shaktiRestTemplate.exchange(applicationProperties.getNetflixSync().getShaktiUrl(), HttpMethod.POST, request, String.class);
+        log.info("Response: length={}", response.getBody().length());
     }
 
     @Scheduled(fixedDelay = 1000 * 60 * 10 /* 10 minutes */)
@@ -86,4 +71,5 @@ public class NetflixSyncService {
     public RestTemplate shaktiRestTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
+
 }
