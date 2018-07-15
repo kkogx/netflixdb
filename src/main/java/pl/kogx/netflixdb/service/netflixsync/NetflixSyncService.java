@@ -1,6 +1,7 @@
-package pl.kogx.netflixdb.service;
+package pl.kogx.netflixdb.service.netflixsync;
 
 import com.google.common.base.Splitter;
+import com.jayway.jsonpath.JsonPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,13 +9,16 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class NetflixSyncService {
@@ -58,6 +62,15 @@ public class NetflixSyncService {
         HttpEntity<String> request = requestBuilder.body(genreId).build();
         ResponseEntity<String> response = shaktiRestTemplate.exchange(applicationProperties.getNetflixSync().getShaktiUrl(), HttpMethod.POST, request, String.class);
         log.info("Response: length={}", response.getBody().length());
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            Set<String> titles = new HashSet<>(JsonPath.read(response.getBody(), "$..title.value"));
+            for (String tile : titles) {
+
+            }
+        } else {
+            log.warn("Invalid HttpStaus retrieved when fetching by genre, stauts={}", response.getStatusCode());
+        }
     }
 
     @Scheduled(fixedDelay = 1000 * 60 * 10 /* 10 minutes */)
