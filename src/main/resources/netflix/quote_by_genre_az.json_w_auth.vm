@@ -1,0 +1,39 @@
+{
+    "paths": [
+        [
+            "genres",
+            $genreid
+            "za",
+            "requestId"
+        ],
+        [
+            "genres",
+            $genreid,
+            "za",
+            {
+                "from": 0,
+                "to": 48
+            },
+            [
+                "summary",
+                "title",
+                "titleMaturity",
+                "userRating",
+                "userRatingRequestId"
+            ]
+        ],
+        [
+            "genres",
+            $genreid,
+            "za",
+            {
+                "from": 0,
+                "to": 48
+            },
+            "boxarts",
+            "_342x192",
+            "jpg"
+        ]
+    ],
+    "authURL": "1531571306282.5IO0v3FsO4YjmS610xs2bmcRrII="
+}

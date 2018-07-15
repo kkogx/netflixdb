@@ -1,0 +1,38 @@
+{
+    "paths": [
+        [
+            "genres",
+            $genreid
+            "za",
+            "requestId"
+        ],
+        [
+            "genres",
+            $genreid,
+            "za",
+            {
+                "from": 0,
+                "to": 48
+            },
+            [
+                "summary",
+                "title",
+                "titleMaturity",
+                "userRating",
+                "userRatingRequestId"
+            ]
+        ],
+        [
+            "genres",
+            $genreid,
+            "za",
+            {
+                "from": 0,
+                "to": 48
+            },
+            "boxarts",
+            "_342x192",
+            "jpg"
+        ]
+    ]
+}

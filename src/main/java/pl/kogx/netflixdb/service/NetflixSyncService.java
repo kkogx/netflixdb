@@ -2,6 +2,9 @@ package pl.kogx.netflixdb.service;
 
 import com.sun.xml.internal.ws.util.CompletedFuture;
 import io.github.jhipster.config.JHipsterProperties;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 
+import java.io.StringWriter;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -45,10 +49,13 @@ public class NetflixSyncService {
     }
 
     public void syncMovies() {
-        String genres="0,\"to\":1";
-        String rmax="5";
-        String base = "[[\"newarrivals\",{\"from\":"+genres+"},{\"from\":0,\"to\":"+rmax+"},[\"title\",\"availability\"]],[\"newarrivals\",{\"from\":"+genres+"},{\"from\":0,\"to\":"+rmax+"},\"boxarts\",\"_342x192\",\"jpg\"]]";
-        String data="{\"paths\":"+base+"}";
+        VelocityEngine ve = new VelocityEngine();
+        ve.init();
+        Template t = ve.getTemplate( "netflix/quote_by_genre_az.json.vm" );
+        VelocityContext context = new VelocityContext();
+        context.put("genreid", "3063");
+        StringWriter writer = new StringWriter();
+        t.merge( context, writer );
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0");
@@ -59,9 +66,9 @@ public class NetflixSyncService {
         headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
         headers.add("DNT", "1");
         headers.add(HttpHeaders.REFERER, "https://www.netflix.com");
-        HttpEntity<String> request = new HttpEntity<>(data, headers);
+        HttpEntity<String> request = new HttpEntity<>(writer.toString(), headers);
 
-        String url = String.format("https://www.netflix.com/api/shakti/%s/pathEvaluator?withSize=true&materialize=true&model=harris",
+        String url = String.format("https://www.netflix.com/api/shakti/%s/pathEvaluator?isWatchlistEnabled=false&isShortformEnabled=false&isVolatileBillboardsEnabled=false&falcor_server=0.1.0&withSize=true&materialize=true",
             applicationProperties.getNetflixSync().getShaktiBuildId());
 
         ResponseEntity<String> response = shaktiRestTemplate.exchange(url, HttpMethod.POST, request, String.class);
