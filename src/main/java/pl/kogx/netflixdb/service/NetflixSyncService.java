@@ -46,7 +46,7 @@ public class NetflixSyncService {
         for (Map.Entry<String, String> genreById : genreByIdMap.entrySet()) {
             syncByGenre(genreById.getKey(), genreById.getValue());
             try {
-                Thread.sleep(10000);
+                Thread.sleep(applicationProperties.getNetflixSync().getRequestSleepMillis());
             } catch (InterruptedException ignore) {
             }
         }

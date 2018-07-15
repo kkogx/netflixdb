@@ -25,6 +25,16 @@ public class ApplicationProperties {
 
         private String genreById;
 
+        private int requestSleepMillis;
+
+        public int getRequestSleepMillis() {
+            return requestSleepMillis;
+        }
+
+        public void setRequestSleepMillis(int requestSleepMillis) {
+            this.requestSleepMillis = requestSleepMillis;
+        }
+
         public String getShaktiUrl() {
             return shaktiUrl;
         }

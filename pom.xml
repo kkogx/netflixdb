@@ -158,7 +158,6 @@
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
-            <scope>test</scope>
             <!-- parent POM declares this dependency in default (compile) scope -->
         </dependency>
         <dependency>
@@ -325,11 +324,6 @@
             <artifactId>spring-security-data</artifactId>
         </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>2.3.0</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
