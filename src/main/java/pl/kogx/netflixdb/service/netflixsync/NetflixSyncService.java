@@ -1,4 +1,4 @@
-package pl.kogx.netflixdb.service;
+package pl.kogx.netflixdb.service.netflixsync;
 
 import com.google.common.base.Splitter;
 import org.slf4j.Logger;

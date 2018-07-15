@@ -1,4 +1,4 @@
-package pl.kogx.netflixdb.service;
+package pl.kogx.netflixdb.service.netflixsync;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;

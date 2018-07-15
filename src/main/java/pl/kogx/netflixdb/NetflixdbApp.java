@@ -1,33 +1,25 @@
 package pl.kogx.netflixdb;
 
+import io.github.jhipster.config.JHipsterConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.web.client.RestTemplate;
-import pl.kogx.netflixdb.config.ApplicationProperties;
-import pl.kogx.netflixdb.config.DefaultProfileUtil;
-
-import io.github.jhipster.config.JHipsterConstants;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
-import pl.kogx.netflixdb.service.NetflixSyncService;
+import org.springframework.scheduling.annotation.EnableAsync;
+import pl.kogx.netflixdb.config.ApplicationProperties;
+import pl.kogx.netflixdb.config.DefaultProfileUtil;
+import pl.kogx.netflixdb.service.netflixsync.NetflixSyncService;
 
 import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Optional;
-import java.util.concurrent.Executor;
 
 @SpringBootApplication
 @EnableAsync
