@@ -2,6 +2,7 @@ package pl.kogx.netflixdb.service.netflixsync;
 
 import com.google.common.base.Splitter;
 import com.jayway.jsonpath.JsonPath;
+import net.minidev.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +16,19 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import pl.kogx.netflixdb.config.ApplicationProperties;
+import pl.kogx.netflixdb.service.VideoService;
+import pl.kogx.netflixdb.service.dto.VideoDTO;
+import pl.kogx.netflixdb.service.util.JsonObject;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 public class NetflixSyncService {
 
     private static final Logger log = LoggerFactory.getLogger(NetflixSyncService.class);
+
+    @Autowired
+    private final VideoService videoService;
 
     @Autowired
     private final NetflixRequestBuilder requestBuilder;
@@ -36,8 +41,9 @@ public class NetflixSyncService {
 
     private boolean scheduled = false;
 
-    public NetflixSyncService(NetflixRequestBuilder requestBuilder, ApplicationProperties applicationProperties) {
+    public NetflixSyncService(VideoService videoService, NetflixRequestBuilder requestBuilder, ApplicationProperties applicationProperties) {
         this.requestBuilder = requestBuilder;
+        this.videoService = videoService;
         this.applicationProperties = applicationProperties;
     }
 
@@ -64,12 +70,16 @@ public class NetflixSyncService {
         log.info("Response: length={}", response.getBody().length());
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            Set<String> titles = new HashSet<>(JsonPath.read(response.getBody(), "$..title.value"));
-            for (String tile : titles) {
-
+            JSONArray videos = JsonPath.read(response.getBody(), "$..videos.*");
+            for (Object video : videos) {
+                VideoDTO videoDTO = new VideoDTO();
+                JsonObject videoJson = new JsonObject(video);
+                videoDTO.setId(videoJson.get("summary").get("value").getLong("id"));
+                videoDTO.setTitle(videoJson.get("title").getString("value"));
+                videoService.updateVideo(videoDTO);
             }
         } else {
-            log.warn("Invalid HttpStaus retrieved when fetching by genre, stauts={}", response.getStatusCode());
+            log.warn("Invalid HttpStaus retrieved when fetching by genre, status={}", response.getStatusCode());
         }
     }
 
