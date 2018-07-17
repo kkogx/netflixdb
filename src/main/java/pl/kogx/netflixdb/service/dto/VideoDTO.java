@@ -11,6 +11,8 @@ public class VideoDTO {
 
     private String title;
 
+    private Integer releaseYear;
+
     public VideoDTO() {
 
     }
@@ -18,6 +20,7 @@ public class VideoDTO {
     public VideoDTO(Video video) {
         this.id = video.getId();
         this.title = video.getTitle();
+        this.releaseYear = video.getReleaseYear();
     }
 
     public Long getId() {
@@ -36,11 +39,20 @@ public class VideoDTO {
         this.title = title;
     }
 
+    public Integer getReleaseYear() {
+        return releaseYear;
+    }
+
+    public void setReleaseYear(Integer releaseYear) {
+        this.releaseYear = releaseYear;
+    }
+
     @Override
     public String toString() {
         return "VideoDTO{" +
             "id=" + id +
             ", title='" + title + '\'' +
+            ", releaseYear=" + releaseYear +
             '}';
     }
 }

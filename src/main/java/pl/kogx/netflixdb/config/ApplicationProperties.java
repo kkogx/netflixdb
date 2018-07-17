@@ -27,6 +27,16 @@ public class ApplicationProperties {
 
         private int requestSleepMillis;
 
+        private int requestBlockSize;
+
+        public int getRequestBlockSize() {
+            return requestBlockSize;
+        }
+
+        public void setRequestBlockSize(int requestBlockSize) {
+            this.requestBlockSize = requestBlockSize;
+        }
+
         public int getRequestSleepMillis() {
             return requestSleepMillis;
         }

@@ -10,27 +10,34 @@ public class JsonObject {
         this.jsonMap = (Map<String, Object>) value;
     }
 
-    public JsonObject get(String key) {
-        if (jsonMap.containsKey(key)) {
-            return new JsonObject(jsonMap.get(key));
-        } else {
-            return null;
-        }
+    public JsonObject get(String key) throws JsonUnmarshallException {
+        return new JsonObject(getObject(key));
     }
 
-    public String getString(String key) {
+    public String getString(String key) throws JsonUnmarshallException {
         return String.valueOf(getObject(key));
     }
 
-    public Long getLong(String key) {
+    public Long getLong(String key) throws JsonUnmarshallException {
         return Long.valueOf(getString(key));
     }
 
-    public Object getObject(String key) {
+    public Integer getInt(String key) throws JsonUnmarshallException {
+        return Integer.valueOf(getString(key));
+    }
+
+    public Object getObject(String key) throws JsonUnmarshallException {
         if (jsonMap.containsKey(key)) {
             return jsonMap.get(key);
         } else {
-            return null;
+            throw new JsonUnmarshallException("Key not found " + key);
+        }
+    }
+
+    public static class JsonUnmarshallException extends Exception {
+
+        public JsonUnmarshallException(String s) {
+            super(s);
         }
     }
 }

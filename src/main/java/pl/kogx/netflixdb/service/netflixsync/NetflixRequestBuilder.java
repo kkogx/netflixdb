@@ -30,12 +30,14 @@ class NetflixRequestBuilder {
         return new HttpEntity<>(body, headers);
     }
 
-    public NetflixRequestBuilder body(String genreId) {
+    public NetflixRequestBuilder body(String genreId, int from, int to) {
         VelocityEngine ve = new VelocityEngine();
         ve.init();
         Template t = ve.getTemplate("src/main/resources/netflix/quote_by_genre_az.json.vm");
         VelocityContext context = new VelocityContext();
         context.put("genreid", genreId);
+        context.put("from", from);
+        context.put("to", to);
         StringWriter writer = new StringWriter();
         t.merge(context, writer);
         this.body = writer.toString();

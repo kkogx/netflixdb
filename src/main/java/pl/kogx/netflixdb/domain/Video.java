@@ -8,13 +8,16 @@ import java.util.Objects;
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "videos")
 public class Video extends AbstractAuditingEntity implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
     @NotNull
     private Long id;
 
     private String title;
+
+    private Integer releaseYear;
+
+    public Video() {
+    }
 
     public Video(@NotNull Long id) {
         this.id = id;
@@ -36,11 +39,20 @@ public class Video extends AbstractAuditingEntity implements Serializable {
         this.title = title;
     }
 
+    public Integer getReleaseYear() {
+        return releaseYear;
+    }
+
+    public void setReleaseYear(Integer releaseYear) {
+        this.releaseYear = releaseYear;
+    }
+
     @Override
     public String toString() {
         return "Video{" +
             "id=" + id +
             ", title='" + title + '\'' +
+            ", releaseYear=" + releaseYear +
             '}';
     }
 
@@ -50,11 +62,13 @@ public class Video extends AbstractAuditingEntity implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Video video = (Video) o;
         return Objects.equals(id, video.id) &&
-            Objects.equals(title, video.title);
+            Objects.equals(title, video.title) &&
+            Objects.equals(releaseYear, video.releaseYear);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title);
+
+        return Objects.hash(id, title, releaseYear);
     }
 }

@@ -9,26 +9,27 @@
         [
             "genres",
             $genreid,
-            "za",
+            "az",
             {
-                "from": 0,
-                "to": 48
+                "from": $from,
+                "to": $to
             },
             [
                 "summary",
                 "title",
                 "titleMaturity",
                 "userRating",
-                "userRatingRequestId"
+                "userRatingRequestId",
+                "releaseYear"
             ]
         ],
         [
             "genres",
             $genreid,
-            "za",
+            "az",
             {
-                "from": 0,
-                "to": 48
+                "from": $from,
+                "to": $to
             },
             "boxarts",
             "_342x192",
