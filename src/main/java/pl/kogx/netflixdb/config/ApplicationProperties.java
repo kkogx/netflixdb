@@ -1,6 +1,10 @@
 package pl.kogx.netflixdb.config;
 
+import com.google.common.base.Splitter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Properties specific to Netflixdb.
@@ -13,8 +17,27 @@ public class ApplicationProperties {
 
     public final NetflixSync netflixSync = new NetflixSync();
 
+    public final OmdbSync omdbSync = new OmdbSync();
+
     public NetflixSync getNetflixSync() {
         return netflixSync;
+    }
+
+    public OmdbSync getOmdbSync() {
+        return omdbSync;
+    }
+
+    public static class OmdbSync {
+
+        private String apiKey;
+
+        public String getApiKey() {
+            return apiKey;
+        }
+
+        public void setApiKey(String apiKey) {
+            this.apiKey = apiKey;
+        }
     }
 
     public static class NetflixSync {
@@ -68,5 +91,10 @@ public class ApplicationProperties {
         public void setSessionCookie(String sessionCookie) {
             this.sessionCookie = sessionCookie;
         }
+    }
+
+    public static Map<String, String> getGenreByIdMap(ApplicationProperties applicationProperties) {
+        return Collections.unmodifiableMap(Splitter.on(",").withKeyValueSeparator("=")
+            .split(applicationProperties.getNetflixSync().getGenreById()));
     }
 }
