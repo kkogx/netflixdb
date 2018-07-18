@@ -31,6 +31,16 @@ public class ApplicationProperties {
 
         private String apiKey;
 
+        private Boolean forceQuerySearch;
+
+        public Boolean getForceQuerySearch() {
+            return forceQuerySearch;
+        }
+
+        public void setForceQuerySearch(Boolean forceQuerySearch) {
+            this.forceQuerySearch = forceQuerySearch;
+        }
+
         public String getApiKey() {
             return apiKey;
         }

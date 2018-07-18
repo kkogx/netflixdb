@@ -142,14 +142,62 @@ public class OmdbSyncService {
         return 0L;
     }
 
+    private static boolean isMovie(String type) {
+        return "movie".equalsIgnoreCase(type);
+    }
+
     private OmdbVideoFull tryFindVideo(VideoDTO video) throws OMDBException {
-        OmdbBuilder omdbBuilder = new OmdbBuilder();
-        if (StringUtils.isEmpty(video.getImdbID())) {
-            omdbBuilder.setTitle(video.getTitle()).setYear(video.getReleaseYear());
+        OmdbVideoFull result;
+        if (StringUtils.isEmpty(video.getImdbID()) || applicationProperties.getOmdbSync().getForceQuerySearch()) {
+            if (isMovie(video.getType())) {
+                // with movies the approach is opposite, first try to find by title and year
+                result = tryFindVideo(video.getType(), video.getTitle(), video.getReleaseYear());
+                if (result == null) {
+                    result = tryFindVideo(video.getType(), video.getTitle());
+                }
+            } else {
+                // show dates tend to be fucked up in Netflix, prefer search by title
+                result = tryFindVideo(video.getType(), video.getTitle());
+                if (result == null) {
+                    result = tryFindVideo(video.getType(), video.getTitle(), video.getReleaseYear());
+                }
+            }
+
         } else {
-            omdbBuilder.setImdbId(video.getImdbID());
+            // find by imdb
+            result = tryFindVideo(video.getType(), video.getImdbID(), null, null);
         }
+        return result;
+    }
+
+    private OmdbBuilder createOmdbBuilder() {
+        OmdbBuilder omdbBuilder = new OmdbBuilder();
         omdbBuilder.setTomatoes(true);
+        return omdbBuilder;
+    }
+
+    private OmdbVideoFull tryFindVideo(String type, String title, Integer releaseYear) throws OMDBException {
+        return tryFindVideo(type, null, title, releaseYear);
+    }
+
+    private OmdbVideoFull tryFindVideo(String type, String title) throws OMDBException {
+        return tryFindVideo(type, null, title, null);
+    }
+
+    private OmdbVideoFull tryFindVideo(String type, String imdbID, String title, Integer releaseYear) throws OMDBException {
+        OmdbBuilder omdbBuilder = createOmdbBuilder();
+        if (StringUtils.isNotEmpty(imdbID)) {
+            omdbBuilder.setImdbId(imdbID);
+        }
+        if (StringUtils.isNotEmpty(title)) {
+            omdbBuilder.setTitle(title);
+        }
+        if (releaseYear != null) {
+            omdbBuilder.setYear(releaseYear);
+        }
+        if (isMovie(type)) {
+            omdbBuilder.setTypeMovie();
+        }
         return omdbApi.getInfo(omdbBuilder.build());
     }
 
