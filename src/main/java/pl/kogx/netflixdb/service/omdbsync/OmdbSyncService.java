@@ -5,6 +5,7 @@ import com.omertron.omdbapi.OmdbApi;
 import com.omertron.omdbapi.model.OmdbVideoFull;
 import com.omertron.omdbapi.tools.OmdbBuilder;
 import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.common.collect.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +20,20 @@ import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.service.VideoService;
 import pl.kogx.netflixdb.service.dto.VideoDTO;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.*;
 
 @Service
 public class OmdbSyncService {
 
     private static final Logger log = LoggerFactory.getLogger(OmdbSyncService.class);
 
+    private static final NumberFormat NUMBER_FORMAT_US = NumberFormat.getInstance(Locale.US);
+
     private static final int PAGE_SIZE = 50;
+
+    private static final String OMDB_UNAVAILABLE_TAG = "N/A";
 
     private final VideoService videoService;
 
@@ -57,17 +61,20 @@ public class OmdbSyncService {
     }
 
     public void syncMovies() {
+        Tuple<Long, Long> countTotal = Tuple.tuple(0L, 0L);
         long time = System.currentTimeMillis();
         log.info("Starting sync");
         List<String> keys = new ArrayList<>(genreByIdMap.keySet());
         Collections.shuffle(keys);
         for (String genreId : keys) {
-            syncByGenre(genreId.trim(), genreByIdMap.get(genreId).trim());
+            Tuple<Integer, Integer> count = syncByGenre(genreId.trim(), genreByIdMap.get(genreId).trim());
+            countTotal = Tuple.tuple(countTotal.v1() + count.v1(), countTotal.v2() + count.v2());
         }
-        log.info("Sync complete, took {} millis", System.currentTimeMillis() - time);
+        log.info("Sync complete, syncedCount={}, failedCount={}, took {} millis",
+            countTotal.v1(), countTotal.v2(), System.currentTimeMillis() - time);
     }
 
-    private void syncByGenre(String genreId, String genreName) {
+    private Tuple<Integer, Integer> syncByGenre(String genreId, String genreName) {
         log.info("OMDB Fetching by genre id={}, name={} ...", genreId, genreName);
 
         int syncedCount = 0;
@@ -92,6 +99,8 @@ public class OmdbSyncService {
         } while (!page.isLast());
 
         log.info("OMDB Fetched {} videos, failed to sync {}", syncedCount, failedCount);
+
+        return Tuple.tuple(syncedCount, failedCount);
     }
 
     private boolean syncVideo(VideoDTO video) {
@@ -107,14 +116,30 @@ public class OmdbSyncService {
             return false;
         }
         video.setOmdbAvailable(true);
-        video.setImdbRating(omdbVideo.getImdbRating());
-        video.setImdbVotes(omdbVideo.getImdbVotes());
+        video.setImdbRating(toFloat(omdbVideo.getImdbRating()));
+        video.setImdbVotes(toLong(omdbVideo.getImdbVotes()));
         video.setMetascore(omdbVideo.getMetascore());
-        video.setTomatoRating(omdbVideo.getTomatoRating());
-        video.setTomatoUserRating(omdbVideo.getTomatoUserRating());
+        video.setTomatoRating(toFloat(omdbVideo.getTomatoRating()));
+        video.setTomatoUserRating(toFloat(omdbVideo.getTomatoUserRating()));
         video.setImdbID(omdbVideo.getImdbID());
         videoService.updateVideo(video);
         return true;
+    }
+
+    private static Float toFloat(String value) {
+        return StringUtils.isEmpty(value) ? 0f : value.equalsIgnoreCase(OMDB_UNAVAILABLE_TAG) ? 0f : Float.valueOf(value);
+    }
+
+    private static Long toLong(String value) {
+        if (StringUtils.isEmpty(value) || value.equalsIgnoreCase(OMDB_UNAVAILABLE_TAG)) {
+            return 0L;
+        }
+        try {
+            return NUMBER_FORMAT_US.parse(value).longValue();
+        } catch (RuntimeException | ParseException e) {
+            log.warn("Cant parse {} as long", value);
+        }
+        return 0L;
     }
 
     private OmdbVideoFull tryFindVideo(VideoDTO video) throws OMDBException {

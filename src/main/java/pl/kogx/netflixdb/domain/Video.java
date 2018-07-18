@@ -1,5 +1,7 @@
 package pl.kogx.netflixdb.domain;
 
+import org.springframework.format.annotation.NumberFormat;
+
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -26,15 +28,18 @@ public class Video extends AbstractAuditingEntity implements Serializable {
 
     private Boolean omdbAvailable;
 
-    private String imdbRating;
+    @NumberFormat(style = NumberFormat.Style.NUMBER)
+    private Float imdbRating;
 
-    private String imdbVotes;
+    private Long imdbVotes;
 
     private Integer metascore;
 
-    private String tomatoRating;
+    @NumberFormat(style = NumberFormat.Style.NUMBER)
+    private Float tomatoRating;
 
-    private String tomatoUserRating;
+    @NumberFormat(style = NumberFormat.Style.NUMBER)
+    private Float tomatoUserRating;
 
     private String imdbID;
 
@@ -109,19 +114,19 @@ public class Video extends AbstractAuditingEntity implements Serializable {
         this.omdbAvailable = omdbAvailable;
     }
 
-    public String getImdbRating() {
+    public Float getImdbRating() {
         return imdbRating;
     }
 
-    public void setImdbRating(String imdbRating) {
+    public void setImdbRating(Float imdbRating) {
         this.imdbRating = imdbRating;
     }
 
-    public String getImdbVotes() {
+    public Long getImdbVotes() {
         return imdbVotes;
     }
 
-    public void setImdbVotes(String imdbVotes) {
+    public void setImdbVotes(Long imdbVotes) {
         this.imdbVotes = imdbVotes;
     }
 
@@ -133,19 +138,19 @@ public class Video extends AbstractAuditingEntity implements Serializable {
         this.metascore = metascore;
     }
 
-    public String getTomatoRating() {
+    public Float getTomatoRating() {
         return tomatoRating;
     }
 
-    public void setTomatoRating(String tomatoRating) {
+    public void setTomatoRating(Float tomatoRating) {
         this.tomatoRating = tomatoRating;
     }
 
-    public String getTomatoUserRating() {
+    public Float getTomatoUserRating() {
         return tomatoUserRating;
     }
 
-    public void setTomatoUserRating(String tomatoUserRating) {
+    public void setTomatoUserRating(Float tomatoUserRating) {
         this.tomatoUserRating = tomatoUserRating;
     }
 
