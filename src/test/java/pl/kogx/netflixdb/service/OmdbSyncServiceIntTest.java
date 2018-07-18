@@ -28,7 +28,11 @@ public class OmdbSyncServiceIntTest {
 
     @Test
     public void test() {
-        System.out.println("Test!");
         omdbSyncService.syncMovies();
+    }
+
+    @Test
+    public void testIndividual() {
+        omdbSyncService.syncMovie(70143836L);
     }
 }

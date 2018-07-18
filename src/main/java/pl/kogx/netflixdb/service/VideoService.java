@@ -39,4 +39,8 @@ public class VideoService {
     public Page<VideoDTO> findByGenreId(Long genreId, Pageable pageable) {
         return videoSearchRepository.findAllByGenreId(genreId, pageable).map(VideoDTO::new);
     }
+
+    public VideoDTO findById(Long id) {
+        return new VideoDTO(videoSearchRepository.findById(id).orElse(null));
+    }
 }

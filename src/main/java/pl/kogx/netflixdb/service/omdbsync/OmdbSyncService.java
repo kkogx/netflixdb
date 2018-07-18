@@ -74,6 +74,16 @@ public class OmdbSyncService {
             countTotal.v1(), countTotal.v2(), System.currentTimeMillis() - time);
     }
 
+    public void syncMovie(Long id) {
+        log.info("Starting sync");
+        boolean result = false;
+        VideoDTO video = videoService.findById(id);
+        if (video != null) {
+            result = syncVideo(video);
+        }
+        log.info("Sync complete, result=", result);
+    }
+
     private Tuple<Integer, Integer> syncByGenre(String genreId, String genreName) {
         log.info("OMDB Fetching by genre id={}, name={} ...", genreId, genreName);
 
@@ -89,7 +99,7 @@ public class OmdbSyncService {
                 if (result) {
                     syncedCount += 1;
                     if (syncedCount % 100 == 0) {
-                        log.info("OMDB fetched {} videos", syncedCount);
+                        log.info("OMDB Fetched {} videos", syncedCount);
                     }
                 } else {
                     failedCount += 1;
