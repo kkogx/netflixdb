@@ -53,15 +53,16 @@ public class NetflixSyncService {
 
     public void syncMovies() {
         long time = System.currentTimeMillis();
+        long countTotal = 0;
         log.info("Starting sync");
         try {
             for (Map.Entry<String, String> genreById : genreByIdMap.entrySet()) {
-                syncByGenre(genreById.getKey().trim(), genreById.getValue().trim());
+                countTotal += syncByGenre(genreById.getKey().trim(), genreById.getValue().trim());
             }
         } catch (JsonObject.JsonUnmarshallException e) {
             log.error("Unable to process the response, API has changed?", e);
         }
-        log.info("Sync complete, took {} millis", System.currentTimeMillis() - time);
+        log.info("Sync complete, ttltook {} millis", System.currentTimeMillis() - time);
     }
 
     private void requestCooldown() {
@@ -73,7 +74,7 @@ public class NetflixSyncService {
         }
     }
 
-    private void syncByGenre(String genreId, String genreName) throws JsonObject.JsonUnmarshallException {
+    private int syncByGenre(String genreId, String genreName) throws JsonObject.JsonUnmarshallException {
         log.info("Fetching by genre id={}, name={}", genreId, genreName);
         final int BLOCK_SIZE = applicationProperties.getNetflixSync().getRequestBlockSize();
         int from = 0, countTotal = 0, count;
@@ -91,6 +92,7 @@ public class NetflixSyncService {
         if (countTotal == 0) {
             log.warn("No titles fetched for genre id={}, name={}", genreId, genreName);
         }
+        return countTotal;
     }
 
     private int syncByGenre(String genreId, String genre, int from, int to) throws JsonObject.JsonUnmarshallException {
