@@ -18,6 +18,10 @@ public class JsonObject {
         return String.valueOf(getObject(key));
     }
 
+    public Boolean getBool(String key) throws JsonUnmarshallException {
+        return Boolean.valueOf(getString(key));
+    }
+
     public Long getLong(String key) throws JsonUnmarshallException {
         return Long.valueOf(getString(key));
     }

@@ -1,6 +1,5 @@
 package pl.kogx.netflixdb.service.netflixsync;
 
-import com.google.common.base.Splitter;
 import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
 import org.slf4j.Logger;
@@ -19,7 +18,6 @@ import pl.kogx.netflixdb.service.VideoService;
 import pl.kogx.netflixdb.service.dto.VideoDTO;
 import pl.kogx.netflixdb.service.util.JsonObject;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Random;
 
@@ -46,8 +44,7 @@ public class NetflixSyncService {
         this.videoService = videoService;
         this.applicationProperties = applicationProperties;
         this.shaktiRestTemplate = restTemplateBuilder.build();
-        this.genreByIdMap = Collections.unmodifiableMap(Splitter.on(",").withKeyValueSeparator("=")
-            .split(applicationProperties.getNetflixSync().getGenreById()));
+        this.genreByIdMap = ApplicationProperties.getGenreByIdMap(applicationProperties);
     }
 
     public void setScheduled(boolean scheduled) {
@@ -55,6 +52,8 @@ public class NetflixSyncService {
     }
 
     public void syncMovies() {
+        long time = System.currentTimeMillis();
+        log.info("Starting sync");
         try {
             for (Map.Entry<String, String> genreById : genreByIdMap.entrySet()) {
                 syncByGenre(genreById.getKey().trim(), genreById.getValue().trim());
@@ -62,6 +61,7 @@ public class NetflixSyncService {
         } catch (JsonObject.JsonUnmarshallException e) {
             log.error("Unable to process the response, API has changed?", e);
         }
+        log.info("Sync complete, took {} millis", System.currentTimeMillis() - time);
     }
 
     private void requestCooldown() {
@@ -75,14 +75,17 @@ public class NetflixSyncService {
 
     private void syncByGenre(String genreId, String genreName) throws JsonObject.JsonUnmarshallException {
         log.info("Fetching by genre id={}, name={}", genreId, genreName);
+        final int BLOCK_SIZE = applicationProperties.getNetflixSync().getRequestBlockSize();
         int from = 0, countTotal = 0, count;
-        int to = applicationProperties.getNetflixSync().getRequestBlockSize();
+        int to = BLOCK_SIZE;
         do {
-            count = syncByGenre(genreId, from, to);
-            countTotal += count;
-            log.info("Fetched {} titles", countTotal);
+            count = syncByGenre(genreId, genreName, from, to);
             from = to;
-            to += applicationProperties.getNetflixSync().getRequestBlockSize();
+            to += BLOCK_SIZE;
+            if (count > 0) {
+                countTotal += count;
+                log.info("Fetched {} titles", countTotal);
+            }
             requestCooldown();
         } while (count > 0);
         if (countTotal == 0) {
@@ -90,7 +93,7 @@ public class NetflixSyncService {
         }
     }
 
-    private int syncByGenre(String genreId, int from, int to) throws JsonObject.JsonUnmarshallException {
+    private int syncByGenre(String genreId, String genre, int from, int to) throws JsonObject.JsonUnmarshallException {
 
         int count = 0;
 
@@ -98,7 +101,7 @@ public class NetflixSyncService {
 
         // Invoke Shakti endpoint
         ResponseEntity<String> response = shaktiRestTemplate.exchange(applicationProperties.getNetflixSync().getShaktiUrl(), HttpMethod.POST, request, String.class);
-        log.info("Response: length={}", response.getBody().length());
+        //log.info("Response: length={}", response.getBody().length());
 
         // Process the result
         if (response.getStatusCode() == HttpStatus.OK) {
@@ -107,8 +110,12 @@ public class NetflixSyncService {
                 VideoDTO videoDTO = new VideoDTO();
                 JsonObject json = new JsonObject(video);
                 videoDTO.setId(json.get("summary").get("value").getLong("id"));
+                videoDTO.setType(json.get("summary").get("value").getString("type"));
+                videoDTO.setOriginal(json.get("summary").get("value").getBool("isOriginal"));
                 videoDTO.setTitle(json.get("title").getString("value"));
                 videoDTO.setReleaseYear(json.get("releaseYear").getInt("value"));
+                videoDTO.setGenreId(Long.valueOf(genreId));
+                videoDTO.setGenre(genre);
                 videoService.updateVideo(videoDTO);
                 count += 1;
             }

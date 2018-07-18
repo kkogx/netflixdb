@@ -335,6 +335,11 @@
             <artifactId>velocity</artifactId>
             <version>1.7</version>
         </dependency>
+        <dependency>
+            <groupId>com.omertron</groupId>
+            <artifactId>API-OMDB</artifactId>
+            <version>1.6-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

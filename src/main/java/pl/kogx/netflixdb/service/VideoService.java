@@ -2,6 +2,8 @@ package pl.kogx.netflixdb.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kogx.netflixdb.domain.Video;
@@ -32,5 +34,9 @@ public class VideoService {
 
     public void deleteVideo(Long id) {
         videoSearchRepository.deleteById(id);
+    }
+
+    public Page<VideoDTO> findByGenreId(Long genreId, Pageable pageable) {
+        return videoSearchRepository.findAllByGenreId(genreId, pageable).map(VideoDTO::new);
     }
 }
