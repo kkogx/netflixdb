@@ -4,6 +4,7 @@ import info.talacha.filmweb.api.FilmwebApi;
 import info.talacha.filmweb.connection.FilmwebException;
 import info.talacha.filmweb.models.Item;
 import info.talacha.filmweb.search.models.FilmSearchResult;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.elasticsearch.common.collect.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class FwebSyncService {
 
     private final Map<String, String> genreByIdMap;
 
-    private final FilmwebApi fwebApi = new FilmwebApi();
+    private FilmwebApi fwebApi;
 
     private boolean scheduled = false;
 
@@ -56,6 +57,7 @@ public class FwebSyncService {
         List<String> keys = new ArrayList<>(genreByIdMap.keySet());
         Collections.shuffle(keys);
         for (String genreId : keys) {
+            fwebApi = new FilmwebApi();
             Tuple<Integer, Integer> count = syncByGenre(genreId.trim(), genreByIdMap.get(genreId).trim());
             countTotal = Tuple.tuple(countTotal.v1() + count.v1(), countTotal.v2() + count.v2());
         }
@@ -143,26 +145,39 @@ public class FwebSyncService {
 
     private Item tryFindSeries(String title, Integer releaseYear) throws FilmwebException {
         // show dates tend to be fucked up in Netflix, prefer search by title
-        List<FilmSearchResult> res = fwebApi.findFilm(title);
-        if (res == null || res.isEmpty()) {
-            res = fwebApi.findFilm(title, releaseYear);
+        FilmSearchResult res = filterByTitleDistance(title, fwebApi.findFilm(title));
+        if (res == null) {
+            res = filterByTitleDistance(title, fwebApi.findFilm(title, releaseYear));
         }
-        if (res == null || res.isEmpty()) {
+        if (res == null) {
             return null;
         }
-        return fwebApi.getFilmData(res.get(0).getId());
+        return fwebApi.getFilmData(res.getId());
     }
 
     private Item tryFindFilm(String title, Integer releaseYear) throws FilmwebException {
         // with movies the approach is opposite, first try to find by title and year
-        List<FilmSearchResult> res = fwebApi.findFilm(title, releaseYear);
-//        if (res == null || res.isEmpty()) {
-//            res = fwebApi.findFilm(title);
-//        }
-        if (res == null || res.isEmpty()) {
+        FilmSearchResult res = filterByTitleDistance(title, fwebApi.findFilm(title, releaseYear));
+        if (res == null) {
+            res = filterByTitleDistance(title, fwebApi.findFilm(title));
+        }
+        if (res == null) {
             return null;
         }
-        return fwebApi.getFilmData(res.get(0).getId());
+        return fwebApi.getFilmData(res.getId());
+    }
+
+    private FilmSearchResult filterByTitleDistance(String title, List<FilmSearchResult> films) {
+        FilmSearchResult best = null;
+        int bestDist = Integer.MAX_VALUE;
+        for (FilmSearchResult res : films) {
+            int dist = new LevenshteinDistance().apply(title, res.getTitle());
+            if (dist < bestDist) {
+                best = res;
+                bestDist = dist;
+            }
+        }
+        return bestDist < title.length() / 3 ? best : null;
     }
 
     @Scheduled(fixedDelay = 1000 * 60 * 10 /* 10 minutes */)
