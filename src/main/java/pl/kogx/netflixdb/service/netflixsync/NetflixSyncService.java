@@ -54,7 +54,7 @@ public class NetflixSyncService {
     public void syncMovies() {
         long time = System.currentTimeMillis();
         long countTotal = 0;
-        log.info("Starting sync");
+        log.info("Starting Netflix sync");
         try {
             for (Map.Entry<String, String> genreById : genreByIdMap.entrySet()) {
                 countTotal += syncByGenre(genreById.getKey().trim(), genreById.getValue().trim());
