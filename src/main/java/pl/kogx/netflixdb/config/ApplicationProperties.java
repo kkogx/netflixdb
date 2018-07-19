@@ -19,12 +19,31 @@ public class ApplicationProperties {
 
     public final OmdbSync omdbSync = new OmdbSync();
 
+    public final FwebSync fwebSync = new FwebSync();
+
+    public FwebSync getFwebSync() {
+        return fwebSync;
+    }
+
     public NetflixSync getNetflixSync() {
         return netflixSync;
     }
 
     public OmdbSync getOmdbSync() {
         return omdbSync;
+    }
+
+    public static class FwebSync {
+
+        private Boolean forceQuerySearch;
+
+        public Boolean getForceQuerySearch() {
+            return forceQuerySearch;
+        }
+
+        public void setForceQuerySearch(Boolean forceQuerySearch) {
+            this.forceQuerySearch = forceQuerySearch;
+        }
     }
 
     public static class OmdbSync {

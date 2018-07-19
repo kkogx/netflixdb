@@ -16,6 +16,8 @@ public class Video extends AbstractAuditingEntity implements Serializable {
 
     private String title;
 
+    private String fwebTitle;
+
     private Integer releaseYear;
 
     private String genre;
@@ -28,10 +30,17 @@ public class Video extends AbstractAuditingEntity implements Serializable {
 
     private Boolean omdbAvailable;
 
+    private Boolean fwebAvailable;
+
     @NumberFormat(style = NumberFormat.Style.NUMBER)
     private Float imdbRating;
 
+    @NumberFormat(style = NumberFormat.Style.NUMBER)
+    private Float fwebRating;
+
     private Long imdbVotes;
+
+    private Long fwebVotes;
 
     private Integer metascore;
 
@@ -42,6 +51,8 @@ public class Video extends AbstractAuditingEntity implements Serializable {
     private Float tomatoUserRating;
 
     private String imdbID;
+
+    private Long fwebID;
 
     public Video() {
     }
@@ -56,6 +67,14 @@ public class Video extends AbstractAuditingEntity implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Boolean getFwebAvailable() {
+        return fwebAvailable;
+    }
+
+    public void setFwebAvailable(Boolean fwebAvailable) {
+        this.fwebAvailable = fwebAvailable;
     }
 
     public String getGenre() {
@@ -162,26 +181,62 @@ public class Video extends AbstractAuditingEntity implements Serializable {
         this.imdbID = imdbID;
     }
 
+    public Float getFwebRating() {
+        return fwebRating;
+    }
+
+    public void setFwebRating(Float fwebRating) {
+        this.fwebRating = fwebRating;
+    }
+
+    public Long getFwebVotes() {
+        return fwebVotes;
+    }
+
+    public void setFwebVotes(Long fwebVotes) {
+        this.fwebVotes = fwebVotes;
+    }
+
+    public Long getFwebID() {
+        return fwebID;
+    }
+
+    public void setFwebID(Long fwebID) {
+        this.fwebID = fwebID;
+    }
+
+    public String getFwebTitle() {
+        return fwebTitle;
+    }
+
+    public void setFwebTitle(String fwebTitle) {
+        this.fwebTitle = fwebTitle;
+    }
+
     @Override
     public String toString() {
         return "Video{" +
             "id=" + id +
             ", title='" + title + '\'' +
+            ", fwebTitle='" + fwebTitle + '\'' +
             ", releaseYear=" + releaseYear +
             ", genre='" + genre + '\'' +
             ", genreId=" + genreId +
             ", original=" + original +
             ", type='" + type + '\'' +
             ", omdbAvailable=" + omdbAvailable +
-            ", imdbRating='" + imdbRating + '\'' +
-            ", imdbVotes='" + imdbVotes + '\'' +
+            ", fwebAvailable=" + fwebAvailable +
+            ", imdbRating=" + imdbRating +
+            ", fwebRating=" + fwebRating +
+            ", imdbVotes=" + imdbVotes +
+            ", fwebVotes=" + fwebVotes +
             ", metascore=" + metascore +
-            ", tomatoRating='" + tomatoRating + '\'' +
-            ", tomatoUserRating='" + tomatoUserRating + '\'' +
+            ", tomatoRating=" + tomatoRating +
+            ", tomatoUserRating=" + tomatoUserRating +
             ", imdbID='" + imdbID + '\'' +
+            ", fwebID=" + fwebID +
             '}';
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -190,23 +245,28 @@ public class Video extends AbstractAuditingEntity implements Serializable {
         Video video = (Video) o;
         return Objects.equals(id, video.id) &&
             Objects.equals(title, video.title) &&
+            Objects.equals(fwebTitle, video.fwebTitle) &&
             Objects.equals(releaseYear, video.releaseYear) &&
             Objects.equals(genre, video.genre) &&
             Objects.equals(genreId, video.genreId) &&
             Objects.equals(original, video.original) &&
             Objects.equals(type, video.type) &&
             Objects.equals(omdbAvailable, video.omdbAvailable) &&
+            Objects.equals(fwebAvailable, video.fwebAvailable) &&
             Objects.equals(imdbRating, video.imdbRating) &&
+            Objects.equals(fwebRating, video.fwebRating) &&
             Objects.equals(imdbVotes, video.imdbVotes) &&
+            Objects.equals(fwebVotes, video.fwebVotes) &&
             Objects.equals(metascore, video.metascore) &&
             Objects.equals(tomatoRating, video.tomatoRating) &&
             Objects.equals(tomatoUserRating, video.tomatoUserRating) &&
-            Objects.equals(imdbID, video.imdbID);
+            Objects.equals(imdbID, video.imdbID) &&
+            Objects.equals(fwebID, video.fwebID);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, title, releaseYear, genre, genreId, original, type, omdbAvailable, imdbRating, imdbVotes, metascore, tomatoRating, tomatoUserRating, imdbID);
+        return Objects.hash(id, title, fwebTitle, releaseYear, genre, genreId, original, type, omdbAvailable, fwebAvailable, imdbRating, fwebRating, imdbVotes, fwebVotes, metascore, tomatoRating, tomatoUserRating, imdbID, fwebID);
     }
 }

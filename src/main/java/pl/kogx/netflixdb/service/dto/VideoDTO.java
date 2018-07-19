@@ -12,6 +12,8 @@ public class VideoDTO {
 
     private String title;
 
+    private String fwebTitle;
+
     private Integer releaseYear;
 
     private String genre;
@@ -24,10 +26,17 @@ public class VideoDTO {
 
     private Boolean omdbAvailable;
 
+    private Boolean fwebAvailable;
+
     @NumberFormat(style = NumberFormat.Style.NUMBER)
     private Float imdbRating;
 
+    @NumberFormat(style = NumberFormat.Style.NUMBER)
+    private Float fwebRating;
+
     private Long imdbVotes;
+
+    private Long fwebVotes;
 
     private Integer metascore;
 
@@ -38,6 +47,8 @@ public class VideoDTO {
     private Float tomatoUserRating;
 
     private String imdbID;
+
+    private Long fwebID;
 
     public VideoDTO() {
 
@@ -52,12 +63,17 @@ public class VideoDTO {
         this.original = video.getOriginal();
         this.type = video.getType();
         this.omdbAvailable = video.getOmdbAvailable();
+        this.fwebAvailable = video.getFwebAvailable();
         this.imdbRating = video.getImdbRating();
+        this.fwebRating = video.getFwebRating();
         this.imdbVotes = video.getImdbVotes();
+        this.fwebVotes = video.getFwebVotes();
         this.metascore = video.getMetascore();
         this.tomatoRating = video.getTomatoRating();
         this.tomatoUserRating = video.getTomatoUserRating();
         this.imdbID = video.getImdbID();
+        this.fwebID = video.getFwebID();
+        this.fwebTitle = video.getFwebTitle();
     }
 
     public Long getId() {
@@ -74,6 +90,14 @@ public class VideoDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getFwebTitle() {
+        return fwebTitle;
+    }
+
+    public void setFwebTitle(String fwebTitle) {
+        this.fwebTitle = fwebTitle;
     }
 
     public Integer getReleaseYear() {
@@ -172,23 +196,60 @@ public class VideoDTO {
         this.imdbID = imdbID;
     }
 
+    public Float getFwebRating() {
+        return fwebRating;
+    }
+
+    public void setFwebRating(Float fwebRating) {
+        this.fwebRating = fwebRating;
+    }
+
+    public Long getFwebVotes() {
+        return fwebVotes;
+    }
+
+    public void setFwebVotes(Long fwebVotes) {
+        this.fwebVotes = fwebVotes;
+    }
+
+    public Long getFwebID() {
+        return fwebID;
+    }
+
+    public void setFwebID(Long fwebID) {
+        this.fwebID = fwebID;
+    }
+
+    public Boolean getFwebAvailable() {
+        return fwebAvailable;
+    }
+
+    public void setFwebAvailable(Boolean fwebAvailable) {
+        this.fwebAvailable = fwebAvailable;
+    }
+
     @Override
     public String toString() {
         return "VideoDTO{" +
             "id=" + id +
             ", title='" + title + '\'' +
+            ", fwebTitle='" + fwebTitle + '\'' +
             ", releaseYear=" + releaseYear +
             ", genre='" + genre + '\'' +
             ", genreId=" + genreId +
             ", original=" + original +
             ", type='" + type + '\'' +
             ", omdbAvailable=" + omdbAvailable +
-            ", imdbRating='" + imdbRating + '\'' +
-            ", imdbVotes='" + imdbVotes + '\'' +
+            ", fwebAvailable=" + fwebAvailable +
+            ", imdbRating=" + imdbRating +
+            ", fwebRating=" + fwebRating +
+            ", imdbVotes=" + imdbVotes +
+            ", fwebVotes=" + fwebVotes +
             ", metascore=" + metascore +
-            ", tomatoRating='" + tomatoRating + '\'' +
-            ", tomatoUserRating='" + tomatoUserRating + '\'' +
+            ", tomatoRating=" + tomatoRating +
+            ", tomatoUserRating=" + tomatoUserRating +
             ", imdbID='" + imdbID + '\'' +
+            ", fwebID=" + fwebID +
             '}';
     }
 }

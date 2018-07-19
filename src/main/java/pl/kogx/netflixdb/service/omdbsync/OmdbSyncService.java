@@ -9,12 +9,10 @@ import org.elasticsearch.common.collect.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.yamj.api.common.exception.ApiExceptionType;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.service.VideoService;
@@ -41,17 +39,14 @@ public class OmdbSyncService {
 
     private final Map<String, String> genreByIdMap;
 
-    private final RestTemplate shaktiRestTemplate;
-
     private final OmdbApi omdbApi;
 
     private boolean scheduled = false;
 
     @Autowired
-    public OmdbSyncService(VideoService videoService, ApplicationProperties applicationProperties, RestTemplateBuilder restTemplateBuilder) {
+    public OmdbSyncService(VideoService videoService, ApplicationProperties applicationProperties) {
         this.videoService = videoService;
         this.applicationProperties = applicationProperties;
-        this.shaktiRestTemplate = restTemplateBuilder.build();
         this.genreByIdMap = ApplicationProperties.getGenreByIdMap(applicationProperties);
         this.omdbApi = new OmdbApi(applicationProperties.getOmdbSync().getApiKey());
     }
@@ -63,7 +58,7 @@ public class OmdbSyncService {
     public void syncMovies() {
         Tuple<Long, Long> countTotal = Tuple.tuple(0L, 0L);
         long time = System.currentTimeMillis();
-        log.info("Starting sync");
+        log.info("Starting OMDB sync");
         List<String> keys = new ArrayList<>(genreByIdMap.keySet());
         Collections.shuffle(keys);
         for (String genreId : keys) {
@@ -75,7 +70,7 @@ public class OmdbSyncService {
     }
 
     public void syncMovie(Long id) {
-        log.info("Starting sync");
+        log.info("Starting OMDB sync");
         boolean result = false;
         VideoDTO video = videoService.findById(id);
         if (video != null) {
