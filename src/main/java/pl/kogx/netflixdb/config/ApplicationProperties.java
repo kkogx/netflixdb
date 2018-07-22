@@ -1,6 +1,7 @@
 package pl.kogx.netflixdb.config;
 
 import com.google.common.base.Splitter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Collections;
@@ -123,7 +124,10 @@ public class ApplicationProperties {
     }
 
     public static Map<String, String> getGenreByIdMap(ApplicationProperties applicationProperties) {
-        return Collections.unmodifiableMap(Splitter.on(",").withKeyValueSeparator("=")
-            .split(applicationProperties.getNetflixSync().getGenreById()));
+        String genreById = applicationProperties.getNetflixSync().getGenreById();
+        if (StringUtils.isEmpty(genreById)) {
+            return Collections.emptyMap();
+        }
+        return Collections.unmodifiableMap(Splitter.on(",").withKeyValueSeparator("=").split(genreById));
     }
 }
