@@ -62,7 +62,7 @@ public class NetflixSyncService {
         } catch (JsonObject.JsonUnmarshallException e) {
             log.error("Unable to process the response, API has changed?", e);
         }
-        log.info("Sync complete, ttltook {} millis", System.currentTimeMillis() - time);
+        log.info("Sync complete, ttl={}, took {} millis", countTotal, System.currentTimeMillis() - time);
     }
 
     private void requestCooldown() {
