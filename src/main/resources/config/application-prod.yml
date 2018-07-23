@@ -15,9 +15,9 @@
 
 logging:
     level:
-        ROOT: INFO
-        pl.kogx.netflixdb: INFO
-        io.github.jhipster: INFO
+        ROOT: DEBUG
+        pl.kogx.netflixdb: DEBUG
+        io.github.jhipster: DEBUG
 
 spring:
     devtools:
@@ -128,4 +128,54 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+    omdb-sync:
+        api-key: "***REMOVED***"
+        force-query-search: true
+    fweb-sync:
+        force-query-search: true
+    netflix-sync:
+        session-cookie: "clSharedContext=46fa5082-e244-4843-a602-acccf748c050; memclid=a0c72348-32ff-4c22-b162-8be8bfa8544b; didUserInteractWithPage=true; hasSeenCookieDisclosure=true; dsca=customer; netflix-sans-normal-2-loaded=true; nfvdid=BQFmAAEBEN8bKTyPhC9ahD%2Bq8ytvR3Vgz5e%2FsZ8XDEdAnqw9882maazXxeBU43IvqZ1K5FKGbyByw3EJReuGuo1ffwIXcn5pGkWnD%2F9LfGbPnDz1KvX8naS4iD5Ra8J3fseISfTHOMAqiOhFxwc1aQwsTgx%2Bjbsf; SecureNetflixId=v%3D2%26mac%3DAQEAEQABABT2lW9sn3aYkvT4mznA8SJbFJUBeowa9dE.%26dt%3D1531552268843; NetflixId=v%3D2%26ct%3DBQAOAAEBEBNnQL5i6TGFiu9nHCXGxz2B0FcIVCnlx5_IRyD2O_Blph3jp3rQB-Bqo_gyoJxQczfBQ10s7co4DjezT6nbmekH_1BrnWK7JmejuTc2OCej81w6W242IF9JCI7fs44fZe6H_X4kweMcAQUnMZu3E9WjX5QVj-qgSQDy-KosFGMF4GujSjqsEbrrKVihxZ8WEl4_kHuBuc3CBrmMZmy5CtwFPYDX_p2l8FQTsvsRZ0hE_zBik-PrXf5yW-4s_6VM8QHEwv_SglCko7mZSO2LYiXKB0r2A-KB4roYNlFxDIpK5kXI42UltAShDlOY5ffhuFeruwSqej41zVqSt7mtqbACO2DhO3XImAbjBaMRlk3GvO_R0zbM7y2OOfH8OqXROrx0iMXwL-7sfOL1sx4g7H4_M3SIuM0PaihoKsptdINabCMG47pFfU-APawNUyOTTSdrtymH80krJ_F_7oVryCYh3S4K26plPAZoPpzAP6krh4ixcJMBUnDnX5-AAJ6ABAWc_-YndCIG9x8p51mBjF2D1MGrHR48Hd3HDcY2eRXNdXTEv1gd8AzfCPKI-oBWstdTDL89MJasyWk_d4G9A1d1-8sw4kzu1Y3dWB0nyx4VVQGiJnLMS7iA3E-Tvr8QZgLc%26bt%3Ddbl%26ch%3DAQEAEAABABSg1EhIJS7kIOX1MEXVK6b25p8_w8dgoOU.%26mac%3DAQEAEAABABTxWTA2dvEsrzv2W7feYBi9gE07Vv-A0HU.; profilesNewSession=0; lhpuuidh-browse-74Z72JFGLFD2HO4TSM3Q3WAJNE=PL%3APL-PL%3A25a33dcb-8ac8-41ce-9dd2-91b0af4452ce_ROOT; lhpuuidh-browse-74Z72JFGLFD2HO4TSM3Q3WAJNE-T=1531552269837; cL=1531552268984%7C153155218914081313%7C15315521896221154%7C%7C5%7CH7DNJNJATVANPPAHTA7AWQJ7OU; netflix-sans-bold-2-loaded=true"
+        shakti-url: "https://www.netflix.com/api/shakti/d7cab521/pathEvaluator?isWatchlistEnabled=false&isShortformEnabled=false&isVolatileBillboardsEnabled=false&falcor_server=0.1.0&withSize=true&materialize=true"
+        request-sleep-millis: 2000
+        request-block-size: 48
+        genre-by-id: "\
+            1365=Action & Adventure Movies,\
+            3063=Anime,\
+            89844=Award winning Movies,\
+            783=Children & Family Movies,\
+            31574=Classic Movies,\
+            6548=Comedies,\
+            5824=Crime,\
+            2243108=Documentaries,\
+            5763=Dramas,\
+            71590=Historical Movies,\
+            8711=Horror Movies,\
+            7077=Independent Movies,\
+            52852=Music & Musicals,\
+            6299=Polish Movies,\
+            8883=Romantic Movies,\
+            1492=Sci-Fi & Fantasy,\
+            4370=Sport Movies,\
+            11559=Stand-up Comedy,\
+            2777752=Summer of Love,\
+            8933=Thrillers,\
+            10673=TV Action & Adventure,\
+            6721=Anime TV,\
+            78103=Asian TV Shows,\
+            52117=British TV Shows,\
+            10375=TV Comedies,\
+            26146=Crime TV Shows,\
+            10105=Docuseries,\
+            11714=TV Dramas,\
+            83181=Historical TV Shows,\
+            83059=TV Horror,\
+            27346=Kids TV,\
+            4366=TV Mysteries,\
+            1622170=Polish TV Shows,\
+            2070390=Reality Variety & Talk Shows,\
+            26156=Romantic TV Shows,\
+            1372=TV Sci-Fi & Fantasy,\
+            60951=Teen TV Shows,\
+            89811=TV Thrillers,\
+            72404=US TV Shows"
