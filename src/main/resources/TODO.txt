@@ -2,4 +2,5 @@
 - frontend
 - improve result filtering (year distance)
 - international support
+- i8n support
 - code refactor
