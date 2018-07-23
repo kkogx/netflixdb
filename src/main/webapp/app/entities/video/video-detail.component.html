@@ -1,0 +1,95 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="video">
+            <h2><span>Video</span> {{video.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Title</span></dt>
+                <dd>
+                    <span>{{video.title}}</span>
+                </dd>
+                <dt><span>Fweb Title</span></dt>
+                <dd>
+                    <span>{{video.fwebTitle}}</span>
+                </dd>
+                <dt><span>Release Year</span></dt>
+                <dd>
+                    <span>{{video.releaseYear}}</span>
+                </dd>
+                <dt><span>Genre</span></dt>
+                <dd>
+                    <span>{{video.genre}}</span>
+                </dd>
+                <dt><span>Genre Id</span></dt>
+                <dd>
+                    <span>{{video.genreId}}</span>
+                </dd>
+                <dt><span>Original</span></dt>
+                <dd>
+                    <span>{{video.original}}</span>
+                </dd>
+                <dt><span>Type</span></dt>
+                <dd>
+                    <span>{{video.type}}</span>
+                </dd>
+                <dt><span>Omdb Available</span></dt>
+                <dd>
+                    <span>{{video.omdbAvailable}}</span>
+                </dd>
+                <dt><span>Fweb Available</span></dt>
+                <dd>
+                    <span>{{video.fwebAvailable}}</span>
+                </dd>
+                <dt><span>Imdb Rating</span></dt>
+                <dd>
+                    <span>{{video.imdbRating}}</span>
+                </dd>
+                <dt><span>Fweb Rating</span></dt>
+                <dd>
+                    <span>{{video.fwebRating}}</span>
+                </dd>
+                <dt><span>Imdb Votes</span></dt>
+                <dd>
+                    <span>{{video.imdbVotes}}</span>
+                </dd>
+                <dt><span>Fweb Votes</span></dt>
+                <dd>
+                    <span>{{video.fwebVotes}}</span>
+                </dd>
+                <dt><span>Metascore</span></dt>
+                <dd>
+                    <span>{{video.metascore}}</span>
+                </dd>
+                <dt><span>Tomato Rating</span></dt>
+                <dd>
+                    <span>{{video.tomatoRating}}</span>
+                </dd>
+                <dt><span>Tomato User Rating</span></dt>
+                <dd>
+                    <span>{{video.tomatoUserRating}}</span>
+                </dd>
+                <dt><span>Imdb ID</span></dt>
+                <dd>
+                    <span>{{video.imdbID}}</span>
+                </dd>
+                <dt><span>Fweb ID</span></dt>
+                <dd>
+                    <span>{{video.fwebID}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/video', video.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

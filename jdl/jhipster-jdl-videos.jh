@@ -1,0 +1,37 @@
+entity Video {
+    id Long,
+    title String,
+    fwebTitle String,
+    releaseYear Integer,
+    genre String,
+    genreId Long,
+    original Boolean,
+    type String,
+    omdbAvailable Boolean,
+    fwebAvailable Boolean,
+    imdbRating Float,
+    fwebRating Float,
+    imdbVotes Long,
+    fwebVotes Long,
+    metascore Integer,
+    tomatoRating Float,
+    tomatoUserRating Float,
+    imdbID String,
+    fwebID Long
+}
+
+enum Language {
+    ENGLISH, POLISH
+}
+
+// Set pagination options
+paginate Video with infinite-scroll
+
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
