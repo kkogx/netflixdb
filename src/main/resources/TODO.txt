@@ -1,4 +1,6 @@
-- improved security
+- improved security (disable elastic and kibana ports)
+
+go prod
 - frontend
 - improve result filtering (year distance)
 - international support
