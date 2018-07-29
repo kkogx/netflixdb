@@ -12,9 +12,12 @@ import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.Scheduled;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.config.DefaultProfileUtil;
+import pl.kogx.netflixdb.service.fwebsync.FwebSyncService;
 import pl.kogx.netflixdb.service.netflixsync.NetflixSyncService;
+import pl.kogx.netflixdb.service.omdbsync.OmdbSyncService;
 
 import javax.annotation.PostConstruct;
 import java.net.InetAddress;
@@ -30,12 +33,20 @@ public class NetflixdbApp implements ApplicationRunner {
 
     private final NetflixSyncService netflixSyncService;
 
+    private final OmdbSyncService omdbSyncService;
+
+    private final FwebSyncService fwebSyncService;
+
     private final Environment env;
 
+    private boolean scheduled = false;
+
     @Autowired
-    public NetflixdbApp(Environment env, NetflixSyncService netflixSyncService) {
+    public NetflixdbApp(Environment env, NetflixSyncService netflixSyncService, OmdbSyncService omdbSyncService, FwebSyncService fwebSyncService) {
         this.env = env;
         this.netflixSyncService = netflixSyncService;
+        this.omdbSyncService = omdbSyncService;
+        this.fwebSyncService = fwebSyncService;
      }
 
     /**
@@ -101,14 +112,25 @@ public class NetflixdbApp implements ApplicationRunner {
         for(String opt : args.getOptionNames()) {
             switch(opt) {
                 case "scheduled": {
-                    netflixSyncService.setScheduled(getBooleanOptionValue(args, opt));
+                    scheduled = getBooleanOptionValue(args, opt);
                     break;
                 }
                 case "sync": {
-                    netflixSyncService.syncMovies();
+                    netflixSyncService.sync();
+                    fwebSyncService.sync();
+                    omdbSyncService.sync();
                     break;
                 }
             }
+        }
+    }
+
+    @Scheduled(fixedDelay = 1000 * 60 * 10 /* 10 minutes */)
+    public void syncMoviesScheduled() {
+        if (scheduled) {
+            netflixSyncService.sync();
+            fwebSyncService.sync();
+            omdbSyncService.sync();
         }
     }
 

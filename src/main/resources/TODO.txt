@@ -3,6 +3,7 @@
 go prod
 - frontend
 - improve result filtering (year distance)
+- add rest service for manual sync
 - international support
 - i8n support
 - code refactor

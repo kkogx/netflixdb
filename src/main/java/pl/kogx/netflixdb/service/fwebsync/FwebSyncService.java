@@ -11,46 +11,33 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.service.VideoService;
 import pl.kogx.netflixdb.service.dto.VideoDTO;
+import pl.kogx.netflixdb.service.sync.AbstractSyncService;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Service
-public class FwebSyncService {
+public class FwebSyncService extends AbstractSyncService {
 
     private static final Logger log = LoggerFactory.getLogger(FwebSyncService.class);
 
     private static final int PAGE_SIZE = 50;
 
-    private final VideoService videoService;
-
-    private final ApplicationProperties applicationProperties;
-
-    private final Map<String, String> genreByIdMap;
-
     private FilmwebApi fwebApi = new FilmwebApi();
 
-    private boolean scheduled = false;
 
     @Autowired
     public FwebSyncService(VideoService videoService, ApplicationProperties applicationProperties) {
-        this.videoService = videoService;
-        this.applicationProperties = applicationProperties;
-        this.genreByIdMap = ApplicationProperties.getGenreByIdMap(applicationProperties);
+        super(videoService, applicationProperties);
     }
 
-    public void setScheduled(boolean scheduled) {
-        this.scheduled = scheduled;
-    }
-
-    public void syncMovies() {
+    @Override
+    public Tuple<Long, Long> syncInternal() {
         Tuple<Long, Long> countTotal = Tuple.tuple(0L, 0L);
         long time = System.currentTimeMillis();
         log.info("Starting filmweb sync");
@@ -60,8 +47,7 @@ public class FwebSyncService {
             Tuple<Integer, Integer> count = syncByGenre(genreId.trim(), genreByIdMap.get(genreId).trim());
             countTotal = Tuple.tuple(countTotal.v1() + count.v1(), countTotal.v2() + count.v2());
         }
-        log.info("Sync complete, syncedCount={}, failedCount={}, took {} millis",
-            countTotal.v1(), countTotal.v2(), System.currentTimeMillis() - time);
+        return countTotal;
     }
 
     public void syncMovie(Long id) {
@@ -177,12 +163,5 @@ public class FwebSyncService {
             }
         }
         return bestDist < title.length() / 3 ? best : null;
-    }
-
-    @Scheduled(fixedDelay = 1000 * 60 * 10 /* 10 minutes */)
-    public void syncMoviesScheduled() {
-        if (scheduled) {
-            syncMovies();
-        }
     }
 }

@@ -2,67 +2,50 @@ package pl.kogx.netflixdb.service.netflixsync;
 
 import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.elasticsearch.common.collect.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.service.VideoService;
 import pl.kogx.netflixdb.service.dto.VideoDTO;
+import pl.kogx.netflixdb.service.sync.AbstractSyncService;
 import pl.kogx.netflixdb.service.util.JsonObject;
 
 import java.util.Map;
 import java.util.Random;
 
 @Service
-public class NetflixSyncService {
-
-    private static final Logger log = LoggerFactory.getLogger(NetflixSyncService.class);
-
-    private final VideoService videoService;
+public class NetflixSyncService extends AbstractSyncService {
 
     private final NetflixRequestBuilder requestBuilder;
 
-    private final ApplicationProperties applicationProperties;
-
-    private final Map<String, String> genreByIdMap;
-
     private final RestTemplate shaktiRestTemplate;
-
-    private boolean scheduled = false;
 
     @Autowired
     public NetflixSyncService(VideoService videoService, NetflixRequestBuilder requestBuilder, ApplicationProperties applicationProperties, RestTemplateBuilder restTemplateBuilder) {
+        super(videoService, applicationProperties);
         this.requestBuilder = requestBuilder;
-        this.videoService = videoService;
-        this.applicationProperties = applicationProperties;
         this.shaktiRestTemplate = restTemplateBuilder.build();
-        this.genreByIdMap = ApplicationProperties.getGenreByIdMap(applicationProperties);
     }
 
-    public void setScheduled(boolean scheduled) {
-        this.scheduled = scheduled;
-    }
-
-    public void syncMovies() {
-        long time = System.currentTimeMillis();
-        long countTotal = 0;
-        log.info("Starting Netflix sync");
+    @Override
+    public Tuple<Long, Long> syncInternal() throws InterruptedException {
+        Tuple<Long, Long> countTotal = new Tuple(0l, 0l);
         try {
             for (Map.Entry<String, String> genreById : genreByIdMap.entrySet()) {
-                countTotal += syncByGenre(genreById.getKey().trim(), genreById.getValue().trim());
+                int count = syncByGenre(genreById.getKey().trim(), genreById.getValue().trim());
+                countTotal = Tuple.tuple(countTotal.v1() + count, 0l);
             }
         } catch (JsonObject.JsonUnmarshallException e) {
             log.error("Unable to process the response, API has changed?", e);
         }
-        log.info("Sync complete, ttl={}, took {} millis", countTotal, System.currentTimeMillis() - time);
+        return countTotal;
     }
 
     private void requestCooldown() {
@@ -74,7 +57,7 @@ public class NetflixSyncService {
         }
     }
 
-    private int syncByGenre(String genreId, String genreName) throws JsonObject.JsonUnmarshallException {
+    private int syncByGenre(String genreId, String genreName) throws JsonObject.JsonUnmarshallException, InterruptedException {
         log.info("Fetching by genre id={}, name={}", genreId, genreName);
         final int BLOCK_SIZE = applicationProperties.getNetflixSync().getRequestBlockSize();
         int from = 0, countTotal = 0, count;
@@ -95,7 +78,7 @@ public class NetflixSyncService {
         return countTotal;
     }
 
-    private int syncByGenre(String genreId, String genre, int from, int to) throws JsonObject.JsonUnmarshallException {
+    private int syncByGenre(String genreId, String genre, int from, int to) throws JsonObject.JsonUnmarshallException, InterruptedException {
 
         int count = 0;
 
@@ -109,6 +92,7 @@ public class NetflixSyncService {
         if (response.getStatusCode() == HttpStatus.OK) {
             JSONArray videos = JsonPath.read(response.getBody(), "$..videos.*");
             for (Object video : videos) {
+                super.checkIfNotInterrupted();
                 VideoDTO videoDTO = new VideoDTO();
                 JsonObject json = new JsonObject(video);
                 videoDTO.setId(json.get("summary").get("value").getLong("id"));
@@ -126,12 +110,5 @@ public class NetflixSyncService {
         }
 
         return count;
-    }
-
-    @Scheduled(fixedDelay = 1000 * 60 * 10 /* 10 minutes */)
-    public void syncMoviesScheduled() {
-        if (scheduled) {
-            syncMovies();
-        }
     }
 }
