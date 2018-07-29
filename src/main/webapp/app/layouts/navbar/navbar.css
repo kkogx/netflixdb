@@ -78,12 +78,12 @@ Logo styles
     height: 45px;
     display: inline-block;
     vertical-align: middle;
-    width: 70px;
+    width: 80px;
 }
 
 .logo-img {
     height: 100%;
-    background: url('../../../content/images/logo-jhipster.png') no-repeat center center;
+    background: url('../../../content/images/logo_netflixdb.png') no-repeat center center;
     background-size: contain;
     width: 100%;
 }
