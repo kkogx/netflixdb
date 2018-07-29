@@ -1,7 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
     selector: 'jhi-footer',
-    templateUrl: './footer.component.html'
+    templateUrl: './footer.component.html',
+    styleUrls: ['footer.css']
 })
-export class FooterComponent {}
+export class FooterComponent implements OnInit {
+    baseUrl: String;
+
+    ngOnInit(): void {
+        this.baseUrl = 'www.netflixdb.pl';
+    }
+}
