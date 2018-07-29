@@ -6,26 +6,25 @@ import com.omertron.omdbapi.model.OmdbVideoFull;
 import com.omertron.omdbapi.tools.OmdbBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.common.collect.Tuple;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.yamj.api.common.exception.ApiExceptionType;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.service.VideoService;
 import pl.kogx.netflixdb.service.dto.VideoDTO;
+import pl.kogx.netflixdb.service.sync.AbstractSyncService;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 @Service
-public class OmdbSyncService {
-
-    private static final Logger log = LoggerFactory.getLogger(OmdbSyncService.class);
+public class OmdbSyncService extends AbstractSyncService {
 
     private static final NumberFormat NUMBER_FORMAT_US = NumberFormat.getInstance(Locale.US);
 
@@ -33,40 +32,24 @@ public class OmdbSyncService {
 
     private static final String OMDB_UNAVAILABLE_TAG = "N/A";
 
-    private final VideoService videoService;
-
-    private final ApplicationProperties applicationProperties;
-
-    private final Map<String, String> genreByIdMap;
-
     private final OmdbApi omdbApi;
-
-    private boolean scheduled = false;
 
     @Autowired
     public OmdbSyncService(VideoService videoService, ApplicationProperties applicationProperties) {
-        this.videoService = videoService;
-        this.applicationProperties = applicationProperties;
-        this.genreByIdMap = ApplicationProperties.getGenreByIdMap(applicationProperties);
+        super(videoService, applicationProperties);
         this.omdbApi = new OmdbApi(applicationProperties.getOmdbSync().getApiKey());
     }
 
-    public void setScheduled(boolean scheduled) {
-        this.scheduled = scheduled;
-    }
-
-    public void syncMovies() {
+    @Override
+    public Tuple<Long, Long> syncInternal() {
         Tuple<Long, Long> countTotal = Tuple.tuple(0L, 0L);
-        long time = System.currentTimeMillis();
-        log.info("Starting OMDB sync");
         List<String> keys = new ArrayList<>(genreByIdMap.keySet());
         Collections.shuffle(keys);
         for (String genreId : keys) {
             Tuple<Integer, Integer> count = syncByGenre(genreId.trim(), genreByIdMap.get(genreId).trim());
             countTotal = Tuple.tuple(countTotal.v1() + count.v1(), countTotal.v2() + count.v2());
         }
-        log.info("Sync complete, syncedCount={}, failedCount={}, took {} millis",
-            countTotal.v1(), countTotal.v2(), System.currentTimeMillis() - time);
+        return countTotal;
     }
 
     public void syncMovie(Long id) {
@@ -135,7 +118,7 @@ public class OmdbSyncService {
         return StringUtils.isEmpty(value) ? 0f : value.equalsIgnoreCase(OMDB_UNAVAILABLE_TAG) ? 0f : Float.valueOf(value);
     }
 
-    private static Long toLong(String value) {
+    private Long toLong(String value) {
         if (StringUtils.isEmpty(value) || value.equalsIgnoreCase(OMDB_UNAVAILABLE_TAG)) {
             return 0L;
         }
@@ -204,12 +187,5 @@ public class OmdbSyncService {
             omdbBuilder.setTypeMovie();
         }
         return omdbApi.getInfo(omdbBuilder.build());
-    }
-
-    @Scheduled(fixedDelay = 1000 * 60 * 10 /* 10 minutes */)
-    public void syncMoviesScheduled() {
-        if (scheduled) {
-            syncMovies();
-        }
     }
 }
