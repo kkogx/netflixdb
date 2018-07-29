@@ -15,6 +15,8 @@ import { VideoService } from './video.service';
     templateUrl: './video.component.html'
 })
 export class VideoComponent implements OnInit, OnDestroy {
+    runtimeSortAttrs: Array<String> = ['title', 'fwebTitle', 'genre'];
+
     videos: IVideo[];
     currentAccount: any;
     eventSubscriber: Subscription;
@@ -26,6 +28,7 @@ export class VideoComponent implements OnInit, OnDestroy {
     reverse: any;
     totalItems: number;
     currentSearch: string;
+    runtimeSort: boolean;
 
     constructor(
         private videoService: VideoService,
@@ -135,7 +138,7 @@ export class VideoComponent implements OnInit, OnDestroy {
     }
 
     sort() {
-        if (this.predicate != null) {
+        if (this.predicate != null && !this.runtimeSortAttrs.find(value => value === this.predicate)) {
             const result = [this.predicate + ',' + (this.reverse ? 'asc' : 'desc')];
             if (this.predicate !== 'id') {
                 result.push('id');
@@ -148,6 +151,17 @@ export class VideoComponent implements OnInit, OnDestroy {
     private paginateVideos(data: IVideo[], headers: HttpHeaders) {
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
+        if (this.predicate != null && this.runtimeSortAttrs.find(value => value === this.predicate)) {
+            data.sort((a, b) => {
+                if (a[this.predicate] > b[this.predicate]) {
+                    return this.reverse ? -1 : 1;
+                } else if (a[this.predicate] < b[this.predicate]) {
+                    return this.reverse ? 1 : -1;
+                } else {
+                    return 0;
+                }
+            });
+        }
         for (let i = 0; i < data.length; i++) {
             this.videos.push(data[i]);
         }
