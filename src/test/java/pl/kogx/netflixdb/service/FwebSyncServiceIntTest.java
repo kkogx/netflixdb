@@ -28,7 +28,7 @@ public class FwebSyncServiceIntTest {
 
     @Test
     public void test() {
-        fwebSyncService.syncMovies();
+        fwebSyncService.sync();
     }
 
     @Test

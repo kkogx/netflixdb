@@ -28,7 +28,7 @@ public class OmdbSyncServiceIntTest {
 
     @Test
     public void test() {
-        omdbSyncService.syncMovies();
+        omdbSyncService.sync();
     }
 
     @Test
