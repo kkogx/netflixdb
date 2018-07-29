@@ -27,7 +27,6 @@ public class NetflixSyncServiceIntTest {
 
     @Test
     public void test() {
-        System.out.println("Test!");
-        netflixSyncService.syncMovies();
+        netflixSyncService.sync();
     }
 }
