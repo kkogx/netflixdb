@@ -27,7 +27,7 @@ spring:
             enabled: false
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:mysql://serwer1817841.home.pl/sql:3306/netflixdb?useUnicode=true&characterEncoding=utf8&useSSL=false
+        url: jdbc:mysql://serwer1817841.home.pl/sql:3306/28239978_netflixdb?useUnicode=true&characterEncoding=utf8&useSSL=false
         username: 28239978_netflixdb
         password: ***REMOVED***!
         hikari:
