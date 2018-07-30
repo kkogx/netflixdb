@@ -1,9 +1,12 @@
 package pl.kogx.netflixdb.web.rest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +14,9 @@ import pl.kogx.netflixdb.security.AuthoritiesConstants;
 import pl.kogx.netflixdb.service.fwebsync.FwebSyncService;
 import pl.kogx.netflixdb.service.netflixsync.NetflixSyncService;
 import pl.kogx.netflixdb.service.omdbsync.OmdbSyncService;
+import pl.kogx.netflixdb.service.sync.AbstractSyncService;
+
+import java.util.Optional;
 
 /**
  * REST controller for managing sync service.
@@ -33,27 +39,59 @@ public class SyncController {
         this.fwebSyncService = fwebSyncService;
     }
 
-    @PostMapping("/sync/netflix/all")
-    @Async
-    @Secured(AuthoritiesConstants.ADMIN)
-    public Runnable syncNetflix() {
-        log.debug("Netflix sync");
-        return () -> netflixSyncService.sync();
+    Optional<AbstractSyncService> getServiceForType(String type) {
+        if (StringUtils.isNotEmpty(type)) {
+            switch (type) {
+                case "netflix":
+                    return Optional.of(netflixSyncService);
+                case "imdb":
+                case "omdb":
+                    return Optional.of(omdbSyncService);
+                case "fweb":
+                case "filmweb":
+                    return Optional.of(fwebSyncService);
+            }
+        }
+        return Optional.empty();
     }
 
-    @PostMapping("/sync/imdb/all")
+    @PostMapping("/sync/{type}/all")
     @Async
     @Secured(AuthoritiesConstants.ADMIN)
-    public Runnable syncImdb() {
-        log.debug("Imdb sync");
-        return () -> omdbSyncService.sync();
+    public Runnable sync(@PathVariable("type") String type) {
+        Optional<AbstractSyncService> service = getServiceForType(type);
+        return service.isPresent() ? null : () -> service.get().sync();
     }
 
-    @PostMapping("/sync/filmweb/all")
-    @Async
+    @PostMapping("/sync/{type}/stop")
     @Secured(AuthoritiesConstants.ADMIN)
-    public Runnable syncFilmweb() {
-        log.debug("Netflix sync");
-        return () -> fwebSyncService.sync();
+    public ResponseEntity<String> stop(@PathVariable("type") String type) {
+        Optional<AbstractSyncService> service = getServiceForType(type);
+        return stop(service);
+    }
+
+    @PostMapping("/sync/{type}/status")
+    @Secured(AuthoritiesConstants.ADMIN)
+    public ResponseEntity<String> status(@PathVariable("type") String type) {
+        Optional<AbstractSyncService> service = getServiceForType(type);
+        return status(service);
+    }
+
+    private ResponseEntity<String> stop(Optional<AbstractSyncService> optionalService) {
+        if (optionalService.isPresent()) {
+            optionalService.get().stop();
+        }
+        return status(optionalService);
+    }
+
+    private ResponseEntity<String> status(Optional<AbstractSyncService> optionalService) {
+        if (optionalService.isPresent()) {
+            AbstractSyncService service = optionalService.get();
+            if (service.isRunning()) {
+                return ResponseEntity.ok("running");
+            }
+            return ResponseEntity.ok("not running");
+        }
+        return ResponseEntity.notFound().build();
     }
 }

@@ -28,6 +28,10 @@ public abstract class AbstractSyncService {
         this.genreByIdMap = ApplicationProperties.getGenreByIdMap(applicationProperties);
     }
 
+    public boolean isRunning() {
+        return this.execute;
+    }
+
     public void stop() {
         this.execute = false;
     }
