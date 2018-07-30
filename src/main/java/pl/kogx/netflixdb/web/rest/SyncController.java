@@ -59,6 +59,7 @@ public class SyncController {
     @Async
     @Secured(AuthoritiesConstants.ADMIN)
     public Runnable sync(@PathVariable("type") String type) {
+        log.info("all");
         Optional<AbstractSyncService> service = getServiceForType(type);
         return service.isPresent() ? null : () -> service.get().sync();
     }
@@ -66,6 +67,7 @@ public class SyncController {
     @PostMapping("/sync/{type}/stop")
     @Secured(AuthoritiesConstants.ADMIN)
     public ResponseEntity<String> stop(@PathVariable("type") String type) {
+        log.info("stop");
         Optional<AbstractSyncService> service = getServiceForType(type);
         return stop(service);
     }
@@ -73,6 +75,7 @@ public class SyncController {
     @PostMapping("/sync/{type}/status")
     @Secured(AuthoritiesConstants.ADMIN)
     public ResponseEntity<String> status(@PathVariable("type") String type) {
+        log.info("status");
         Optional<AbstractSyncService> service = getServiceForType(type);
         return status(service);
     }
