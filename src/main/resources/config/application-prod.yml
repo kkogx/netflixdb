@@ -15,9 +15,9 @@
 
 logging:
     level:
-        ROOT: DEBUG
-        pl.kogx.netflixdb: DEBUG
-        io.github.jhipster: DEBUG
+        ROOT: INFO
+        pl.kogx.netflixdb: INFO
+        io.github.jhipster: INFO
 
 spring:
     devtools:
