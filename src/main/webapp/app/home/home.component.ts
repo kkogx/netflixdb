@@ -3,6 +3,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { LoginModalService, Principal, Account } from 'app/core';
+import { ProfileService } from 'app/layouts/profiles/profile.service';
 
 @Component({
     selector: 'jhi-home',
@@ -12,14 +13,23 @@ import { LoginModalService, Principal, Account } from 'app/core';
 export class HomeComponent implements OnInit {
     account: Account;
     modalRef: NgbModalRef;
+    registrationOpen: boolean;
 
-    constructor(private principal: Principal, private loginModalService: LoginModalService, private eventManager: JhiEventManager) {}
+    constructor(
+        private principal: Principal,
+        private loginModalService: LoginModalService,
+        private eventManager: JhiEventManager,
+        private profileService: ProfileService
+    ) {}
 
     ngOnInit() {
         this.principal.identity().then(account => {
             this.account = account;
         });
         this.registerAuthenticationSuccess();
+        this.profileService.getProfileInfo().then(profileInfo => {
+            this.registrationOpen = !profileInfo.registrationClosed;
+        });
     }
 
     registerAuthenticationSuccess() {

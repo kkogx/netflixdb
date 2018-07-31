@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { User, UserService } from 'app/core';
+import { JhiLanguageHelper, User, UserService } from 'app/core';
 
 @Component({
     selector: 'jhi-user-mgmt-update',
@@ -13,7 +13,12 @@ export class UserMgmtUpdateComponent implements OnInit {
     authorities: any[];
     isSaving: boolean;
 
-    constructor(private userService: UserService, private route: ActivatedRoute, private router: Router) {}
+    constructor(
+        private languageHelper: JhiLanguageHelper,
+        private userService: UserService,
+        private route: ActivatedRoute,
+        private router: Router
+    ) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -23,6 +28,9 @@ export class UserMgmtUpdateComponent implements OnInit {
         this.authorities = [];
         this.userService.authorities().subscribe(authorities => {
             this.authorities = authorities;
+        });
+        this.languageHelper.getAll().then(languages => {
+            this.languages = languages;
         });
     }
 
@@ -35,7 +43,6 @@ export class UserMgmtUpdateComponent implements OnInit {
         if (this.user.id !== null) {
             this.userService.update(this.user).subscribe(response => this.onSaveSuccess(response), () => this.onSaveError());
         } else {
-            this.user.langKey = 'en';
             this.userService.create(this.user).subscribe(response => this.onSaveSuccess(response), () => this.onSaveError());
         }
     }

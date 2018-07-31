@@ -30,6 +30,8 @@ export class ProfileService {
                             pi.inProduction = pi.activeProfiles.includes('prod');
                             pi.swaggerEnabled = pi.activeProfiles.includes('swagger');
                         }
+                        const registrationClosed = data['registrationClosed'];
+                        pi.registrationClosed = Boolean(registrationClosed);
                         return pi;
                     })
                 )
