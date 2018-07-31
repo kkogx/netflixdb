@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 
-import { NetflixdbSharedLibsModule, JhiAlertComponent, JhiAlertErrorComponent } from './';
+import { FindLanguageFromKeyPipe, JhiAlertComponent, JhiAlertErrorComponent, NetflixdbSharedLibsModule } from './';
 
 @NgModule({
     imports: [NetflixdbSharedLibsModule],
-    declarations: [JhiAlertComponent, JhiAlertErrorComponent],
-    exports: [NetflixdbSharedLibsModule, JhiAlertComponent, JhiAlertErrorComponent]
+    declarations: [FindLanguageFromKeyPipe, JhiAlertComponent, JhiAlertErrorComponent],
+    exports: [NetflixdbSharedLibsModule, FindLanguageFromKeyPipe, JhiAlertComponent, JhiAlertErrorComponent]
 })
 export class NetflixdbSharedCommonModule {}
