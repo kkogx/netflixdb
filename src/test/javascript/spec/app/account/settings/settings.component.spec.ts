@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
-import { Observable, throwError } from 'rxjs';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { throwError } from 'rxjs';
 
 import { NetflixdbTestModule } from '../../../test.module';
-import { Principal, AccountService } from 'app/core';
+import { AccountService, Principal } from 'app/core';
 import { SettingsComponent } from 'app/account/settings/settings.component';
 
 describe('Component Tests', () => {
@@ -12,15 +12,17 @@ describe('Component Tests', () => {
         let mockAuth: any;
         let mockPrincipal: any;
 
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [NetflixdbTestModule],
-                declarations: [SettingsComponent],
-                providers: []
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    imports: [NetflixdbTestModule],
+                    declarations: [SettingsComponent],
+                    providers: []
+                })
+                    .overrideTemplate(SettingsComponent, '')
+                    .compileComponents();
             })
-                .overrideTemplate(SettingsComponent, '')
-                .compileComponents();
-        }));
+        );
 
         beforeEach(() => {
             fixture = TestBed.createComponent(SettingsComponent);
@@ -37,7 +39,7 @@ describe('Component Tests', () => {
 
                 activated: true,
                 email: 'john.doe@mail.com',
-                langKey: 'en',
+                langKey: 'pl',
                 login: 'john'
             };
             mockPrincipal.setResponse(accountValues);
