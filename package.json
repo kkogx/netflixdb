@@ -1,3 +1,4 @@
+
 {
   "name": "netflixdb",
   "version": "0.0.0",
@@ -31,7 +32,7 @@
     "rxjs": "6.1.0",
     "rxjs-compat": "6.1.0",
     "swagger-ui": "2.2.10",
-    "tslib": "^1.9.0",
+    "tslib": "1.9.0",
     "zone.js": "0.8.26"
   },
   "devDependencies": {
@@ -53,11 +54,12 @@
     "file-loader": "1.1.11",
     "fork-ts-checker-webpack-plugin": "0.4.1",
     "friendly-errors-webpack-plugin": "1.7.0",
-    "generator-jhipster": "5.0.2",
+    "generator-jhipster": "5.1.0",
     "html-loader": "0.5.5",
     "html-webpack-plugin": "3.2.0",
     "husky": "0.14.3",
     "jest": "22.4.3",
+    "jest-junit": "5.1.0",
     "jest-preset-angular": "5.2.2",
     "jest-sonar-reporter": "2.0.0",
     "lint-staged": "7.0.0",
@@ -122,6 +124,6 @@
   },
   "jestSonar": {
     "reportPath": "target/test-results/jest",
-    "reportFile": "TESTS-results.xml"
+    "reportFile": "TESTS-results-sonar.xml"
   }
 }
