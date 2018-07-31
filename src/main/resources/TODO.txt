@@ -1,9 +1,11 @@
-- improved security (disable elastic and kibana ports)
-go prod
-- registration disabled msg
-- i8n support
-- frontend
+- search criteria
+- frontend for mobile
 - improve result filtering (year distance)
+- live search
 
 Done
 - add rest service for manual sync
+- improved security (disable elastic and kibana ports)
+- go prod
+- registration disabled msg
+- i8n support
