@@ -1,9 +1,9 @@
 - improved security (disable elastic and kibana ports)
 go prod
+- registration disabled msg
+- i8n support
 - frontend
 - improve result filtering (year distance)
-- international support
-- i8n support
 
 Done
 - add rest service for manual sync
