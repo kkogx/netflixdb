@@ -3,22 +3,18 @@
         <span class="netflixdb img-fluid rounded"></span>
     </div>
     <div class="col-md-9">
-        <h1 class="display-4">Welcome to Netflixdb!</h1>
-        <p class="lead">An unofficial Netflix database</p>
+        <h1 class="display-4">Witaj w Netflixdb!</h1>
+        <p class="lead">Nieoficialny katalog polskiego Netflixa</p>
 
         <div [ngSwitch]="isAuthenticated()">
             <div class="alert alert-success" *ngSwitchCase="true">
                 <span *ngIf="account"
-                   > You are logged in as user "{{account.login}}". </span>
+                > Zalogowałeś się jako "{{account.login}}". </span>
             </div>
 
             <div class="alert alert-info" *ngSwitchCase="false">
-                <span>If you want to </span>
-                <a class="alert-link" (click)="login()">sign in</a><span>, you can try the default accounts:<br/>- Administrator (login="admin" and password="admin") <br/>- User (login="user" and password="user").</span>
-            </div>
-            <div class="alert alert-info" *ngSwitchCase="false">
-                <span>You don't have an account yet?</span>&nbsp;
-                <a class="alert-link" routerLink="register">Register a new account</a>
+                <span>Nie masz jeszcze konta?</span>&nbsp;
+                <a class="alert-link" routerLink="register">Zarejestruj się</a>
             </div>
         </div>
     </div>

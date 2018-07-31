@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 import { VERSION } from 'app/app.constants';
-import { Principal, LoginModalService, LoginService } from 'app/core';
+import { LoginModalService, LoginService, Principal } from 'app/core';
 import { ProfileService } from '../profiles/profile.service';
 
 @Component({
@@ -18,6 +18,7 @@ export class NavbarComponent implements OnInit {
     swaggerEnabled: boolean;
     modalRef: NgbModalRef;
     version: string;
+    registrationOpen: boolean;
 
     constructor(
         private loginService: LoginService,
@@ -28,6 +29,7 @@ export class NavbarComponent implements OnInit {
     ) {
         this.version = VERSION ? 'v' + VERSION : '';
         this.isNavbarCollapsed = true;
+        this.registrationOpen = false;
     }
 
     ngOnInit() {
