@@ -55,13 +55,15 @@ public class SyncController {
         return Optional.empty();
     }
 
-    @PostMapping("/sync/{type}/all")
     @Async
+    @PostMapping("/sync/{type}/all")
     @Secured(AuthoritiesConstants.ADMIN)
-    public Runnable sync(@PathVariable("type") String type) {
+    public void sync(@PathVariable("type") String type) {
         log.info("all");
         Optional<AbstractSyncService> service = getServiceForType(type);
-        return service.isPresent() ? null : () -> service.get().sync();
+        if (service.isPresent()) {
+            service.get().sync();
+        }
     }
 
     @PostMapping("/sync/{type}/stop")

@@ -13,6 +13,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.context.SecurityContextHolder;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.config.DefaultProfileUtil;
 import pl.kogx.netflixdb.service.fwebsync.FwebSyncService;
@@ -67,6 +68,8 @@ public class NetflixdbApp implements ApplicationRunner {
             log.error("You have misconfigured your application! It should not " +
                 "run with both the 'dev' and 'cloud' profiles at the same time.");
         }
+
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); //allows for security context inheritance in async methods
     }
 
     /**
