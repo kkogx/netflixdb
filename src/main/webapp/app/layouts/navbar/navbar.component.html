@@ -145,7 +145,7 @@
                             <span>Sign in</span>
                         </a>
                     </li>
-                    <li *ngSwitchCase="false">
+                    <li *ngIf="!isAuthenticated() && registrationOpen">
                         <a class="dropdown-item" routerLink="register" routerLinkActive="active" (click)="collapseNavbar()">
                             <fa-icon [icon]="'user-plus'" [fixedWidth]="true"></fa-icon>
                             <span>Register</span>
