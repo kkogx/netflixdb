@@ -346,13 +346,17 @@
             <version>1.6-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>info.talacha</groupId>
+        <groupId>info.talacha</groupId>
             <artifactId>FilmwebApi</artifactId>
-            <version>0.3.5</version>
+            <version>0.3.8</version>
             <exclusions>
                 <exclusion>
                     <groupId>ch.qos.logback</groupId>
-                    <artifactId>*</artifactId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
