@@ -87,7 +87,7 @@ jhipster:
         #allow-credentials: true
         #max-age: 1800
     mail:
-        from: netflixdb@localhost
+        from: admin@netflixdb.pl
     swagger:
         default-include-pattern: /api/.*
         title: netflixdb API
