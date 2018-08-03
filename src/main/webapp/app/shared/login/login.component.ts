@@ -5,6 +5,7 @@ import { JhiEventManager } from 'ng-jhipster';
 
 import { LoginService } from 'app/core/login/login.service';
 import { StateStorageService } from 'app/core/auth/state-storage.service';
+import { ProfileService } from 'app/layouts/profiles/profile.service';
 
 @Component({
     selector: 'jhi-login-modal',
@@ -16,6 +17,7 @@ export class JhiLoginModalComponent implements AfterViewInit {
     rememberMe: boolean;
     username: string;
     credentials: any;
+    registrationOpen: boolean;
 
     constructor(
         private eventManager: JhiEventManager,
@@ -24,9 +26,16 @@ export class JhiLoginModalComponent implements AfterViewInit {
         private elementRef: ElementRef,
         private renderer: Renderer,
         private router: Router,
+        private profileService: ProfileService,
         public activeModal: NgbActiveModal
     ) {
         this.credentials = {};
+    }
+
+    ngOnInit() {
+        this.profileService.getProfileInfo().then(profileInfo => {
+            this.registrationOpen = !profileInfo.registrationClosed;
+        });
     }
 
     ngAfterViewInit() {

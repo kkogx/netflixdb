@@ -58,10 +58,10 @@ spring:
     liquibase:
         contexts: dev
     mail:
-        host: localhost
-        port: 25
-        username:
-        password:
+        host: serwer1817841.home.pl
+        port: 587
+        username: admin@netflixdb.pl
+        password: 753dfxnetflixdb
     messages:
         cache-duration: PT1S # 1 second, see the ISO 8601 standard
     thymeleaf:
@@ -87,6 +87,10 @@ spring:
 server:
     port: 8080
 
+# Properties to be exposed on the /info management endpoint
+info:
+    # Comma separated list of profiles that will trigger the ribbon to show
+    registrationClosed: false
 # ===================================================================
 # JHipster specific properties
 #
@@ -112,7 +116,7 @@ jhipster:
                 token-validity-in-seconds: 86400
                 token-validity-in-seconds-for-remember-me: 2592000
     mail: # specific JHipster mail property, for standard properties see MailProperties
-        from: netflixdb@localhost
+        from: admin@netflixdb.pl
         base-url: http://127.0.0.1:8080
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx:
