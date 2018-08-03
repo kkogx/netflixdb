@@ -7,7 +7,7 @@
             },
             "messages": {
                 "info": "Wpisz email użyty podczas rejestracji.",
-                "success": "Sprawdź email w celu uzyskania szczegołów jak zresetować hasło.",
+                "success": "Sprawdź email w celu uzyskania szczegołów jak zresetować hasło (również katalog ze spamem).",
                 "notfound": "<strong>Email nie był zarejestrowany!</strong> Proszę sprawdź i spróbuj ponownie."
             }
         },
