@@ -27,9 +27,9 @@ spring:
             enabled: false
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:mysql://serwer1817841.home.pl:3306/28239978_netflixdb?useUnicode=true&characterEncoding=utf8&useSSL=false
-        username: 28239978_netflixdb
-        password: ***REMOVED***!
+        url: jdbc:mysql://localhost:3306/root?useUnicode=true&characterEncoding=utf8&useSSL=false
+        username: root
+        password: ***REMOVED***
         hikari:
             data-source-properties:
                 cachePrepStmts: true
@@ -53,7 +53,7 @@ spring:
         contexts: prod
     mail:
         host: serwer1817841.home.pl
-        port: 587
+        port: 25
         username: admin@netflixdb.pl
         password: ***REMOVED***
     thymeleaf:
