@@ -52,10 +52,10 @@ spring:
     liquibase:
         contexts: prod
     mail:
-        host: localhost
-        port: 25
-        username:
-        password:
+        host: serwer1817841.home.pl
+        port: 587
+        username: admin@netflixdb.pl
+        password: ***REMOVED***
     thymeleaf:
         cache: true
 
