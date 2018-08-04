@@ -6,15 +6,15 @@
             "fwebtitle": "Tytuł",
             "releaseyear": "Rok",
             "genre": "Gatunek",
-            "fwebrating": "Filmweb ranking",
+            "fwebrating": "Filmweb ocena",
             "fwebvotes": "Filmweb głosy",
-            "imdbrating": "Imdb ranking",
+            "imdbrating": "Imdb ocena",
             "imdbvotes": "Imdb głosy"
         },
         "filter": {
-            "fwebvotesmin": "Głosy Filmweb od",
+            "fwebvotesmin": "Filmweb głosy od",
             "fwebvotesmax": "do",
-            "imdbvotesmin": "Głosy Imdb od",
+            "imdbvotesmin": "Imdb głosy od",
             "imdbvotesmax": "do",
             "genre": "Gatunek",
             "type": "Typ"
