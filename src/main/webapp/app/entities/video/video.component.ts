@@ -28,7 +28,6 @@ export class VideoComponent implements OnInit, OnDestroy {
     reverse: any;
     totalItems: number;
     currentSearch: string;
-    runtimeSort: boolean;
 
     constructor(
         private videoService: VideoService,

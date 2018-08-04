@@ -1,7 +1,7 @@
 {
     "home": {
         "title": "Welcome to Netflixdb!!",
-        "subtitle": "An unofficial database of Polish Netflix",
+        "subtitle": "An unofficial Polish Netflix database",
         "logged": {
             "message": "You are logged in as user \"{{username}}\"."
         },

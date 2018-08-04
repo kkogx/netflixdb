@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Renderer, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, Renderer, ElementRef, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { JhiEventManager } from 'ng-jhipster';
@@ -11,7 +11,7 @@ import { ProfileService } from 'app/layouts/profiles/profile.service';
     selector: 'jhi-login-modal',
     templateUrl: './login.component.html'
 })
-export class JhiLoginModalComponent implements AfterViewInit {
+export class JhiLoginModalComponent implements AfterViewInit, OnInit {
     authenticationError: boolean;
     password: string;
     rememberMe: boolean;
