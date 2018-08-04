@@ -57,7 +57,7 @@ public class SyncController {
 
     @Async
     @PostMapping("/sync/{type}/all")
-    @Secured(AuthoritiesConstants.ADMIN)
+    //@Secured(AuthoritiesConstants.ADMIN)
     public void sync(@PathVariable("type") String type) {
         log.info("all");
         Optional<AbstractSyncService> service = getServiceForType(type);

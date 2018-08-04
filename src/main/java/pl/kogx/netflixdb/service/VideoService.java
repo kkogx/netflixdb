@@ -1,5 +1,9 @@
 package pl.kogx.netflixdb.service;
 
+import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,6 +15,7 @@ import pl.kogx.netflixdb.repository.search.VideoSearchRepository;
 import pl.kogx.netflixdb.service.dto.VideoDTO;
 import pl.kogx.netflixdb.service.util.NullAwareBeanUtilsBean;
 
+import javax.management.Query;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -102,5 +107,36 @@ public class VideoService {
     public Page<Video> search(String query, Pageable pageable) {
         log.debug("Request to search for a page of Videos for query {}", query);
         return videoSearchRepository.search(queryStringQuery(query), pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Video> search(String query, Integer fwebMin, Integer fwebMax, Integer imdbMin, Integer imdbMax, Pageable pageable) {
+        log.debug("Request to search for a page of Videos for query={} fs={} fx={} is={} ix={}", query, fwebMin, fwebMax, imdbMin, imdbMax);
+        BoolQueryBuilder builder = QueryBuilders.boolQuery();
+        if (StringUtils.isEmpty(query)) {
+            query = "*";
+        }
+        builder = builder.must(queryStringQuery(query).field("fwebTitle").field("title"));
+        if (fwebMin > 0 || fwebMax > 0) {
+            RangeQueryBuilder fwebVotesBuilder = QueryBuilders.rangeQuery("fwebVotes");
+            if (fwebMin > 0) {
+                fwebVotesBuilder = fwebVotesBuilder.gte(fwebMin);
+            }
+            if (fwebMax > 0) {
+                fwebVotesBuilder = fwebVotesBuilder.lte(fwebMax);
+            }
+            builder = builder.must(fwebVotesBuilder);
+        }
+        if (imdbMin > 0 || imdbMax > 0) {
+            RangeQueryBuilder imdbVotesBuilder = QueryBuilders.rangeQuery("imdbVotes");
+            if (imdbMin > 0) {
+                imdbVotesBuilder = imdbVotesBuilder.gte(imdbMin);
+            }
+            if (imdbMax > 0) {
+                imdbVotesBuilder = imdbVotesBuilder.lte(imdbMax);
+            }
+            builder = builder.must(imdbVotesBuilder);
+        }
+        return videoSearchRepository.search(builder, pageable);
     }
 }

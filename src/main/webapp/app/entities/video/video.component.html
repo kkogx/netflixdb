@@ -29,24 +29,24 @@
                         <span class="input-group-text" jhiTranslate="videos.filter.fwebvotesmin">FilmWeb votes min</span>
                     </div>
                     <input type="number" class="form-control" name="fweb-vote-min" [(ngModel)]="fwebVoteMin"
-                           (ngModelChange)="updateSearchParams()" (blur)="search(currentSearch)"/>
+                           (keyup.enter)="searchBlurMin(currentSearch)" (blur)="searchBlurMin(currentSearch)"/>
                     <div class="input-group-append">
                         <span class="input-group-text" jhiTranslate="videos.filter.fwebvotesmax">max</span>
                     </div>
                     <input type="number" class="form-control" name="fweb-vote-max" [(ngModel)]="fwebVoteMax"
-                           (ngModelChange)="updateSearchParams()" (blur)="search(currentSearch)"/>
+                           (keyup.enter)="searchBlurMax(currentSearch)" (blur)="searchBlurMax(currentSearch)"/>
                 </div>
                 <div class="input-group ml-3 mt-3 mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" jhiTranslate="videos.filter.imdbvotesmin">Imdb votes min</span>
                     </div>
                     <input type="number" class="form-control" name="imdb-vote-min" [(ngModel)]="imdbVoteMin"
-                           (ngModelChange)="updateSearchParams()" (blur)="search(currentSearch)"/>
+                           (keyup.enter)="searchBlurMin(currentSearch)" (blur)="searchBlurMin(currentSearch)"/>
                     <div class="input-group-append">
                         <span class="input-group-text" jhiTranslate="videos.filter.imdbvotesmax">max</span>
                     </div>
                     <input type="number" class="form-control" name="imdb-vote-max" [(ngModel)]="imdbVoteMax"
-                           (ngModelChange)="updateSearchParams()" (blur)="search(currentSearch)"/>
+                           (keyup.enter)="searchBlurMax(currentSearch)" (blur)="searchBlurMax(currentSearch)"/>
                 </div>
             </form>
         </div>

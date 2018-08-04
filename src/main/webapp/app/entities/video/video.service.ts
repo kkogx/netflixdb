@@ -12,7 +12,7 @@ type EntityArrayResponseType = HttpResponse<IVideo[]>;
 @Injectable({ providedIn: 'root' })
 export class VideoService {
     private resourceUrl = SERVER_API_URL + 'api/videos';
-    private resourceSearchUrl = SERVER_API_URL + 'api/_search/videos';
+    private resourceSearchUrl = SERVER_API_URL + 'api/_search/videos/range';
 
     constructor(private http: HttpClient) {}
 
