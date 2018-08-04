@@ -1,5 +1,7 @@
 package pl.kogx.netflixdb.config;
 
+import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
+import org.springframework.security.core.context.SecurityContextHolder;
 import pl.kogx.netflixdb.security.*;
 import pl.kogx.netflixdb.security.jwt.*;
 
@@ -120,5 +122,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private JWTConfigurer securityConfigurerAdapter() {
         return new JWTConfigurer(tokenProvider);
+    }
+
+
+    @Bean
+    public MethodInvokingFactoryBean methodInvokingFactoryBean() {
+        MethodInvokingFactoryBean methodInvokingFactoryBean = new MethodInvokingFactoryBean();
+        methodInvokingFactoryBean.setTargetClass(SecurityContextHolder.class);
+        methodInvokingFactoryBean.setTargetMethod("setStrategyName");
+        methodInvokingFactoryBean.setArguments(new String[]{SecurityContextHolder.MODE_INHERITABLETHREADLOCAL});
+        return methodInvokingFactoryBean;
     }
 }

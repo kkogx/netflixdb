@@ -10,6 +10,14 @@
             "fwebvotes": "Filmweb głosy",
             "imdbrating": "Imdb ranking",
             "imdbvotes": "Imdb głosy"
+        },
+        "filter": {
+            "fwebvotesmin": "Głosy Filmweb od",
+            "fwebvotesmax": "do",
+            "imdbvotesmin": "Głosy Imdb od",
+            "imdbvotesmax": "do",
+            "genre": "Gatunek",
+            "type": "Typ"
         }
     }
 }
