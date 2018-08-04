@@ -3,6 +3,8 @@ package pl.kogx.netflixdb.service.dto;
 import org.springframework.format.annotation.NumberFormat;
 import pl.kogx.netflixdb.domain.Video;
 
+import java.text.DecimalFormat;
+
 /**
  * A DTO representing a video, with his authorities.
  */
@@ -65,7 +67,7 @@ public class VideoDTO {
         this.omdbAvailable = video.getOmdbAvailable();
         this.fwebAvailable = video.getFwebAvailable();
         this.imdbRating = video.getImdbRating();
-        this.fwebRating = video.getFwebRating();
+        this.fwebRating = round(video.getFwebRating(), 1);
         this.imdbVotes = video.getImdbVotes();
         this.fwebVotes = video.getFwebVotes();
         this.metascore = video.getMetascore();
@@ -74,6 +76,14 @@ public class VideoDTO {
         this.imdbID = video.getImdbID();
         this.fwebID = video.getFwebID();
         this.fwebTitle = video.getFwebTitle();
+    }
+
+    private static Float round (Float value, int precision) {
+        if(value == null) {
+            return null;
+        }
+        int scale = (int) Math.pow(10, precision);
+        return (float) Math.round(value * scale) / scale;
     }
 
     public Long getId() {
