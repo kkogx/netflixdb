@@ -59,6 +59,10 @@ export class VideoComponent implements OnInit, OnDestroy {
             this.videoService
                 .search({
                     query: this.currentSearch,
+                    fwebMin: this.fwebVoteMin ? this.fwebVoteMin : 0,
+                    fwebMax: this.fwebVoteMax ? this.fwebVoteMax : -1,
+                    imdbMin: this.imdbVoteMin ? this.imdbVoteMin : 0,
+                    imdbMax: this.imdbVoteMax ? this.imdbVoteMax : -1,
                     page: this.page,
                     size: this.itemsPerPage,
                     sort: this.sort()
@@ -104,14 +108,43 @@ export class VideoComponent implements OnInit, OnDestroy {
         this.loadAll();
     }
 
-    updateSearchParams() {
-        this.fwebVoteMax = Math.max(this.fwebVoteMin, this.fwebVoteMax);
-        this.fwebVoteMin = Math.max(0, this.fwebVoteMin);
-        this.fwebVoteMax = Math.min(this.fwebVoteMax, 2000000);
+    private ensureRange(value: number): number {
+        value = Math.max(0, value);
+        value = Math.min(10000000, value);
+        if (value == 0) {
+            value = undefined;
+        }
+        return value;
+    }
 
-        this.imdbVoteMax = Math.max(this.imdbVoteMin, this.imdbVoteMax);
-        this.imdbVoteMin = Math.max(0, this.imdbVoteMin);
-        this.imdbVoteMax = Math.min(this.imdbVoteMax, 10000000);
+    private ensureRanges() {
+        this.fwebVoteMin = this.ensureRange(this.fwebVoteMin);
+        this.fwebVoteMax = this.ensureRange(this.fwebVoteMax);
+        this.imdbVoteMin = this.ensureRange(this.imdbVoteMin);
+        this.imdbVoteMax = this.ensureRange(this.imdbVoteMax);
+    }
+
+    // called whenever min search param is changed
+    public searchBlurMin(query) {
+        this.ensureRanges();
+        if (this.fwebVoteMax <= this.fwebVoteMin) {
+            this.fwebVoteMax = undefined;
+        }
+        if (this.imdbVoteMax <= this.imdbVoteMin) {
+            this.imdbVoteMax = undefined;
+        }
+        this.search(query);
+    }
+
+    public searchBlurMax(query) {
+        this.ensureRanges();
+        if (this.fwebVoteMin >= this.fwebVoteMax) {
+            this.fwebVoteMin = 0;
+        }
+        if (this.imdbVoteMin >= this.imdbVoteMax) {
+            this.imdbVoteMin = 0;
+        }
+        this.search(query);
     }
 
     search(query) {
