@@ -24,10 +24,13 @@ export class VideoComponent implements OnInit, OnDestroy {
     links: any;
     page: any;
     predicate: any;
-    queryCount: any;
     reverse: any;
     totalItems: number;
     currentSearch: string;
+    imdbVoteMin: number;
+    imdbVoteMax: number;
+    fwebVoteMin: number;
+    fwebVoteMax: number;
 
     constructor(
         private videoService: VideoService,
@@ -99,6 +102,16 @@ export class VideoComponent implements OnInit, OnDestroy {
         this.reverse = true;
         this.currentSearch = '';
         this.loadAll();
+    }
+
+    updateSearchParams() {
+        this.fwebVoteMax = Math.max(this.fwebVoteMin, this.fwebVoteMax);
+        this.fwebVoteMin = Math.max(0, this.fwebVoteMin);
+        this.fwebVoteMax = Math.min(this.fwebVoteMax, 2000000);
+
+        this.imdbVoteMax = Math.max(this.imdbVoteMin, this.imdbVoteMax);
+        this.imdbVoteMin = Math.max(0, this.imdbVoteMin);
+        this.imdbVoteMax = Math.min(this.imdbVoteMax, 10000000);
     }
 
     search(query) {
