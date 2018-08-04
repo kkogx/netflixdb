@@ -24,7 +24,7 @@
                         <fa-icon [icon]="'trash-alt'"></fa-icon>
                     </button>
                 </div>
-                <div class="input-group mt-3 mb-3">
+                <div class="input-group mt-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" jhiTranslate="videos.filter.fwebvotesmin">FilmWeb votes min</span>
                     </div>
@@ -36,7 +36,7 @@
                     <input type="number" class="form-control" name="fweb-vote-max" [(ngModel)]="fwebVoteMax"
                            (keyup.enter)="searchBlurMax(currentSearch)" (blur)="searchBlurMax(currentSearch)"/>
                 </div>
-                <div class="input-group ml-3 mt-3 mb-3">
+                <div class="input-group mt-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" jhiTranslate="videos.filter.imdbvotesmin">Imdb votes min</span>
                     </div>
@@ -56,7 +56,7 @@
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
-                <th jhiSortBy="id"><span>ID</span>
+                <th jhiSortBy="id"><span>Trailer</span>
                     <fa-icon [icon]="'sort'"></fa-icon>
                 </th>
                 <th jhiSortBy="title"><span jhiTranslate="videos.entity.title">Title</span>
@@ -89,7 +89,8 @@
             <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']"
                    [infiniteScrollDistance]="0">
             <tr *ngFor="let video of videos ;trackBy: trackId">
-                <td><a [routerLink]="['/video', video.id, 'view' ]">{{video.id}}</a></td>
+                <td><a href="https://www.youtube.com/results?search_query={{video.title}} {{video.releaseYear}} trailer">
+                    <img src="../../../content/images/youtube-play160.png" width="30" height="30"></a></td>
                 <td>{{video.title}}</td>
                 <td>{{video.fwebTitle}}</td>
                 <td>{{video.releaseYear}}</td>
@@ -100,7 +101,7 @@
                 <td>{{video.imdbVotes}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
-                        <button type="submit"
+                        <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"
                                 [routerLink]="['/video', video.id, 'view' ]"
                                 class="btn btn-info btn-sm">
                             <fa-icon [icon]="'eye'"></fa-icon>
