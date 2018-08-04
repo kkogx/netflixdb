@@ -1,0 +1,15 @@
+{
+    "videos": {
+        "title": "Katalog",
+        "entity": {
+            "title": "Tytuł EN",
+            "fwebtitle": "Tytuł",
+            "releaseyear": "Rok",
+            "genre": "Gatunek",
+            "fwebrating": "Filmweb ranking",
+            "fwebvotes": "Filmweb głosy",
+            "imdbrating": "Imdb ranking",
+            "imdbvotes": "Imdb głosy"
+        }
+    }
+}
