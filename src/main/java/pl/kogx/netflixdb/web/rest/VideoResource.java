@@ -20,6 +20,7 @@ import pl.kogx.netflixdb.web.rest.util.PaginationUtil;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,7 +43,8 @@ public class VideoResource {
     public VideoResource(VideoService videoService, ApplicationProperties properties) {
         this.videoService = videoService;
         this.genres = ApplicationProperties.getGenreByIdMap(properties).entrySet().stream()
-            .map(kv -> new Genre(Long.valueOf(kv.getKey()), kv.getValue())).collect(Collectors.toList());
+            .map(kv -> new Genre(Long.valueOf(kv.getKey()), kv.getValue()))
+            .sorted(Comparator.comparing(Genre::getName)).collect(Collectors.toList());
     }
 
     /**
@@ -152,9 +154,10 @@ public class VideoResource {
     public ResponseEntity<List<Video>> searchVideos(@RequestParam String query,
                                                     @RequestParam Integer fwebMin, @RequestParam Integer fwebMax,
                                                     @RequestParam Integer imdbMin, @RequestParam Integer imdbMax,
+                                                    @RequestParam Integer[] genres,
                                                     Pageable pageable) {
         log.debug("REST request to search for a page of Videos for query {}", query);
-        Page<Video> page = videoService.search(query, fwebMin, fwebMax, imdbMin, imdbMax, pageable);
+        Page<Video> page = videoService.search(query, fwebMin, fwebMax, imdbMin, imdbMax, genres, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/videos/range");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }

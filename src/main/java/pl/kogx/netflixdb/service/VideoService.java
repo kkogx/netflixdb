@@ -1,5 +1,6 @@
 package pl.kogx.netflixdb.service;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -15,7 +16,6 @@ import pl.kogx.netflixdb.repository.search.VideoSearchRepository;
 import pl.kogx.netflixdb.service.dto.VideoDTO;
 import pl.kogx.netflixdb.service.util.NullAwareBeanUtilsBean;
 
-import javax.management.Query;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -110,8 +110,8 @@ public class VideoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Video> search(String query, Integer fwebMin, Integer fwebMax, Integer imdbMin, Integer imdbMax, Pageable pageable) {
-        log.debug("Request to search for a page of Videos for query={} fs={} fx={} is={} ix={}", query, fwebMin, fwebMax, imdbMin, imdbMax);
+    public Page<Video> search(String query, Integer fwebMin, Integer fwebMax, Integer imdbMin, Integer imdbMax, Integer[] genres, Pageable pageable) {
+        log.debug("Request to search for a page of Videos for query={} fs={} fx={} is={} ix={} g={}", query, fwebMin, fwebMax, imdbMin, imdbMax, genres);
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
         if (StringUtils.isEmpty(query)) {
             query = "*";
@@ -136,6 +136,9 @@ public class VideoService {
                 imdbVotesBuilder = imdbVotesBuilder.lte(imdbMax);
             }
             builder = builder.must(imdbVotesBuilder);
+        }
+        if(!ArrayUtils.isEmpty(genres)) {
+                builder = builder.must(QueryBuilders.termsQuery("genreId", genres));
         }
         return videoSearchRepository.search(builder, pageable);
     }
