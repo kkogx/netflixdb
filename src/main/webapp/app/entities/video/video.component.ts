@@ -9,6 +9,7 @@ import { Principal } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
 import { VideoService } from './video.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'jhi-video',
@@ -31,6 +32,9 @@ export class VideoComponent implements OnInit, OnDestroy {
     imdbVoteMax: number;
     fwebVoteMin: number;
     fwebVoteMax: number;
+
+    genres: Observable<any[]>;
+    selectedGenres = [];
 
     constructor(
         private videoService: VideoService,
@@ -111,7 +115,7 @@ export class VideoComponent implements OnInit, OnDestroy {
     private ensureRange(value: number): number {
         value = Math.max(0, value);
         value = Math.min(10000000, value);
-        if (value == 0) {
+        if (value === 0) {
             value = undefined;
         }
         return value;
@@ -163,6 +167,8 @@ export class VideoComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.genres = this.videoService.genres();
+
         this.loadAll();
         this.principal.identity().then(account => {
             this.currentAccount = account;
@@ -208,6 +214,7 @@ export class VideoComponent implements OnInit, OnDestroy {
             });
         }
         for (let i = 0; i < data.length; i++) {
+            data[i].fwebRating = Math.round(data[i].fwebRating * 10) / 10;
             this.videos.push(data[i]);
         }
     }

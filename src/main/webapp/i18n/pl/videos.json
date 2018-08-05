@@ -16,7 +16,7 @@
             "fwebvotesmax": "do",
             "imdbvotesmin": "Imdb głosy od",
             "imdbvotesmax": "do",
-            "genre": "Gatunek",
+            "genres": "Gatunki",
             "type": "Typ"
         }
     }

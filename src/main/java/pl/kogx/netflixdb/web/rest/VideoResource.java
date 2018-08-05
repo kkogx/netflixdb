@@ -10,6 +10,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.kogx.netflixdb.config.ApplicationProperties;
+import pl.kogx.netflixdb.domain.Genre;
 import pl.kogx.netflixdb.domain.Video;
 import pl.kogx.netflixdb.service.VideoService;
 import pl.kogx.netflixdb.web.rest.errors.BadRequestAlertException;
@@ -20,6 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Video.
@@ -34,8 +37,12 @@ public class VideoResource {
 
     private final VideoService videoService;
 
-    public VideoResource(VideoService videoService) {
+    private final List<Genre> genres;
+
+    public VideoResource(VideoService videoService, ApplicationProperties properties) {
         this.videoService = videoService;
+        this.genres = ApplicationProperties.getGenreByIdMap(properties).entrySet().stream()
+            .map(kv -> new Genre(Long.valueOf(kv.getKey()), kv.getValue())).collect(Collectors.toList());
     }
 
     /**
@@ -152,4 +159,9 @@ public class VideoResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+    @GetMapping("/videos/genres")
+    public ResponseEntity<List<Genre>> getAllGenres() {
+        log.debug("REST request to get all genres");
+        return new ResponseEntity<>(genres, HttpStatus.OK);
+    }
 }
