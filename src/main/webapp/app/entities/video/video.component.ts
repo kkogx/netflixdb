@@ -10,6 +10,7 @@ import { Principal } from 'app/core';
 import { ITEMS_PER_PAGE } from 'app/shared';
 import { VideoService } from './video.service';
 import { Observable } from 'rxjs/Observable';
+import { IGenre } from 'app/shared/model/genre.model';
 
 @Component({
     selector: 'jhi-video',
@@ -33,8 +34,8 @@ export class VideoComponent implements OnInit, OnDestroy {
     fwebVoteMin: number;
     fwebVoteMax: number;
 
-    genres: Observable<any[]>;
-    selectedGenres = [];
+    genres: Observable<IGenre[]>;
+    selectedGenres: IGenre[] = [];
 
     constructor(
         private videoService: VideoService,
@@ -59,26 +60,14 @@ export class VideoComponent implements OnInit, OnDestroy {
     }
 
     loadAll() {
-        if (this.currentSearch) {
-            this.videoService
-                .search({
-                    query: this.currentSearch,
-                    fwebMin: this.fwebVoteMin ? this.fwebVoteMin : 0,
-                    fwebMax: this.fwebVoteMax ? this.fwebVoteMax : -1,
-                    imdbMin: this.imdbVoteMin ? this.imdbVoteMin : 0,
-                    imdbMax: this.imdbVoteMax ? this.imdbVoteMax : -1,
-                    page: this.page,
-                    size: this.itemsPerPage,
-                    sort: this.sort()
-                })
-                .subscribe(
-                    (res: HttpResponse<IVideo[]>) => this.paginateVideos(res.body, res.headers),
-                    (res: HttpErrorResponse) => this.onError(res.message)
-                );
-            return;
-        }
         this.videoService
-            .query({
+            .search({
+                query: this.currentSearch,
+                fwebMin: this.fwebVoteMin ? this.fwebVoteMin : 0,
+                fwebMax: this.fwebVoteMax ? this.fwebVoteMax : -1,
+                imdbMin: this.imdbVoteMin ? this.imdbVoteMin : 0,
+                imdbMax: this.imdbVoteMax ? this.imdbVoteMax : -1,
+                genres: this.selectedGenres.map(value => value.id),
                 page: this.page,
                 size: this.itemsPerPage,
                 sort: this.sort()
@@ -87,6 +76,17 @@ export class VideoComponent implements OnInit, OnDestroy {
                 (res: HttpResponse<IVideo[]>) => this.paginateVideos(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
+        return;
+        // this.videoService
+        //     .query({
+        //         page: this.page,
+        //         size: this.itemsPerPage,
+        //         sort: this.sort()
+        //     })
+        //     .subscribe(
+        //         (res: HttpResponse<IVideo[]>) => this.paginateVideos(res.body, res.headers),
+        //         (res: HttpErrorResponse) => this.onError(res.message)
+        //     );
     }
 
     reset() {
