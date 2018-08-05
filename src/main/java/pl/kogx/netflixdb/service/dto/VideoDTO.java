@@ -3,8 +3,6 @@ package pl.kogx.netflixdb.service.dto;
 import org.springframework.format.annotation.NumberFormat;
 import pl.kogx.netflixdb.domain.Video;
 
-import java.text.DecimalFormat;
-
 /**
  * A DTO representing a video, with his authorities.
  */
@@ -52,6 +50,8 @@ public class VideoDTO {
 
     private Long fwebID;
 
+    private String boxart;
+
     public VideoDTO() {
 
     }
@@ -76,6 +76,7 @@ public class VideoDTO {
         this.imdbID = video.getImdbID();
         this.fwebID = video.getFwebID();
         this.fwebTitle = video.getFwebTitle();
+        this.boxart = video.getBoxart();
     }
 
     private static Float round (Float value, int precision) {
@@ -236,6 +237,14 @@ public class VideoDTO {
 
     public void setFwebAvailable(Boolean fwebAvailable) {
         this.fwebAvailable = fwebAvailable;
+    }
+
+    public String getBoxart() {
+        return boxart;
+    }
+
+    public void setBoxart(String boxart) {
+        this.boxart = boxart;
     }
 
     @Override

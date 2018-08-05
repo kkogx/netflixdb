@@ -54,6 +54,8 @@ public class Video extends AbstractAuditingEntity implements Serializable {
 
     private Long fwebID;
 
+    private String boxart;
+
     public Video() {
     }
 
@@ -213,6 +215,14 @@ public class Video extends AbstractAuditingEntity implements Serializable {
         this.fwebTitle = fwebTitle;
     }
 
+    public String getBoxart() {
+        return boxart;
+    }
+
+    public void setBoxart(String boxart) {
+        this.boxart = boxart;
+    }
+
     @Override
     public String toString() {
         return "Video{" +
@@ -261,12 +271,13 @@ public class Video extends AbstractAuditingEntity implements Serializable {
             Objects.equals(tomatoRating, video.tomatoRating) &&
             Objects.equals(tomatoUserRating, video.tomatoUserRating) &&
             Objects.equals(imdbID, video.imdbID) &&
-            Objects.equals(fwebID, video.fwebID);
+            Objects.equals(fwebID, video.fwebID) &&
+            Objects.equals(boxart, video.boxart);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, title, fwebTitle, releaseYear, genre, genreId, original, type, omdbAvailable, fwebAvailable, imdbRating, fwebRating, imdbVotes, fwebVotes, metascore, tomatoRating, tomatoUserRating, imdbID, fwebID);
+        return Objects.hash(id, title, fwebTitle, releaseYear, genre, genreId, original, type, omdbAvailable, fwebAvailable, imdbRating, fwebRating, imdbVotes, fwebVotes, metascore, tomatoRating, tomatoUserRating, imdbID, fwebID, boxart);
     }
 }

@@ -1,3 +1,9 @@
 /* after changing this file run 'yarn run webpack:build' */
 @import 'bootstrap.min.css';
 @import 'ng.select.css';
+
+.boxart-171-96 {
+    width: 171px;
+    height: 96px;
+    background-size: 171px 96px;
+}

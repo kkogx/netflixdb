@@ -18,6 +18,7 @@ export interface IVideo {
     tomatoUserRating?: number;
     imdbID?: string;
     fwebID?: number;
+    boxart?: string;
 }
 
 export class Video implements IVideo {
@@ -40,7 +41,8 @@ export class Video implements IVideo {
         public tomatoRating?: number,
         public tomatoUserRating?: number,
         public imdbID?: string,
-        public fwebID?: number
+        public fwebID?: number,
+        public boxart?: string
     ) {
         this.original = false;
         this.omdbAvailable = false;
