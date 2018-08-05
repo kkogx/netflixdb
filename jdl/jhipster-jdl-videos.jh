@@ -17,7 +17,8 @@ entity Video {
     tomatoRating Float,
     tomatoUserRating Float,
     imdbID String,
-    fwebID Long
+    fwebID Long,
+    boxart String,
 }
 
 enum Language {

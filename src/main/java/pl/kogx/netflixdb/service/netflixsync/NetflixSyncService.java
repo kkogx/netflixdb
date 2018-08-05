@@ -102,6 +102,7 @@ public class NetflixSyncService extends AbstractSyncService {
                 videoDTO.setReleaseYear(json.get("releaseYear").getInt("value"));
                 videoDTO.setGenreId(Long.valueOf(genreId));
                 videoDTO.setGenre(genre);
+                videoDTO.setBoxart(json.get("boxarts").get("_342x192").get("jpg").get("value").getString("url"));
                 videoService.updateVideo(videoDTO);
                 count += 1;
             }

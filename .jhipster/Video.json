@@ -72,6 +72,10 @@
         {
             "fieldName": "fwebID",
             "fieldType": "Long"
+        },
+        {
+            "fieldName": "boxart",
+            "fieldType": "String"
         }
     ],
     "relationships": [],

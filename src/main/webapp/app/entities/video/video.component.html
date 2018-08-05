@@ -76,8 +76,6 @@
                 </th>
                 <th><span jhiTranslate="videos.entity.fwebtitle">Fweb Title</span>
                 </th>
-                <th><span jhiTranslate="videos.entity.title">Title</span>
-                </th>
                 <th jhiSortBy="releaseYear"><span jhiTranslate="videos.entity.releaseyear">Release Year</span>
                     <fa-icon [icon]="'sort'"></fa-icon>
                 </th>
@@ -102,10 +100,16 @@
             <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']"
                    [infiniteScrollDistance]="0">
             <tr *ngFor="let video of videos ;trackBy: trackId">
-                <td><a href="https://www.youtube.com/results?search_query={{video.title}} {{video.releaseYear}} trailer">
-                    <img src="../../../content/images/youtube-play160.png" width="30" height="30"></a></td>
+                <td><a
+                    href="https://www.youtube.com/results?search_query={{video.title}} {{video.releaseYear}} trailer">
+                    <div class="boxart-171-96"
+                         lazyLoad="{{video.boxart}}" width="171px" height="96px"
+                         defaultImage='../../content/images/netflixdb_347x195_blur.png'>
+                        <img src="../../../content/images/youtube-play160.png" width="30" height="30" align="right">
+                    </div>
+                </a></td>
+                <!--<td>{{video.title}}</td>-->
                 <td>{{video.fwebTitle}}</td>
-                <td>{{video.title}}</td>
                 <td>{{video.releaseYear}}</td>
                 <td>{{video.genre}}</td>
                 <td>{{video.fwebRating}}</td>
