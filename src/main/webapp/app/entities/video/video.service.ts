@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { IVideo } from 'app/shared/model/video.model';
+import { IGenre } from 'app/shared/model/genre.model';
 
 type EntityResponseType = HttpResponse<IVideo>;
 type EntityArrayResponseType = HttpResponse<IVideo[]>;
@@ -13,6 +14,7 @@ type EntityArrayResponseType = HttpResponse<IVideo[]>;
 export class VideoService {
     private resourceUrl = SERVER_API_URL + 'api/videos';
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/videos/range';
+    private resourceGenresUrl = SERVER_API_URL + 'api/videos/genres';
 
     constructor(private http: HttpClient) {}
 
@@ -40,5 +42,10 @@ export class VideoService {
     search(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
         return this.http.get<IVideo[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
+    }
+
+    genres(): Observable<IGenre[]> {
+        const result = this.http.get<IGenre[]>(this.resourceGenresUrl);
+        return result;
     }
 }

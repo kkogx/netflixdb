@@ -48,6 +48,21 @@
                     <input type="number" class="form-control" name="imdb-vote-max" [(ngModel)]="imdbVoteMax"
                            (keyup.enter)="searchBlurMax(currentSearch)" (blur)="searchBlurMax(currentSearch)"/>
                 </div>
+                <div class="input-group mt-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" jhiTranslate="videos.filter.genres">Genres</span>
+                        </div>
+                    <ng-select
+                        [items]="genres | async"
+                        [multiple]="true"
+                        [closeOnSelect]="false"
+                        [hideSelected]="true"
+                        placeholder=""
+                        name="genres"
+                        bindLabel="name"
+                        [(ngModel)]="selectedGenres">
+                    </ng-select>
+                </div>
             </form>
         </div>
     </div>

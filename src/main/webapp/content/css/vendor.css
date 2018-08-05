@@ -1,2 +1,3 @@
 /* after changing this file run 'yarn run webpack:build' */
 @import 'bootstrap.min.css';
+@import 'ng.select.css';
