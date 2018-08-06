@@ -1,7 +1,7 @@
 - search criteria
-- frontend for mobile
 - improve result filtering (year distance)
 - live search
+- frontend for mobile
 
 Done
 - add rest service for manual sync
