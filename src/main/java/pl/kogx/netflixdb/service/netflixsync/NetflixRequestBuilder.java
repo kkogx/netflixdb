@@ -1,15 +1,15 @@
 package pl.kogx.netflixdb.service.netflixsync;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 
-import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 class NetflixRequestBuilder {
@@ -17,12 +17,16 @@ class NetflixRequestBuilder {
     @Autowired
     private final ApplicationProperties applicationProperties;
 
+    @Autowired
+    private final VelocityEngine velocityEngine;
+
     private String body;
 
     private HttpHeaders headers;
 
-    public NetflixRequestBuilder(ApplicationProperties applicationProperties) {
+    public NetflixRequestBuilder(ApplicationProperties applicationProperties, VelocityEngine velocityEngine) {
         this.applicationProperties = applicationProperties;
+        this.velocityEngine = velocityEngine;
     }
 
     public HttpEntity<String> build() {
@@ -31,16 +35,11 @@ class NetflixRequestBuilder {
     }
 
     public NetflixRequestBuilder body(String genreId, int from, int to) {
-        VelocityEngine ve = new VelocityEngine();
-        ve.init();
-        Template t = ve.getTemplate("src/main/resources/netflix/quote_by_genre_az.json.vm");
-        VelocityContext context = new VelocityContext();
+        Map<String, Object> context = new HashMap<>();
         context.put("genreid", genreId);
         context.put("from", from);
         context.put("to", to);
-        StringWriter writer = new StringWriter();
-        t.merge(context, writer);
-        this.body = writer.toString();
+        this.body = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "netflix/quote_by_genre_az.json.vm", context);
         return this;
     }
 
