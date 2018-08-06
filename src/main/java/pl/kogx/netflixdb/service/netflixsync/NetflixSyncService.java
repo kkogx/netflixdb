@@ -35,7 +35,7 @@ public class NetflixSyncService extends AbstractSyncService {
     }
 
     @Override
-    public Tuple<Long, Long> syncInternal() throws InterruptedException {
+    public Tuple<Long, Long> doSync() throws InterruptedException {
         Tuple<Long, Long> countTotal = new Tuple(0l, 0l);
         try {
             for (Map.Entry<String, String> genreById : genreByIdMap.entrySet()) {
@@ -85,8 +85,8 @@ public class NetflixSyncService extends AbstractSyncService {
         HttpEntity<String> request = requestBuilder.body(genreId, from, to).build();
 
         // Invoke Shakti endpoint
-        ResponseEntity<String> response = shaktiRestTemplate.exchange(applicationProperties.getNetflixSync().getShaktiUrl(), HttpMethod.POST, request, String.class);
-        //log.info("Response: length={}", response.getBody().length());
+        ResponseEntity<String> response = shaktiRestTemplate.exchange(applicationProperties.getNetflixSync().getShaktiUrl(),
+            HttpMethod.POST, request, String.class);
 
         // Process the result
         if (response.getStatusCode() == HttpStatus.OK) {
@@ -102,14 +102,46 @@ public class NetflixSyncService extends AbstractSyncService {
                 videoDTO.setReleaseYear(json.get("releaseYear").getInt("value"));
                 videoDTO.setGenreId(Long.valueOf(genreId));
                 videoDTO.setGenre(genre);
-                videoDTO.setBoxart(json.get("boxarts").get("_342x192").get("jpg").get("value").getString("url"));
+                videoDTO.setBoxart(json.get("boxarts").get("_260x146").get("jpg").get("value").getString("url"));
                 videoService.updateVideo(videoDTO);
                 count += 1;
             }
         } else {
-            log.warn("Invalid HttpStaus retrieved when fetching by genre, status={}", response.getStatusCode());
+            log.warn("Invalid HttpStatus retrieved when fetching by genre, status={}", response.getStatusCode());
         }
 
         return count;
+    }
+
+    @Override
+    public void syncMovie(long id) {
+
+        HttpEntity<String> request = requestBuilder.body(id).build();
+
+        // Invoke Shakti endpoint
+        ResponseEntity<String> response = shaktiRestTemplate.exchange(applicationProperties.getNetflixSync().getShaktiUrl(),
+            HttpMethod.POST, request, String.class);
+
+        // Process the result
+            try {
+        if (response.getStatusCode() == HttpStatus.OK) {
+            JSONArray videos = JsonPath.read(response.getBody(), "$.."+id);
+            VideoDTO videoDTO = new VideoDTO();
+            videoDTO.setId(id);
+                JsonObject json = new JsonObject(videos.get(0));
+                videoDTO.setType(json.get("summary").get("value").getString("type"));
+            videoDTO.setOriginal(json.get("summary").get("value").getBool("isOriginal"));
+                videoDTO.setTitle(json.get("title").getString("value"));
+                videoDTO.setReleaseYear(json.get("releaseYear").getInt("value"));
+                videoDTO.setGenreId(null);
+                videoDTO.setGenre(null);
+                videoDTO.setBoxart(json.get("boxarts").get("_260x146").get("jpg").get("value").getString("url"));
+                videoService.updateVideo(videoDTO);
+        } else {
+            log.warn("Invalid HttpStatus retrieved when fetching by genre, status={}", response.getStatusCode());
+        }
+            } catch (JsonObject.JsonUnmarshallException e) {
+                throw new RuntimeException(e);
+            }
     }
 }

@@ -102,14 +102,15 @@
             <tr *ngFor="let video of videos ;trackBy: trackId">
                 <td><a
                     href="https://www.youtube.com/results?search_query={{video.title}} {{video.releaseYear}} trailer">
-                    <div class="boxart-171-96"
-                         lazyLoad="{{video.boxart}}" width="171px" height="96px"
+                    <div class="boxart-260-146"
+                         lazyLoad="{{video.boxart}}" width="260px" height="146px"
                          defaultImage='../../content/images/netflixdb_347x195_blur.png'>
                         <img src="../../../content/images/youtube-play160.png" width="30" height="30" align="right">
                     </div>
                 </a></td>
                 <!--<td>{{video.title}}</td>-->
-                <td>{{video.fwebTitle}}</td>
+                <td><div>{{video.fwebTitle}}</div>
+                    <div class="text-muted">{{video.title}}</div></td>
                 <td>{{video.releaseYear}}</td>
                 <td>{{video.genre}}</td>
                 <td>{{video.fwebRating}}</td>

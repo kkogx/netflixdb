@@ -41,7 +41,7 @@ public abstract class AbstractSyncService {
         long time = System.currentTimeMillis();
         log.info("Starting sync");
         try {
-            Tuple<Long, Long> countTotal = syncInternal();
+            Tuple<Long, Long> countTotal = doSync();
             log.info("Sync complete, syncedCount={}, failedCount={}, took {} millis",
                 countTotal.v1(), countTotal.v2(), System.currentTimeMillis() - time);
         } catch (InterruptedException e) {
@@ -49,7 +49,9 @@ public abstract class AbstractSyncService {
         }
     }
 
-    protected abstract Tuple<Long, Long> syncInternal() throws InterruptedException;
+    public abstract void syncMovie(long id);
+
+    protected abstract Tuple<Long, Long> doSync() throws InterruptedException;
 
     protected void checkIfNotInterrupted() throws InterruptedException {
         if (!execute) {

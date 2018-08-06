@@ -34,6 +34,13 @@ class NetflixRequestBuilder {
         return new HttpEntity<>(body, headers);
     }
 
+    public NetflixRequestBuilder body(long id) {
+        Map<String, Object> context = new HashMap<>();
+        context.put("id", id);
+        this.body = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "netflix/quote_by_id.json.vm", context);
+        return this;
+    }
+
     public NetflixRequestBuilder body(String genreId, int from, int to) {
         Map<String, Object> context = new HashMap<>();
         context.put("genreid", genreId);
