@@ -90,7 +90,7 @@ public class SyncController {
 
     private ResponseEntity<String> stop(Optional<AbstractSyncService> optionalService) {
         optionalService.ifPresent(AbstractSyncService::stop);
-        return status(optionalService);
+        return status(optionalService);//test
     }
 
     private ResponseEntity<String> status(Optional<AbstractSyncService> optionalService) {
