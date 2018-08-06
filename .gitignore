@@ -3,6 +3,9 @@
 ######################
 /target/www/**
 /src/test/javascript/coverage/
+cert.p12
+logback-spring.xml
+nohup.out
 
 ######################
 # Node
