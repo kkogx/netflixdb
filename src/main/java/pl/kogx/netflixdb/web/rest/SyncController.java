@@ -58,16 +58,26 @@ public class SyncController {
     @PostMapping("/sync/{type}/{id}")
     //@Secured(AuthoritiesConstants.ADMIN)
     public void sync(@PathVariable("type") String type, @PathVariable("id") Long id) {
-        log.info("all");
+        log.info("all type={} id={}", type, id);
         Optional<AbstractSyncService> service = getServiceForType(type);
         service.ifPresent(abstractSyncService -> abstractSyncService.syncMovie(id));
+    }
+
+    @Async
+    @PostMapping("/sync/all")
+    //@Secured(AuthoritiesConstants.ADMIN)
+    public void sync() {
+        log.info("all");
+        netflixSyncService.sync();
+        omdbSyncService.sync();
+        fwebSyncService.sync();
     }
 
     @Async
     @PostMapping("/sync/{type}/all")
     //@Secured(AuthoritiesConstants.ADMIN)
     public void sync(@PathVariable("type") String type) {
-        log.info("all");
+        log.info("all type={}", type);
         Optional<AbstractSyncService> service = getServiceForType(type);
         service.ifPresent(AbstractSyncService::sync);
     }
@@ -75,7 +85,7 @@ public class SyncController {
     @PostMapping("/sync/{type}/stop")
     @Secured(AuthoritiesConstants.ADMIN)
     public ResponseEntity<String> stop(@PathVariable("type") String type) {
-        log.info("stop");
+        log.info("stop " + type);
         Optional<AbstractSyncService> service = getServiceForType(type);
         return stop(service);
     }
@@ -83,7 +93,7 @@ public class SyncController {
     @PostMapping("/sync/{type}/status")
     @Secured(AuthoritiesConstants.ADMIN)
     public ResponseEntity<String> status(@PathVariable("type") String type) {
-        log.info("status");
+        log.info("status " + type);
         Optional<AbstractSyncService> service = getServiceForType(type);
         return status(service);
     }
