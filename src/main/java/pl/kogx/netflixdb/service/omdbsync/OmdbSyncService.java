@@ -41,7 +41,7 @@ public class OmdbSyncService extends AbstractSyncService {
     }
 
     @Override
-    public Tuple<Long, Long> syncInternal() {
+    public Tuple<Long, Long> doSync() {
         Tuple<Long, Long> countTotal = Tuple.tuple(0L, 0L);
         List<String> keys = new ArrayList<>(genreByIdMap.keySet());
         Collections.shuffle(keys);
@@ -52,7 +52,8 @@ public class OmdbSyncService extends AbstractSyncService {
         return countTotal;
     }
 
-    public void syncMovie(Long id) {
+    @Override
+    public void syncMovie(long id) {
         log.info("Starting OMDB sync");
         boolean result = false;
         VideoDTO video = videoService.findById(id);

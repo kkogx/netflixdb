@@ -12,7 +12,7 @@
             "imdbvotes": "Imdb głosy"
         },
         "filter": {
-            "query": "*słowa kluczowe*",
+            "query": "*Tytuł*",
             "fwebvotesmin": "Filmweb głosy od",
             "fwebvotesmax": "do",
             "imdbvotesmin": "Imdb głosy od",

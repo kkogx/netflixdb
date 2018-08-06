@@ -39,7 +39,7 @@ public class SyncController {
         this.fwebSyncService = fwebSyncService;
     }
 
-    Optional<AbstractSyncService> getServiceForType(String type) {
+    private Optional<AbstractSyncService> getServiceForType(String type) {
         if (StringUtils.isNotEmpty(type)) {
             switch (type) {
                 case "netflix":
@@ -55,15 +55,21 @@ public class SyncController {
         return Optional.empty();
     }
 
+    @PostMapping("/sync/{type}/{id}")
+    //@Secured(AuthoritiesConstants.ADMIN)
+    public void sync(@PathVariable("type") String type, @PathVariable("id") Long id) {
+        log.info("all");
+        Optional<AbstractSyncService> service = getServiceForType(type);
+        service.ifPresent(abstractSyncService -> abstractSyncService.syncMovie(id));
+    }
+
     @Async
     @PostMapping("/sync/{type}/all")
     //@Secured(AuthoritiesConstants.ADMIN)
     public void sync(@PathVariable("type") String type) {
         log.info("all");
         Optional<AbstractSyncService> service = getServiceForType(type);
-        if (service.isPresent()) {
-            service.get().sync();
-        }
+        service.ifPresent(AbstractSyncService::sync);
     }
 
     @PostMapping("/sync/{type}/stop")
@@ -83,9 +89,7 @@ public class SyncController {
     }
 
     private ResponseEntity<String> stop(Optional<AbstractSyncService> optionalService) {
-        if (optionalService.isPresent()) {
-            optionalService.get().stop();
-        }
+        optionalService.ifPresent(AbstractSyncService::stop);
         return status(optionalService);
     }
 

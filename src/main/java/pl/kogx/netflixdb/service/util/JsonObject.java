@@ -38,6 +38,10 @@ public class JsonObject {
         }
     }
 
+    public boolean contains(String key) {
+        return jsonMap.containsKey(key);
+    }
+
     public static class JsonUnmarshallException extends Exception {
 
         public JsonUnmarshallException(String s) {

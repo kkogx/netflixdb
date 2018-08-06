@@ -1,0 +1,20 @@
+{
+    "paths": [
+        [
+            "videos",
+            $id,
+            [
+                "summary",
+                "title",
+                "releaseYear"
+            ]
+        ],
+        [
+            "videos",
+            $id,
+            "boxarts",
+            "_260x146",
+            "jpg"
+        ]
+    ]
+}

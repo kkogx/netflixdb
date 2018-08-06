@@ -29,4 +29,10 @@ public class NetflixSyncServiceIntTest {
     public void test() {
         netflixSyncService.sync();
     }
+
+
+    @Test
+    public void testIndividual() {
+        netflixSyncService.syncMovie(207856L);
+    }
 }
