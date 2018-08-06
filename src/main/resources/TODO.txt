@@ -1,6 +1,7 @@
 - search criteria
 - improve result filtering (year distance)
 - live search
+- refresh timestamp
 - frontend for mobile
 
 Done
