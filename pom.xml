@@ -449,6 +449,7 @@
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>config/*.yml</include>
+                                        <include>netflix/*.vm</include>
                                     </includes>
                                 </resource>
                                 <resource>
