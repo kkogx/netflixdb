@@ -16,6 +16,7 @@ import pl.kogx.netflixdb.repository.search.VideoSearchRepository;
 import pl.kogx.netflixdb.service.dto.VideoDTO;
 import pl.kogx.netflixdb.service.util.NullAwareBeanUtilsBean;
 
+import java.util.Date;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -94,6 +95,11 @@ public class VideoService {
     public void delete(Long id) {
         log.debug("Request to delete Video : {}", id);
         videoSearchRepository.deleteById(id);
+    }
+
+    public void deleteByTimestampBefore(Date timestamp) {
+        log.debug("Request to delete Video timestamp before: {}", timestamp);
+        videoSearchRepository.deleteByTimestampBefore(timestamp);
     }
 
     /**
