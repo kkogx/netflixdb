@@ -17,6 +17,7 @@ import pl.kogx.netflixdb.service.dto.VideoDTO;
 import pl.kogx.netflixdb.service.sync.AbstractSyncService;
 import pl.kogx.netflixdb.service.util.JsonObject;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 
@@ -94,6 +95,7 @@ public class NetflixSyncService extends AbstractSyncService {
             for (Object video : videos) {
                 super.checkIfNotInterrupted();
                 VideoDTO videoDTO = new VideoDTO();
+                videoDTO.setTimestamp(new Date());
                 JsonObject json = new JsonObject(video);
                 videoDTO.setId(json.get("summary").get("value").getLong("id"));
                 videoDTO.setType(json.get("summary").get("value").getString("type"));
@@ -123,25 +125,26 @@ public class NetflixSyncService extends AbstractSyncService {
             HttpMethod.POST, request, String.class);
 
         // Process the result
-            try {
-        if (response.getStatusCode() == HttpStatus.OK) {
-            JSONArray videos = JsonPath.read(response.getBody(), "$.."+id);
-            VideoDTO videoDTO = new VideoDTO();
-            videoDTO.setId(id);
+        try {
+            if (response.getStatusCode() == HttpStatus.OK) {
+                JSONArray videos = JsonPath.read(response.getBody(), "$.." + id);
+                VideoDTO videoDTO = new VideoDTO();
+                videoDTO.setTimestamp(new Date());
+                videoDTO.setId(id);
                 JsonObject json = new JsonObject(videos.get(0));
                 videoDTO.setType(json.get("summary").get("value").getString("type"));
-            videoDTO.setOriginal(json.get("summary").get("value").getBool("isOriginal"));
+                videoDTO.setOriginal(json.get("summary").get("value").getBool("isOriginal"));
                 videoDTO.setTitle(json.get("title").getString("value"));
                 videoDTO.setReleaseYear(json.get("releaseYear").getInt("value"));
                 videoDTO.setGenreId(null);
                 videoDTO.setGenre(null);
                 videoDTO.setBoxart(json.get("boxarts").get("_260x146").get("jpg").get("value").getString("url"));
                 videoService.updateVideo(videoDTO);
-        } else {
-            log.warn("Invalid HttpStatus retrieved when fetching by genre, status={}", response.getStatusCode());
-        }
-            } catch (JsonObject.JsonUnmarshallException e) {
-                throw new RuntimeException(e);
+            } else {
+                log.warn("Invalid HttpStatus retrieved when fetching by genre, status={}", response.getStatusCode());
             }
+        } catch (JsonObject.JsonUnmarshallException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

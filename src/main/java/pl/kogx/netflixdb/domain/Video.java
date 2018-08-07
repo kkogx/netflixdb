@@ -5,10 +5,11 @@ import org.springframework.format.annotation.NumberFormat;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "videos")
-public class Video extends AbstractAuditingEntity implements Serializable {
+public class Video implements Serializable {
 
     @Id
     @NotNull
@@ -55,6 +56,8 @@ public class Video extends AbstractAuditingEntity implements Serializable {
     private Long fwebID;
 
     private String boxart;
+
+    private Date timestamp;
 
     public Video() {
     }
@@ -223,29 +226,12 @@ public class Video extends AbstractAuditingEntity implements Serializable {
         this.boxart = boxart;
     }
 
-    @Override
-    public String toString() {
-        return "Video{" +
-            "id=" + id +
-            ", title='" + title + '\'' +
-            ", fwebTitle='" + fwebTitle + '\'' +
-            ", releaseYear=" + releaseYear +
-            ", genre='" + genre + '\'' +
-            ", genreId=" + genreId +
-            ", original=" + original +
-            ", type='" + type + '\'' +
-            ", omdbAvailable=" + omdbAvailable +
-            ", fwebAvailable=" + fwebAvailable +
-            ", imdbRating=" + imdbRating +
-            ", fwebRating=" + fwebRating +
-            ", imdbVotes=" + imdbVotes +
-            ", fwebVotes=" + fwebVotes +
-            ", metascore=" + metascore +
-            ", tomatoRating=" + tomatoRating +
-            ", tomatoUserRating=" + tomatoUserRating +
-            ", imdbID='" + imdbID + '\'' +
-            ", fwebID=" + fwebID +
-            '}';
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 
     @Override
@@ -272,12 +258,40 @@ public class Video extends AbstractAuditingEntity implements Serializable {
             Objects.equals(tomatoUserRating, video.tomatoUserRating) &&
             Objects.equals(imdbID, video.imdbID) &&
             Objects.equals(fwebID, video.fwebID) &&
-            Objects.equals(boxart, video.boxart);
+            Objects.equals(boxart, video.boxart) &&
+            Objects.equals(timestamp, video.timestamp);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, title, fwebTitle, releaseYear, genre, genreId, original, type, omdbAvailable, fwebAvailable, imdbRating, fwebRating, imdbVotes, fwebVotes, metascore, tomatoRating, tomatoUserRating, imdbID, fwebID, boxart);
+        return Objects.hash(id, title, fwebTitle, releaseYear, genre, genreId, original, type, omdbAvailable, fwebAvailable, imdbRating, fwebRating, imdbVotes, fwebVotes, metascore, tomatoRating, tomatoUserRating, imdbID, fwebID, boxart, timestamp);
+    }
+
+    @Override
+    public String toString() {
+        return "Video{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", fwebTitle='" + fwebTitle + '\'' +
+            ", releaseYear=" + releaseYear +
+            ", genre='" + genre + '\'' +
+            ", genreId=" + genreId +
+            ", original=" + original +
+            ", type='" + type + '\'' +
+            ", omdbAvailable=" + omdbAvailable +
+            ", fwebAvailable=" + fwebAvailable +
+            ", imdbRating=" + imdbRating +
+            ", fwebRating=" + fwebRating +
+            ", imdbVotes=" + imdbVotes +
+            ", fwebVotes=" + fwebVotes +
+            ", metascore=" + metascore +
+            ", tomatoRating=" + tomatoRating +
+            ", tomatoUserRating=" + tomatoUserRating +
+            ", imdbID='" + imdbID + '\'' +
+            ", fwebID=" + fwebID +
+            ", boxart='" + boxart + '\'' +
+            ", timestamp=" + timestamp +
+            '}';
     }
 }
