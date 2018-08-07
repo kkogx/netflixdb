@@ -149,4 +149,9 @@ public class NetflixSyncService extends AbstractSyncService {
             throw new RuntimeException(e);
         }
     }
+
+    public void deleteAll() {
+        log.info("Delete all");
+        videoService.deleteAll();
+    }
 }
