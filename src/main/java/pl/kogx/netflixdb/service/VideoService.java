@@ -148,4 +148,8 @@ public class VideoService {
         }
         return videoSearchRepository.search(builder, pageable);
     }
+
+    public void deleteAll() {
+        videoSearchRepository.deleteAll();
+    }
 }
