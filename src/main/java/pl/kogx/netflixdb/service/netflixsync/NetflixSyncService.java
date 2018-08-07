@@ -37,6 +37,7 @@ public class NetflixSyncService extends AbstractSyncService {
 
     @Override
     public Tuple<Long, Long> doSync() throws InterruptedException {
+        Date timestamp = new Date();
         Tuple<Long, Long> countTotal = new Tuple(0l, 0l);
         try {
             for (Map.Entry<String, String> genreById : genreByIdMap.entrySet()) {
@@ -46,6 +47,7 @@ public class NetflixSyncService extends AbstractSyncService {
         } catch (JsonObject.JsonUnmarshallException e) {
             log.error("Unable to process the response, API has changed?", e);
         }
+        videoService.deleteByTimestampBefore(timestamp);
         return countTotal;
     }
 
