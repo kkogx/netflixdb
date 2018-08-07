@@ -76,23 +76,45 @@
                 </th>
                 <th><span jhiTranslate="videos.entity.fwebtitle">Fweb Title</span>
                 </th>
-                <th jhiSortBy="releaseYear"><span jhiTranslate="videos.entity.releaseyear">Release Year</span>
-                    <fa-icon [icon]="'sort'"></fa-icon>
+                <th jhiSortBy="releaseYear">
+                    <div class="text-nowrap text-right">
+                        <span jhiTranslate="videos.entity.releaseyear">Release Year</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </div>
                 </th>
-                <th jhiSortBy="genreId"><span jhiTranslate="videos.entity.genre">Genre</span>
-                    <fa-icon [icon]="'sort'"></fa-icon>
+                <th jhiSortBy="genreId">
+                    <div class="text-nowrap">
+                        <span jhiTranslate="videos.entity.genre">Genre</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </div>
                 </th>
-                <th jhiSortBy="fwebRating"><span jhiTranslate="videos.entity.fwebrating">Fweb Rating</span>
-                    <fa-icon [icon]="'sort'"></fa-icon>
+                <th jhiSortBy="fwebRating">
+                    <img src="../../../content/images/filmweb30inv.png">
+                    <div class="text-nowrap text-right">
+                        <span jhiTranslate="videos.entity.fwebrating">Fweb Rating</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </div>
                 </th>
-                <th jhiSortBy="fwebVotes"><span jhiTranslate="videos.entity.fwebvotes">Fweb Votes</span>
-                    <fa-icon [icon]="'sort'"></fa-icon>
+                <th jhiSortBy="fwebVotes">
+                    <img src="../../../content/images/filmweb30inv.png">
+                    <div class="text-nowrap text-right">
+                        <span jhiTranslate="videos.entity.fwebvotes">Fweb Votes</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </div>
                 </th>
-                <th jhiSortBy="imdbRating"><span jhiTranslate="videos.entity.imdbrating">Imdb Rating</span>
-                    <fa-icon [icon]="'sort'"></fa-icon>
+                <th jhiSortBy="imdbRating">
+                    <img src="../../../content/images/icons8-imdb-40.png">
+                    <div class="text-nowrap">
+                        <span jhiTranslate="videos.entity.imdbrating">Imdb Rating</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </div>
                 </th>
-                <th jhiSortBy="imdbVotes"><span jhiTranslate="videos.entity.imdbvotes">Imdb Votes</span>
-                    <fa-icon [icon]="'sort'"></fa-icon>
+                <th jhiSortBy="imdbVotes">
+                    <img src="../../../content/images/icons8-imdb-40.png">
+                    <div class="text-nowrap">
+                        <span jhiTranslate="videos.entity.imdbvotes">Imdb Votes</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </div>
                 </th>
                 <th></th>
             </tr>
@@ -111,12 +133,12 @@
                 <!--<td>{{video.title}}</td>-->
                 <td><div>{{video.fwebTitle}}</div>
                     <div class="text-muted">{{video.title}}</div></td>
-                <td>{{video.releaseYear}}</td>
+                <td class="text-right">{{video.releaseYear}}</td>
                 <td>{{video.genre}}</td>
-                <td>{{video.fwebRating}}</td>
-                <td>{{video.fwebVotes}}</td>
-                <td>{{video.imdbRating}}</td>
-                <td>{{video.imdbVotes}}</td>
+                <td class="text-right">{{video.fwebRating}}</td>
+                <td class="text-right">{{video.fwebVotes}}</td>
+                <td class="text-right">{{video.imdbRating}}</td>
+                <td class="text-right">{{video.imdbVotes}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"

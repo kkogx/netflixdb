@@ -6,10 +6,10 @@
             "fwebtitle": "Tytuł",
             "releaseyear": "Rok",
             "genre": "Gatunek",
-            "fwebrating": "Filmweb ocena",
-            "fwebvotes": "Filmweb głosy",
-            "imdbrating": "Imdb ocena",
-            "imdbvotes": "Imdb głosy"
+            "fwebrating": "ocena",
+            "fwebvotes": "głosy",
+            "imdbrating": "ocena",
+            "imdbvotes": "głosy"
         },
         "filter": {
             "query": "*Tytuł*",
