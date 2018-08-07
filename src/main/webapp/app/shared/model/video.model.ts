@@ -19,6 +19,7 @@ export interface IVideo {
     imdbID?: string;
     fwebID?: number;
     boxart?: string;
+    timestamp?: Date;
 }
 
 export class Video implements IVideo {
@@ -42,7 +43,8 @@ export class Video implements IVideo {
         public tomatoUserRating?: number,
         public imdbID?: string,
         public fwebID?: number,
-        public boxart?: string
+        public boxart?: string,
+        public timestamp?: Date
     ) {
         this.original = false;
         this.omdbAvailable = false;
