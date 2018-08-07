@@ -99,7 +99,7 @@ public class VideoService {
 
     public void deleteByTimestampBefore(Date timestamp) {
         log.debug("Request to delete Video timestamp before: {}", timestamp);
-        videoSearchRepository.deleteByTimestampBefore(timestamp);
+        videoSearchRepository.deleteByTimestampBefore(timestamp.getTime());
     }
 
     /**
