@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -162,9 +163,11 @@ public class VideoResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+    @Cacheable("genres")
     @GetMapping("/videos/genres")
     public ResponseEntity<List<Genre>> getAllGenres() {
-        log.debug("REST request to get all genres");
-        return new ResponseEntity<>(genres, HttpStatus.OK);
+        log.debug("REST request to get all (non-empty) genres");
+        List<Genre> result = genres.stream().filter(g -> videoService.countByGenreId(g.getId()) > 0).collect(Collectors.toList());
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

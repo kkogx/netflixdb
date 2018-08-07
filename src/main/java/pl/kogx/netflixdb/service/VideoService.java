@@ -152,4 +152,8 @@ public class VideoService {
     public void deleteAll() {
         videoSearchRepository.deleteAll();
     }
+
+    public long countByGenreId(long genreId) {
+        return videoSearchRepository.countByGenreId(genreId);
+    }
 }
