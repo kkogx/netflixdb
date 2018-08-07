@@ -25,6 +25,22 @@
                         <fa-icon [icon]="'trash-alt'"></fa-icon>
                     </button>
                 </div>
+                <div class="input-group mt-3 text-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" jhiTranslate="videos.filter.genres">Genres</span>
+                    </div>
+                    <ng-select
+                        [items]="genres | async"
+                        [multiple]="true"
+                        [closeOnSelect]="true"
+                        [hideSelected]="true"
+                        placeholder=""
+                        name="genres"
+                        bindLabel="name"
+                        (change)="search(currentSearch)"
+                        [(ngModel)]="selectedGenres">
+                    </ng-select>
+                </div>
                 <div class="input-group mt-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" jhiTranslate="videos.filter.fwebvotesmin">FilmWeb votes min</span>
@@ -48,21 +64,6 @@
                     <!--</div>-->
                     <!--<input type="number" class="form-control" name="imdb-vote-max" [(ngModel)]="imdbVoteMax"-->
                            <!--(keyup.enter)="searchBlurMax(currentSearch)" (blur)="searchBlurMax(currentSearch)"/>-->
-                </div>
-                <div class="input-group mt-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" jhiTranslate="videos.filter.genres">Genres</span>
-                        </div>
-                    <ng-select
-                        [items]="genres | async"
-                        [multiple]="true"
-                        [closeOnSelect]="true"
-                        [hideSelected]="true"
-                        placeholder=""
-                        name="genres"
-                        bindLabel="name"
-                        [(ngModel)]="selectedGenres">
-                    </ng-select>
                 </div>
             </form>
         </div>
