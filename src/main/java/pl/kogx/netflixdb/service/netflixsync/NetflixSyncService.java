@@ -4,7 +4,6 @@ import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
 import org.elasticsearch.common.collect.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -29,10 +28,10 @@ public class NetflixSyncService extends AbstractSyncService {
     private final RestTemplate shaktiRestTemplate;
 
     @Autowired
-    public NetflixSyncService(VideoService videoService, NetflixRequestBuilder requestBuilder, ApplicationProperties applicationProperties, RestTemplateBuilder restTemplateBuilder) {
+    public NetflixSyncService(VideoService videoService, NetflixRequestBuilder requestBuilder, ApplicationProperties applicationProperties, RestTemplate shaktiRestTemplate) {
         super(videoService, applicationProperties);
         this.requestBuilder = requestBuilder;
-        this.shaktiRestTemplate = restTemplateBuilder.build();
+        this.shaktiRestTemplate = shaktiRestTemplate;
     }
 
     @Override

@@ -72,6 +72,8 @@ public class ApplicationProperties {
 
     public static class NetflixSync {
 
+        private ProxySettings proxySettings;
+
         private String sessionCookie;
 
         private String shaktiUrl;
@@ -81,6 +83,14 @@ public class ApplicationProperties {
         private int requestSleepMillis;
 
         private int requestBlockSize;
+
+        public ProxySettings getProxySettings() {
+            return proxySettings;
+        }
+
+        public void setProxySettings(ProxySettings proxySettings) {
+            this.proxySettings = proxySettings;
+        }
 
         public int getRequestBlockSize() {
             return requestBlockSize;
@@ -120,6 +130,59 @@ public class ApplicationProperties {
 
         public void setSessionCookie(String sessionCookie) {
             this.sessionCookie = sessionCookie;
+        }
+
+        public static class ProxySettings {
+
+            private boolean enabled;
+
+            private String host;
+
+            private short port;
+
+            private String user;
+
+            private String password;
+
+            public boolean isEnabled() {
+                return enabled;
+            }
+
+            public void setEnabled(boolean enabled) {
+                this.enabled = enabled;
+            }
+
+            public String getHost() {
+                return host;
+            }
+
+            public void setHost(String host) {
+                this.host = host;
+            }
+
+            public short getPort() {
+                return port;
+            }
+
+            public void setPort(short port) {
+                this.port = port;
+            }
+
+            public String getUser() {
+                return user;
+            }
+
+            public void setUser(String user) {
+                this.user = user;
+            }
+
+            public String getPassword() {
+                return password;
+            }
+
+            public void setPassword(String password) {
+                this.password = password;
+            }
         }
     }
 
