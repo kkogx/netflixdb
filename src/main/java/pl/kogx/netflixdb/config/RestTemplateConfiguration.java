@@ -32,7 +32,7 @@ public class RestTemplateConfiguration {
             credsProvider.setCredentials(authScope, credentials);
             HttpClient httpClient = HttpClientBuilder.create().setProxy(new HttpHost(proxySettings.getHost(), proxySettings.getPort())).setDefaultCredentialsProvider(credsProvider).build();
             HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
-            restTemplateBuilder.requestFactory(() -> requestFactory);
+            restTemplateBuilder = restTemplateBuilder.requestFactory(() -> requestFactory);
         }
         return restTemplateBuilder.build();
     }
