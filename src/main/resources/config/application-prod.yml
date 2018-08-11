@@ -134,3 +134,11 @@ jhipster:
 # More documentation is available at:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
+application:
+    netflix-sync:
+        proxy-settings:
+            user: "zhentarin"
+            password: "***REMOVED***"
+            host: "pl.vpn.mydevil.net"
+            port: 8889
+            enabled: true
