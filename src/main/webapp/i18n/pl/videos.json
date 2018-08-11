@@ -9,7 +9,9 @@
             "fwebrating": "ocena",
             "fwebvotes": "głosy",
             "imdbrating": "ocena",
-            "imdbvotes": "głosy"
+            "imdbvotes": "głosy",
+            "plot": "opis",
+            "plotUpper": "Opis"
         },
         "filter": {
             "query": "*Tytuł*",

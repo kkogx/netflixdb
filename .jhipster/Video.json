@@ -76,6 +76,10 @@
         {
             "fieldName": "boxart",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "fwebPlot",
+            "fieldType": "String"
         }
     ],
     "relationships": [],

@@ -30,6 +30,8 @@ public class VideoDTO {
 
     private Boolean fwebAvailable;
 
+    private String fwebPlot;
+
     @NumberFormat(style = NumberFormat.Style.NUMBER)
     private Float imdbRating;
 
@@ -82,6 +84,7 @@ public class VideoDTO {
         this.fwebTitle = video.getFwebTitle();
         this.boxart = video.getBoxart();
         this.timestamp = video.getTimestamp();
+        this.fwebPlot = video.getFwebPlot();
     }
 
     private static Float round (Float value, int precision) {
@@ -90,6 +93,14 @@ public class VideoDTO {
         }
         int scale = (int) Math.pow(10, precision);
         return (float) Math.round(value * scale) / scale;
+    }
+
+    public String getFwebPlot() {
+        return fwebPlot;
+    }
+
+    public void setFwebPlot(String fwebPlot) {
+        this.fwebPlot = fwebPlot;
     }
 
     public Long getId() {
@@ -273,6 +284,7 @@ public class VideoDTO {
             ", type='" + type + '\'' +
             ", omdbAvailable=" + omdbAvailable +
             ", fwebAvailable=" + fwebAvailable +
+            ", fwebPlot='" + fwebPlot + '\'' +
             ", imdbRating=" + imdbRating +
             ", fwebRating=" + fwebRating +
             ", imdbVotes=" + imdbVotes +

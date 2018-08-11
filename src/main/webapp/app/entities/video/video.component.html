@@ -132,8 +132,14 @@
                     </div>
                 </a></td>
                 <!--<td>{{video.title}}</td>-->
-                <td><div>{{video.fwebTitle}}</div>
-                    <div class="text-muted">{{video.title}}</div></td>
+                <td>
+                    <div *ngIf="video.fwebTitle" placement="right" class="underline-on-hover"
+                            ngbPopover="{{video.fwebPlot}}" triggers="click:mouseleave">
+                        {{video.fwebTitle}}
+                    </div>
+                    <!--<div>{{video.fwebTitle}}</div>-->
+                    <div class="text-muted">{{video.title}}</div>
+                </td>
                 <td class="text-right">{{video.releaseYear}}</td>
                 <td>{{video.genre}}</td>
                 <td class="text-right">{{video.fwebRating}}</td>
