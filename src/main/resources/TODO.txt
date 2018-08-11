@@ -1,10 +1,11 @@
+- multi genre
 - search criteria
 - improve result filtering (year distance)
 - live search
-- refresh timestamp
 - frontend for mobile
 
 Done
+- refresh timestamp
 - add rest service for manual sync
 - improved security (disable elastic and kibana ports)
 - go prod

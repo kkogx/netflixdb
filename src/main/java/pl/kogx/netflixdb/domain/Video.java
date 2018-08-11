@@ -59,6 +59,8 @@ public class Video implements Serializable {
 
     private Date timestamp;
 
+    private String fwebPlot;
+
     public Video() {
     }
 
@@ -234,6 +236,14 @@ public class Video implements Serializable {
         this.timestamp = timestamp;
     }
 
+    public String getFwebPlot() {
+        return fwebPlot;
+    }
+
+    public void setFwebPlot(String fwebPlot) {
+        this.fwebPlot = fwebPlot;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -259,13 +269,14 @@ public class Video implements Serializable {
             Objects.equals(imdbID, video.imdbID) &&
             Objects.equals(fwebID, video.fwebID) &&
             Objects.equals(boxart, video.boxart) &&
-            Objects.equals(timestamp, video.timestamp);
+            Objects.equals(timestamp, video.timestamp) &&
+            Objects.equals(fwebPlot, video.fwebPlot);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, title, fwebTitle, releaseYear, genre, genreId, original, type, omdbAvailable, fwebAvailable, imdbRating, fwebRating, imdbVotes, fwebVotes, metascore, tomatoRating, tomatoUserRating, imdbID, fwebID, boxart, timestamp);
+        return Objects.hash(id, title, fwebTitle, releaseYear, genre, genreId, original, type, omdbAvailable, fwebAvailable, imdbRating, fwebRating, imdbVotes, fwebVotes, metascore, tomatoRating, tomatoUserRating, imdbID, fwebID, boxart, timestamp, fwebPlot);
     }
 
     @Override
@@ -292,6 +303,7 @@ public class Video implements Serializable {
             ", fwebID=" + fwebID +
             ", boxart='" + boxart + '\'' +
             ", timestamp=" + timestamp +
+            ", fwebPlot='" + fwebPlot + '\'' +
             '}';
     }
 }

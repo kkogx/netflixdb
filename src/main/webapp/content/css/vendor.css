@@ -13,3 +13,7 @@
     height: 146px;
     background-size: 260px 146px;
 }
+
+.underline-on-hover:hover {
+    text-decoration: underline;
+}

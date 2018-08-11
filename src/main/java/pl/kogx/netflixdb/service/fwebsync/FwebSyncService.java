@@ -104,6 +104,7 @@ public class FwebSyncService extends AbstractSyncService {
         video.setFwebVotes(Long.valueOf(fwebVideoData.getVotes()));
         video.setFwebID(fwebVideoData.getId());
         video.setFwebTitle(fwebVideoData.getPolishTitle());
+        video.setFwebPlot(fwebVideoData.getPlot());
         videoService.updateVideo(video);
         return true;
     }
