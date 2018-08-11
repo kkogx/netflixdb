@@ -14,7 +14,7 @@ Main page styles
     display: inline-block;
     width: 347px;
     height: 195px;
-    background: url('../../content/images/netflixdb_347x195.png') no-repeat center top;
+    background: url('../../content/images/netflixdb_347x42.png') no-repeat center top;
     background-size: contain;
 }
 
@@ -26,7 +26,7 @@ Main page styles
     only screen and (min-resolution: 192dpi),
     only screen and (min-resolution: 2dppx) {
     .netflixdb {
-        background: url('../../content/images/netflixdb_347x195.png') no-repeat center top;
+        background: url('../../content/images/netflixdb_347x42.png') no-repeat center top;
         background-size: contain;
     }
 }

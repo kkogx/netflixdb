@@ -63,6 +63,10 @@
                     "header": "Szukasz filmu na wieczór?",
                     "intro": "Znajdziesz tutaj pełny katalog Netflixa, wraz z ocenami z innych serwisów filmowych, takich jak IMDB lub Filmweb."
                 },
+                "donate": {
+                    "header": "Wsparcie",
+                    "intro": "Autorem serwisu jest obecnie jedna osoba, która pracuje nad nim w prywatnym czasie. Serwis powstał dla celów osobistych ale ostatecznie został udostępniony. Utrzymanie takiego serwisu jest kosztowne, dlatego jeśli możesz wspomóc jego dalszy rozwój - kliknij w dotacje."
+                },
                 "knowhow": {
                     "header": "Czy wiedziałeś o tym?",
                     "youtube": "Miniatury filmów zawierają odnośnik do Youtube, gdzie możesz obejrzeć zwiastun filmu przed jego obejrzeniem!",
