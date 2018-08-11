@@ -155,10 +155,11 @@ public class VideoResource {
     public ResponseEntity<List<Video>> searchVideos(@RequestParam String query,
                                                     @RequestParam Integer fwebMin, @RequestParam Integer fwebMax,
                                                     @RequestParam Integer imdbMin, @RequestParam Integer imdbMax,
+                                                    @RequestParam Integer yearMin,
                                                     @RequestParam Integer[] genres,
                                                     Pageable pageable) {
         log.debug("REST request to search for a page of Videos for query {}", query);
-        Page<Video> page = videoService.search(query, fwebMin, fwebMax, imdbMin, imdbMax, genres, pageable);
+        Page<Video> page = videoService.search(query, fwebMin, fwebMax, imdbMin, imdbMax, yearMin, genres, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/videos/range");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }

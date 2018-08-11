@@ -33,6 +33,7 @@ export class VideoComponent implements OnInit, OnDestroy {
     imdbVoteMax: number;
     fwebVoteMin: number;
     fwebVoteMax: number;
+    releaseYearMin: number;
 
     genres: Observable<IGenre[]>;
     selectedGenres: IGenre[] = [];
@@ -67,6 +68,7 @@ export class VideoComponent implements OnInit, OnDestroy {
                 fwebMax: this.fwebVoteMax ? this.fwebVoteMax : -1,
                 imdbMin: this.imdbVoteMin ? this.imdbVoteMin : 0,
                 imdbMax: this.imdbVoteMax ? this.imdbVoteMax : -1,
+                yearMin: this.releaseYearMin ? this.releaseYearMin : 0,
                 genres: this.selectedGenres.map(value => value.id),
                 page: this.page,
                 size: this.itemsPerPage,
@@ -112,9 +114,12 @@ export class VideoComponent implements OnInit, OnDestroy {
         this.loadAll();
     }
 
-    private ensureRange(value: number): number {
-        value = Math.max(0, value);
-        value = Math.min(10000000, value);
+    private ensureRange(value: number, max: number, min?: number): number {
+        if (min === undefined) {
+            min = 0;
+        }
+        value = Math.max(min, value);
+        value = Math.min(max, value);
         if (value === 0) {
             value = undefined;
         }
@@ -122,10 +127,11 @@ export class VideoComponent implements OnInit, OnDestroy {
     }
 
     private ensureRanges() {
-        this.fwebVoteMin = this.ensureRange(this.fwebVoteMin);
-        this.fwebVoteMax = this.ensureRange(this.fwebVoteMax);
-        this.imdbVoteMin = this.ensureRange(this.imdbVoteMin);
-        this.imdbVoteMax = this.ensureRange(this.imdbVoteMax);
+        this.fwebVoteMin = this.ensureRange(this.fwebVoteMin, 1000000);
+        this.fwebVoteMax = this.ensureRange(this.fwebVoteMax, 1000000);
+        this.imdbVoteMin = this.ensureRange(this.imdbVoteMin, 2000000);
+        this.imdbVoteMax = this.ensureRange(this.imdbVoteMax, 2000000);
+        this.releaseYearMin = this.ensureRange(this.releaseYearMin, 2020, 1940);
     }
 
     // called whenever min search param is changed

@@ -17,3 +17,28 @@
 .underline-on-hover:hover {
     text-decoration: underline;
 }
+
+#year-min-input {
+    width: 100px;
+}
+
+#fweb-vote-min-input {
+    width: 120px;
+}
+
+#imdb-vote-min-input {
+    width: 120px;
+}
+
+#genres-input {
+    min-width: 600px;
+    max-width: 820px;
+}
+
+#search-input {
+    width: 200px;
+}
+
+.ng-option {
+    font-size: 0.8rem;
+}
