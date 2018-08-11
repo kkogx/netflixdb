@@ -7,12 +7,12 @@
         <p class="lead" jhiTranslate="home.subtitle">Nieoficjalny katalog polskiego Netflixa</p>
 
         <div [ngSwitch]="isAuthenticated()">
-            <div class="alert alert-success" *ngSwitchCase="true">
+            <div class="alert alert-success" *ngSwitchCase="true" style="max-width: 35rem;">
                 <span *ngIf="account" jhiTranslate="home.logged.message"
                       translateValues="{username: '{{account.login}}'}"> You are logged in as user "{{account.login}}". </span>
             </div>
             <div *ngIf="registrationOpen">
-                <div class="alert alert-info" *ngSwitchCase="false">
+                <div class="alert alert-info" *ngSwitchCase="false" style="max-width: 35rem;">
                     <span jhiTranslate="global.messages.info.register.noaccount">You don't have an account yet?</span>&nbsp;
                     <a class="alert-link" routerLink="register" jhiTranslate="global.messages.info.register.link">Register a
                         new account</a>
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <div *ngIf="!registrationOpen" class="card border-warning mb-3" style="max-width: 30rem;">
+        <div *ngIf="!registrationOpen" class="card border-warning mb-3" style="max-width: 35rem;">
             <div class="card-header" jhiTranslate="global.messages.info.register.closed">Registration is currently closed</div>
             <div class="card-body">
                 <p class="card-text" jhiTranslate="global.messages.info.register.wait">Please come back later</p>
