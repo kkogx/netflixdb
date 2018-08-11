@@ -11,18 +11,66 @@
                 <span *ngIf="account" jhiTranslate="home.logged.message"
                       translateValues="{username: '{{account.login}}'}"> You are logged in as user "{{account.login}}". </span>
             </div>
-
-            <div *ngIf="!registrationOpen">
-                <div class="alert alert-warning" *ngSwitchCase="false">
-                    <span jhiTranslate="global.messages.info.register.closed">Registration is currenly closed</span>&nbsp;
-                    <a jhiTranslate="global.messages.info.register.wait">Please stay tuned</a>
-                </div>
-            </div>
             <div *ngIf="registrationOpen">
                 <div class="alert alert-info" *ngSwitchCase="false">
                     <span jhiTranslate="global.messages.info.register.noaccount">You don't have an account yet?</span>&nbsp;
                     <a class="alert-link" routerLink="register" jhiTranslate="global.messages.info.register.link">Register a
                         new account</a>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!registrationOpen" class="card border-warning mb-3" style="max-width: 30rem;">
+            <div class="card-header" jhiTranslate="global.messages.info.register.closed">Registration is currently closed</div>
+            <div class="card-body">
+                <p class="card-text" jhiTranslate="global.messages.info.register.wait">Please come back later</p>
+            </div>
+        </div>
+
+        <div class="card border-info mb-3" style="max-width: 35rem;">
+            <div class="card-header" jhiTranslate="global.messages.info.catalogue.header">Check out the catalogue</div>
+            <div class="card-body">
+                <p class="card-text" jhiTranslate="global.messages.info.catalogue.intro">This is the place where you'll find an overview of entire Polish Netflix, enriched by ratings from other services such as IMDB or FilmWeb</p>
+            </div>
+        </div>
+
+        <div class="card border-info mb-3" style="max-width: 35rem;">
+            <div class="card-header" jhiTranslate="global.messages.info.knowhow.header">Did you know that?</div>
+            <div class="card-body">
+                <p class="card-text" jhiTranslate="global.messages.info.knowhow.youtube">Movie miniatures contain links to youtube, here you can find trialers with just one click!</p>
+            </div>
+        </div>
+
+        <div class="card border-info mb-3" style="max-width: 35rem;">
+            <div class="card-header" jhiTranslate="global.messages.info.knowhow.header">Did you know that?</div>
+            <div class="card-body">
+                <p class="card-text" jhiTranslate="global.messages.info.knowhow.tooltip"></p>
+            </div>
+        </div>
+
+        <div class="card border-info mb-3" style="max-width: 35rem;">
+            <div class="card-header" jhiTranslate="global.messages.info.beta.header">We are in beta</div>
+            <div class="card-body">
+                <div class="card-text">
+                   <span jhiTranslate="global.messages.info.beta.roadmap"></span>
+                    <ul>
+                        <li jhiTranslate="global.messages.info.beta.private">asd</li>
+                        <li jhiTranslate="global.messages.info.beta.score">s</li>
+                        <li jhiTranslate="global.messages.info.beta.search">s</li>
+                        <li jhiTranslate="global.messages.info.beta.mobile">s</li>
+                    </ul>
+                    <span jhiTranslate="global.messages.info.beta.visit"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-info mb-3" style="max-width: 35rem;">
+            <div class="card-header" jhiTranslate="global.messages.info.contact.header">Got an idea?</div>
+            <div class="card-body">
+                <div class="card-text">
+                    <span jhiTranslate="global.messages.info.contact.prefix"></span>
+                    <a href="mailto:admin@netflixdb.pl">admin@netflixdb.pl</a>
+                    <span jhiTranslate="global.messages.info.contact.suffix"></span>
                 </div>
             </div>
         </div>

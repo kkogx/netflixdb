@@ -58,6 +58,29 @@
                     "link": "Zarejestruj się",
                     "closed": "Rejestracja jest obecnie zamknięta",
                     "wait": "Otwieramy niedługo!"
+                },
+                "catalogue": {
+                    "header": "Szukasz filmu na wieczór?",
+                    "intro": "Znajdziesz tutaj pełny katalog Netflixa, wraz z ocenami z innych serwisów filmowych, takich jak IMDB lub Filmweb."
+                },
+                "knowhow": {
+                    "header": "Czy wiedziałeś o tym?",
+                    "youtube": "Miniatury filmów zawierają odnośnik do Youtube, gdzie możesz obejrzeć zwiastun filmu przed jego obejrzeniem!",
+                    "tooltip": "Kliknięcie na tytuł filmu otwiera krótki opis filmu."
+                },
+                "beta": {
+                    "header": "Strona w wersji beta",
+                    "roadmap": "Przed nami jeszcze dużo zmian, w planach mamy między innymi:",
+                    "private": "oznaczanie obejrzanych filmów",
+                    "score": "własne oceny użytkowników",
+                    "search": "lepsze kryteria wyszukiwania",
+                    "mobile": "wersję na urządzenia mobilne",
+                    "visit": "Odwiedzaj nas regularnie!"
+                },
+                "contact": {
+                    "header": "Masz jakieś uwagi?",
+                    "prefix": "Zależy nam na Twojej opini, skontaktuj się z nami (",
+                    "suffix": "), na pewno weźmiemy to pod uwagę!"
                 }
             },
             "error": {
@@ -134,5 +157,5 @@
         "idexists": "Nowy {{entityName}} nie może jeszcze mieć przypisanego ID",
         "idnull": "Invalid ID"
     },
-    "footer": "To jest stopka"
+    "footer": "Netflix jest znakiem towarowym należącym do Netflix, Inc i wykorzystywanym na podstawie licencji."
 }
