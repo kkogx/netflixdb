@@ -15,6 +15,7 @@
         },
         "filter": {
             "query": "*Tytuł*",
+            "yearmin": "Rok od",
             "fwebvotesmin": "Filmweb głosy od",
             "fwebvotesmax": "do",
             "imdbvotesmin": "Imdb głosy od",

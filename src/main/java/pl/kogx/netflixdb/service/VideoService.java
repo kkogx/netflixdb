@@ -116,37 +116,34 @@ public class VideoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Video> search(String query, Integer fwebMin, Integer fwebMax, Integer imdbMin, Integer imdbMax, Integer[] genres, Pageable pageable) {
-        log.debug("Request to search for a page of Videos for query={} fs={} fx={} is={} ix={} g={}", query, fwebMin, fwebMax, imdbMin, imdbMax, genres);
+    public Page<Video> search(String query, Integer fwebMin, Integer fwebMax, Integer imdbMin, Integer imdbMax, Integer yearMin, Integer[] genres, Pageable pageable) {
+        log.debug("Request to search for a page of Videos for query={} fs={} fx={} is={} ix={} ym={} g={}", query, fwebMin, fwebMax, imdbMin, imdbMax, yearMin, genres);
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
         if (StringUtils.isEmpty(query)) {
             query = "*";
         }
         builder = builder.must(queryStringQuery(query).field("fwebTitle").field("title"));
-        if (fwebMin > 0 || fwebMax > 0) {
-            RangeQueryBuilder fwebVotesBuilder = QueryBuilders.rangeQuery("fwebVotes");
-            if (fwebMin > 0) {
-                fwebVotesBuilder = fwebVotesBuilder.gte(fwebMin);
-            }
-            if (fwebMax > 0) {
-                fwebVotesBuilder = fwebVotesBuilder.lte(fwebMax);
-            }
-            builder = builder.must(fwebVotesBuilder);
-        }
-        if (imdbMin > 0 || imdbMax > 0) {
-            RangeQueryBuilder imdbVotesBuilder = QueryBuilders.rangeQuery("imdbVotes");
-            if (imdbMin > 0) {
-                imdbVotesBuilder = imdbVotesBuilder.gte(imdbMin);
-            }
-            if (imdbMax > 0) {
-                imdbVotesBuilder = imdbVotesBuilder.lte(imdbMax);
-            }
-            builder = builder.must(imdbVotesBuilder);
-        }
+        builder = applyMustBetween(builder, fwebMin, fwebMax, "fwebVotes");
+        builder = applyMustBetween(builder, imdbMin, imdbMax, "imdbVotes");
+        builder = applyMustBetween(builder, yearMin, -1, "releaseYear");
         if(!ArrayUtils.isEmpty(genres)) {
                 builder = builder.must(QueryBuilders.termsQuery("genreId", genres));
         }
         return videoSearchRepository.search(builder, pageable);
+    }
+
+    public BoolQueryBuilder applyMustBetween(BoolQueryBuilder builder, Integer min, Integer max, String name) {
+        if (min < 0 && max < 0) {
+            return builder;
+        }
+        RangeQueryBuilder betweenBuilder = QueryBuilders.rangeQuery(name);
+        if (min > 0) {
+            betweenBuilder = betweenBuilder.gte(min);
+        }
+        if (max > 0) {
+            betweenBuilder = betweenBuilder.lte(max);
+        }
+        return builder.must(betweenBuilder);
     }
 
     public void deleteAll() {

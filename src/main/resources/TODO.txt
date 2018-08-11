@@ -1,4 +1,5 @@
 - multi genre
+- split catalogue
 - search criteria
 - improve result filtering (year distance)
 - live search
