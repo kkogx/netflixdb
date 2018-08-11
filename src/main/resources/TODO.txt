@@ -1,7 +1,13 @@
+- gotham font logo
+- split movies n tv
+Pre-prod
+- visit count
+- donates
 - multi genre
 - split catalogue
 - search criteria
 - improve result filtering (year distance)
+Post-prod
 - live search
 - frontend for mobile
 
