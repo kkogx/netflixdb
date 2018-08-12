@@ -1,44 +1,44 @@
 /* after changing this file run 'yarn run webpack:build' */
 /* tslint:disable */
 import '../content/css/vendor.css';
-
-// Imports all fontawesome core and solid icons
-
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
-    faUser,
-    faSort,
-    faSync,
-    faEye,
-    faBan,
-    faTimes,
     faArrowLeft,
-    faSave,
-    faPlus,
-    faPencilAlt,
+    faAsterisk,
+    faBan,
     faBars,
-    faThList,
-    faUserPlus,
-    faRoad,
-    faTachometerAlt,
-    faHeart,
-    faList,
     faBell,
     faBook,
-    faHdd,
-    faFlag,
-    faWrench,
+    faCalendarAlt,
     faClock,
     faCloud,
-    faSignOutAlt,
-    faSignInAlt,
-    faCalendarAlt,
+    faDonate,
+    faEye,
+    faFlag,
+    faHdd,
+    faHeart,
+    faHome,
+    faList,
+    faPencilAlt,
+    faPlus,
+    faRoad,
+    faSave,
     faSearch,
-    faTrashAlt,
-    faAsterisk,
+    faSignInAlt,
+    faSignOutAlt,
+    faSort,
+    faSync,
+    faTachometerAlt,
     faTasks,
-    faHome
+    faThList,
+    faTimes,
+    faTrashAlt,
+    faUser,
+    faUserPlus,
+    faWrench
 } from '@fortawesome/free-solid-svg-icons';
+
+// Imports all fontawesome core and solid icons
 
 // Adds the SVG icon to the library so you can use it in your page
 library.add(faUser);
@@ -73,5 +73,6 @@ library.add(faCalendarAlt);
 library.add(faSearch);
 library.add(faTrashAlt);
 library.add(faAsterisk);
+library.add(faDonate);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

@@ -17,7 +17,16 @@ import { NetflixdbHomeModule } from './home/home.module';
 import { NetflixdbAccountModule } from './account/account.module';
 import { NetflixdbEntityModule } from './entities/entity.module';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
-import { ActiveMenuDirective, ErrorComponent, FooterComponent, JhiMainComponent, NavbarComponent, PageRibbonComponent } from './layouts';
+import {
+    ActiveMenuDirective,
+    DonateModalComponent,
+    DonateModalContentComponent,
+    ErrorComponent,
+    FooterComponent,
+    JhiMainComponent,
+    NavbarComponent,
+    PageRibbonComponent
+} from './layouts';
 
 @NgModule({
     imports: [
@@ -31,7 +40,17 @@ import { ActiveMenuDirective, ErrorComponent, FooterComponent, JhiMainComponent,
         NetflixdbEntityModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
-    declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],
+    declarations: [
+        JhiMainComponent,
+        NavbarComponent,
+        ErrorComponent,
+        PageRibbonComponent,
+        ActiveMenuDirective,
+        FooterComponent,
+        DonateModalComponent,
+        DonateModalContentComponent
+    ],
+    entryComponents: [DonateModalContentComponent],
     providers: [
         {
             provide: HTTP_INTERCEPTORS,
