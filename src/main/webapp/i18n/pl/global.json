@@ -61,11 +61,11 @@
                 },
                 "catalogue": {
                     "header": "Szukasz filmu na wieczór?",
-                    "intro": "Znajdziesz tutaj pełny katalog Netflixa, wraz z ocenami z innych serwisów filmowych, takich jak IMDB lub Filmweb."
+                    "intro": "Znajdziesz tu pełny katalog Netflixa, wraz z ocenami z innych serwisów filmowych, takich jak IMDB lub Filmweb."
                 },
                 "donate": {
                     "header": "Wsparcie",
-                    "intro": "Autorem serwisu jest obecnie jedna osoba, która pracuje nad nim w prywatnym czasie. Serwis powstał dla celów osobistych ale ostatecznie został udostępniony. Utrzymanie takiego serwisu jest kosztowne, dlatego jeśli możesz wspomóc jego dalszy rozwój - kliknij w dotacje."
+                    "intro": "Netflixdb.pl tworzy obecnie jedna osoba, w swoim prywatnym czasie. Katalog powstał dla celów prywatnych ale został upubliczniony. Pomimo tego że działamy bezinteresownie, utrzymanie netflixdb.pl nie jest darmowe, dlatego jeśli możesz wspomóc jego dalszy rozwój - kliknij w dotacje."
                 },
                 "knowhow": {
                     "header": "Czy wiedziałeś o tym?",
@@ -74,8 +74,8 @@
                 },
                 "beta": {
                     "header": "Strona w wersji beta",
-                    "roadmap": "Przed nami jeszcze dużo zmian, w planach mamy między innymi:",
-                    "private": "oznaczanie obejrzanych filmów",
+                    "roadmap": "Przed nami jeszcze dużo zmian, w planach między innymi:",
+                    "private": "oznaczanie filmów które już widziałeś",
                     "score": "własne oceny użytkowników",
                     "search": "lepsze kryteria wyszukiwania",
                     "mobile": "wersję na urządzenia mobilne",
@@ -84,7 +84,7 @@
                 "contact": {
                     "header": "Masz jakieś uwagi?",
                     "prefix": "Zależy nam na Twojej opini, skontaktuj się z nami (",
-                    "suffix": "), na pewno weźmiemy to pod uwagę!"
+                    "suffix": "), każdą z pewnością weźmiemy to pod uwagę!"
                 }
             },
             "error": {
