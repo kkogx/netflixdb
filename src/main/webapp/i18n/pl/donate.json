@@ -1,0 +1,13 @@
+{
+    "donate": {
+        "title": "Wsparcie",
+        "form": {
+            "amount": "Kwota",
+            "currency": "Waluta",
+            "description": "Wiadomość",
+            "email": "Email"
+        },
+        "cancel": "Anuluj",
+        "send": "Wyślij"
+    }
+}
