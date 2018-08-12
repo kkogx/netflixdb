@@ -22,6 +22,12 @@ public class ApplicationProperties {
 
     public final FwebSync fwebSync = new FwebSync();
 
+    public final Przelewy24 przelewy24 = new Przelewy24();
+
+    public Przelewy24 getPrzelewy24() {
+        return przelewy24;
+    }
+
     public FwebSync getFwebSync() {
         return fwebSync;
     }
@@ -32,6 +38,39 @@ public class ApplicationProperties {
 
     public OmdbSync getOmdbSync() {
         return omdbSync;
+    }
+
+    public static class Przelewy24 {
+
+        private String host;
+
+        private String crc;
+
+        private String merchantId;
+
+        public String getHost() {
+            return host;
+        }
+
+        public void setHost(String host) {
+            this.host = host;
+        }
+
+        public String getCrc() {
+            return crc;
+        }
+
+        public void setCrc(String crc) {
+            this.crc = crc;
+        }
+
+        public String getMerchantId() {
+            return merchantId;
+        }
+
+        public void setMerchantId(String merchantId) {
+            this.merchantId = merchantId;
+        }
     }
 
     public static class FwebSync {

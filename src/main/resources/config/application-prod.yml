@@ -135,6 +135,9 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 application:
+    przelewy24:
+        host: "https://secure.przelewy24.pl/"
+        crc: "***REMOVED***"
     netflix-sync:
         proxy-settings:
             user: "zhentarin"

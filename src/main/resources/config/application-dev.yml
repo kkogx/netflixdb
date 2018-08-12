@@ -139,3 +139,7 @@ jhipster:
 # More documentation is available at:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
+application:
+    przelewy24:
+        host: "https://sandbox.przelewy24.pl/"
+        crc: "***REMOVED***"
