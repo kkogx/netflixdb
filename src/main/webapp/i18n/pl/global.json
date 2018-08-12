@@ -6,6 +6,7 @@
             "home": "Strona domowa",
             "videos": "Katalog",
             "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
+            "donate": "Wsparcie",
             "entities": {
                 "main": "Encje",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
@@ -65,7 +66,7 @@
                 },
                 "donate": {
                     "header": "Wsparcie",
-                    "intro": "Netflixdb.pl tworzy obecnie jedna osoba, w swoim prywatnym czasie. Katalog powstał dla celów prywatnych ale został upubliczniony. Pomimo tego że działamy bezinteresownie, utrzymanie netflixdb.pl nie jest darmowe, dlatego jeśli możesz wspomóc jego dalszy rozwój - kliknij w darowiznę."
+                    "intro": "Netflixdb.pl tworzy obecnie jedna osoba, w swoim prywatnym czasie. Katalog powstał dla celów prywatnych ale został upubliczniony. Pomimo tego że działamy bezinteresownie, utrzymanie netflixdb.pl nie jest darmowe, dlatego jeśli możesz wspomóc jego dalszy rozwój - kliknij we Wsparcie."
                 },
                 "knowhow": {
                     "header": "Czy wiedziałeś o tym?",
