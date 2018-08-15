@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <div class="card border-info mb-3" style="max-width: 35rem;">
+        <div *ngIf="!inProduction" class="card border-info mb-3" style="max-width: 35rem;">
             <div class="card-header" jhiTranslate="global.messages.info.catalogue.header">Check out the catalogue</div>
             <div class="card-body">
                 <p class="card-text" jhiTranslate="global.messages.info.catalogue.intro">This is the place where you'll find an overview of entire Polish Netflix, enriched by ratings from other services such as IMDB or FilmWeb</p>
@@ -36,14 +36,14 @@
         </div>
 
 
-        <div class="card border-info mb-3" style="max-width: 35rem;">
+        <div *ngIf="!inProduction" class="card border-info mb-3" style="max-width: 35rem;">
             <div class="card-header" jhiTranslate="global.messages.info.donate.header"></div>
             <div class="card-body">
                 <p class="card-text" jhiTranslate="global.messages.info.donate.intro"></p>
             </div>
         </div>
 
-        <div class="card border-info mb-3" style="max-width: 35rem;">
+        <div *ngIf="!inProduction" class="card border-info mb-3" style="max-width: 35rem;">
             <div class="card-header" jhiTranslate="global.messages.info.knowhow.header">Did you know that?</div>
             <div class="card-body">
                 <p class="card-text" jhiTranslate="global.messages.info.knowhow.youtube">Movie miniatures contain links to youtube, here you can find trialers with just one click!</p>
@@ -57,7 +57,7 @@
             <!--</div>-->
         <!--</div>-->
 
-        <div class="card border-info mb-3" style="max-width: 35rem;">
+        <div *ngIf="!inProduction" class="card border-info mb-3" style="max-width: 35rem;">
             <div class="card-header" jhiTranslate="global.messages.info.beta.header">We are in beta</div>
             <div class="card-body">
                 <div class="card-text">
