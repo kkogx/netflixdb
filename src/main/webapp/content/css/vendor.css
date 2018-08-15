@@ -14,6 +14,10 @@
     background-size: 260px 146px;
 }
 
+.form-inline > div.donate-form {
+    width: 75%;
+}
+
 .underline-on-hover:hover {
     text-decoration: underline;
 }
