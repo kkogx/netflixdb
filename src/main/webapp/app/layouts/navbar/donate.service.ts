@@ -3,12 +3,12 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { map } from 'rxjs/operators';
-import { Przelewy24 } from 'app/layouts/navbar/donate.model';
+import { Przelewy24, Przelewy24Trx } from 'app/layouts/navbar/donate.model';
 import { Observable } from 'rxjs/index';
 
 @Injectable({ providedIn: 'root' })
 export class DonateService {
-    private infoUrl = SERVER_API_URL + 'api/donate';
+    private donateUrl = SERVER_API_URL + 'api/donate';
     private przelewy24Promise: Promise<Przelewy24>;
     private przelewy24: Przelewy24;
 
@@ -17,7 +17,7 @@ export class DonateService {
     getPrzelewy24(): Promise<Przelewy24> {
         if (!this.przelewy24Promise) {
             this.przelewy24Promise = this.http
-                .get<Przelewy24>(this.infoUrl + '/p24', { observe: 'response' })
+                .get<Przelewy24>(this.donateUrl + '/p24', { observe: 'response' })
                 .pipe(
                     map((res: HttpResponse<Przelewy24>) => {
                         const data = res.body;
@@ -34,12 +34,7 @@ export class DonateService {
         return this.przelewy24Promise;
     }
 
-    txnRegisterP24(req: any): Observable<HttpResponse<any>> {
-        let url = this.przelewy24.host;
-        if (!url.endsWith('/')) {
-            url += '/';
-        }
-        url += 'trnRegister';
-        return this.http.post<any>(url, req);
+    txnRegisterP24(req: Przelewy24Trx): Observable<HttpResponse<any>> {
+        return this.http.post<any>(this.donateUrl + '/p24/txnRegister', req);
     }
 }
