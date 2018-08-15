@@ -1,10 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Md5 } from 'ts-md5/dist/md5';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DonateService } from 'app/layouts/navbar/donate.service';
-import { Przelewy24 } from 'app/layouts/navbar/donate.model';
+import { Przelewy24, Przelewy24Trx } from 'app/layouts/navbar/donate.model';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
     selector: 'jhi-donate-modal-content',
@@ -42,6 +41,9 @@ import { Router } from '@angular/router';
                     jhiTranslate="donate.cancel"></button>
             <button type="button" class="btn btn-primary" (click)=send() jhiTranslate="donate.send"></button>
         </div>
+        <div *ngIf="showResponse">
+            <a href="{{paymentLink}}">{{paymentLink}}</a>
+        </div>
     `
 })
 export class DonateModalContentComponent implements OnInit {
@@ -52,14 +54,17 @@ export class DonateModalContentComponent implements OnInit {
     private currency: string;
     private description: string;
     private email: string;
+    private paymentLink: string;
+    private showResponse: boolean;
 
     constructor(
+        @Inject(DOCUMENT) private document: any,
         public activeModal: NgbActiveModal,
         private http: HttpClient,
-        private donateService: DonateService,
-        private router: Router
+        private donateService: DonateService
     ) {
         this.currency = 'PLN';
+        this.showResponse = false;
     }
 
     ngOnInit(): void {
@@ -71,36 +76,22 @@ export class DonateModalContentComponent implements OnInit {
     public send() {
         console.log(this.przelewy24.host);
 
-        const uuid =
-            Math.random()
-                .toString(36)
-                .substring(2, 15) +
-            Math.random()
-                .toString(36)
-                .substring(2, 15);
-        const sessionId = Md5.hashStr(Date.now().toString() + uuid);
-        const amount = Math.trunc(this.amount * 100);
-        const req = {
-            p24_merchant_id: this.przelewy24.merchantId,
-            p24_pos_id: this.przelewy24.merchantId,
-            p24_session_id: Md5.hashStr(Date.now().toString() + uuid),
-            p24_amount: amount,
-            p24_currency: this.currency,
-            p24_description: this.description,
-            p24_email: this.email,
-            p24_country: 'PL',
-            p24_url_return: this.router.url,
-            p24_transfer_label: this.description,
-            p24_sign: Md5.hashStr(`${sessionId}|${this.przelewy24.merchantId}|${amount}|${this.currency}|${this.przelewy24.crc}`),
-            p24_api_version: '3.2'
-        };
+        const p24 = new Przelewy24Trx();
+        p24.country = 'PL';
+        p24.currency = this.currency;
+        p24.description = this.description;
+        p24.email = this.email;
+        p24.transferLabel = this.description;
+        p24.urlReturn = document.location.href;
+        p24.amount = this.amount;
 
         this.donateService
-            .txnRegisterP24(req)
+            .txnRegisterP24(p24)
             .toPromise()
             .then(
                 res => {
-                    console.log(res);
+                    this.paymentLink = res.body;
+                    this.showResponse = true;
                 },
                 err => {
                     console.error(err);

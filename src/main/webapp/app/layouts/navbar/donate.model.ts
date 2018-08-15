@@ -3,3 +3,13 @@ export class Przelewy24 {
     crc: string;
     merchantId: string;
 }
+
+export class Przelewy24Trx {
+    amount: number;
+    currency: string;
+    description: string;
+    email: string;
+    country: string;
+    urlReturn: string;
+    transferLabel: string;
+}

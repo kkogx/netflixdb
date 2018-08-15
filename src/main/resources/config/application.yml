@@ -111,7 +111,7 @@ jhipster:
 
 application:
     przelewy24:
-        merchantId: "687502fa"
+        merchant-id: "***REMOVED***"
     omdb-sync:
         api-key: "***REMOVED***"
         force-query-search: true
