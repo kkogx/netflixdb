@@ -1,11 +1,7 @@
 package pl.kogx.netflixdb.config;
 
-import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
-import org.springframework.security.core.context.SecurityContextHolder;
-import pl.kogx.netflixdb.security.*;
-import pl.kogx.netflixdb.security.jwt.*;
-
 import org.springframework.beans.factory.BeanInitializationException;
+import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -18,12 +14,16 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
+import pl.kogx.netflixdb.security.AuthoritiesConstants;
+import pl.kogx.netflixdb.security.jwt.JWTConfigurer;
+import pl.kogx.netflixdb.security.jwt.TokenProvider;
 
 import javax.annotation.PostConstruct;
 
@@ -108,6 +108,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/authenticate").permitAll()
             .antMatchers("/api/account/reset-password/init").permitAll()
             .antMatchers("/api/account/reset-password/finish").permitAll()
+            .antMatchers("/api/donate/p24").permitAll()
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/info").permitAll()
