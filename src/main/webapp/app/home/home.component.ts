@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { LoginModalService, Principal, Account } from 'app/core';
+import { Account, LoginModalService, Principal } from 'app/core';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
 
 @Component({
@@ -11,6 +11,7 @@ import { ProfileService } from 'app/layouts/profiles/profile.service';
     styleUrls: ['home.css']
 })
 export class HomeComponent implements OnInit {
+    inProduction: boolean;
     account: Account;
     modalRef: NgbModalRef;
     registrationOpen: boolean;
@@ -29,6 +30,7 @@ export class HomeComponent implements OnInit {
         this.registerAuthenticationSuccess();
         this.profileService.getProfileInfo().then(profileInfo => {
             this.registrationOpen = !profileInfo.registrationClosed;
+            this.inProduction = profileInfo.inProduction;
         });
     }
 
