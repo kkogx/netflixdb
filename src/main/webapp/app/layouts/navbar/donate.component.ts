@@ -55,12 +55,12 @@ export class DonateModalContentComponent implements OnInit {
 
     @Input() name;
 
-    private amount: number;
-    private currency: string;
-    private description: string;
-    private email: string;
-    private paymentLink: string;
-    private showResponse: boolean;
+    public amount: number;
+    public readonly currency: string;
+    public description: string;
+    public email: string;
+    public paymentLink: string;
+    public showResponse: boolean;
 
     constructor(
         @Inject(DOCUMENT) private document: any,
