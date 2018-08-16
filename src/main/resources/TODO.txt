@@ -1,17 +1,17 @@
-- gotham font logo
-- split movies n tv
-Pre-prod
-- visit count
-- donates
-- multi genre
-- split catalogue
 - search criteria
+Go closed tests
+- donate validations
+- split movies n tv
 - improve result filtering (year distance)
+- multi genre
 Post-prod
 - live search
 - frontend for mobile
 
 Done
+- visit count
+- donates
+- gotham font logo
 - refresh timestamp
 - add rest service for manual sync
 - improved security (disable elastic and kibana ports)
