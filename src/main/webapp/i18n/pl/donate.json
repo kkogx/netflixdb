@@ -8,6 +8,8 @@
             "email": "Email"
         },
         "cancel": "Anuluj",
-        "send": "Wyślij"
+        "send": "Wygeneruj link do P24",
+        "pay": "Wyślij",
+        "thanks": "Dziękujemy za wsparcie!"
     }
 }

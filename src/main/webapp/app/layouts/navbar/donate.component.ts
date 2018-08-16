@@ -1,9 +1,11 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DonateService } from 'app/layouts/navbar/donate.service';
-import { Przelewy24, Przelewy24Trx } from 'app/layouts/navbar/donate.model';
+import { Przelewy24Trx } from 'app/layouts/navbar/donate.model';
 import { HttpClient } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
+import { Router } from '@angular/router';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
 @Component({
     selector: 'jhi-donate-modal-content',
@@ -16,23 +18,26 @@ import { DOCUMENT } from '@angular/common';
         </div>
         <div class="modal-body">
             <img src="../../../content/images/przelewy24_150.png">
+            <ng4-loading-spinner></ng4-loading-spinner>
             <form class="form-inline">
                 <div class="donate-form input-group mt-3">
-                    <div class="input-group-prepend"><span class="input-group-text"
-                                                           jhiTranslate="donate.form.amount"></span></div>
-                    <input type="number" class="form-control" name="amount" [(ngModel)]="amount"/>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" jhiTranslate="donate.form.amount"></span>
+                    </div>
+                    <input type="number" class="form-control" name="amount" required [(ngModel)]="amount"/>
                     <div class="input-group-append"><span class="input-group-text">{{currency}}</span></div>
                 </div>
                 <div class="donate-form input-group mt-3">
-                    <div class="input-group-prepend"><span class="input-group-text"
-                                                           jhiTranslate="donate.form.email"></span></div>
-                    <input type="email" class="form-control" name="email" [(ngModel)]="email"/>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" jhiTranslate="donate.form.email"></span>
+                    </div>
+                    <input type="email" class="form-control" name="email"  required [(ngModel)]="email"/>
                 </div>
                 <div class="donate-form input-group mt-3">
-                    <div class="input-group-prepend"><span class="input-group-text"
-                                                           jhiTranslate="donate.form.description"></span></div>
-                    <input type="text" class="form-control" name="description" [(ngModel)]="description"
-                           value="I love Netflixdb!"/>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" jhiTranslate="donate.form.description"></span>
+                    </div>
+                    <input type="text" class="form-control" name="description" [(ngModel)]="description"/>
                 </div>
             </form>
         </div>
@@ -40,16 +45,16 @@ import { DOCUMENT } from '@angular/common';
             <button type="button" class="btn btn-secondary" (click)="activeModal.close('Close click')"
                     jhiTranslate="donate.cancel"></button>
             <button type="button" class="btn btn-primary" (click)=send() jhiTranslate="donate.send"></button>
-        </div>
-        <div *ngIf="showResponse">
-            <a href="{{paymentLink}}">{{paymentLink}}</a>
+            <button type="button" class="btn btn-success" (click)=redirect() jhiTranslate="donate.pay"
+                    [disabled]="!showResponse"></button>
         </div>
     `
 })
 export class DonateModalContentComponent implements OnInit {
+    public static DONATED_PARAM = 'donated';
+
     @Input() name;
 
-    private przelewy24: Przelewy24;
     private amount: number;
     private currency: string;
     private description: string;
@@ -61,42 +66,48 @@ export class DonateModalContentComponent implements OnInit {
         @Inject(DOCUMENT) private document: any,
         public activeModal: NgbActiveModal,
         private http: HttpClient,
-        private donateService: DonateService
+        private router: Router,
+        private donateService: DonateService,
+        private spinnerService: Ng4LoadingSpinnerService
     ) {
         this.currency = 'PLN';
         this.showResponse = false;
     }
 
     ngOnInit(): void {
-        this.donateService.getPrzelewy24().then(przelewy24 => {
-            this.przelewy24 = przelewy24;
-        });
+        this.description = 'I love Netflixdb.pl!';
     }
 
     public send() {
-        console.log(this.przelewy24.host);
-
         const p24 = new Przelewy24Trx();
         p24.country = 'PL';
+        p24.language = 'pl';
         p24.currency = this.currency;
         p24.description = this.description;
         p24.email = this.email;
         p24.transferLabel = this.description;
-        p24.urlReturn = document.location.href;
+        p24.urlReturn = document.location.href + `?${DonateModalContentComponent.DONATED_PARAM}=true`;
         p24.amount = this.amount;
 
+        this.spinnerService.show();
         this.donateService
             .txnRegisterP24(p24)
             .toPromise()
             .then(
                 res => {
-                    this.paymentLink = res.body;
+                    this.paymentLink = res['url'];
                     this.showResponse = true;
+                    this.spinnerService.hide();
                 },
                 err => {
                     console.error(err);
+                    this.spinnerService.hide();
                 }
             );
+    }
+
+    public redirect() {
+        document.location.href = this.paymentLink;
     }
 }
 
@@ -109,6 +120,6 @@ export class DonateModalComponent {
 
     open() {
         const modalRef = this.modalService.open(DonateModalContentComponent);
-        modalRef.componentInstance.name = 'World';
+        modalRef.componentInstance.name = 'Donate';
     }
 }

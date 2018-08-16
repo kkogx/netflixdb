@@ -16,6 +16,7 @@ import { NetflixdbAppRoutingModule } from './app-routing.module';
 import { NetflixdbHomeModule } from './home/home.module';
 import { NetflixdbAccountModule } from './account/account.module';
 import { NetflixdbEntityModule } from './entities/entity.module';
+import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import {
     ActiveMenuDirective,
@@ -37,7 +38,8 @@ import {
         NetflixdbCoreModule,
         NetflixdbHomeModule,
         NetflixdbAccountModule,
-        NetflixdbEntityModule
+        NetflixdbEntityModule,
+        Ng4LoadingSpinnerModule.forRoot()
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [

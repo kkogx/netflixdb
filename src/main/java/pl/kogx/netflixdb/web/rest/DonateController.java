@@ -4,12 +4,18 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import pl.kogx.netflixdb.config.ApplicationProperties;
-import pl.kogx.netflixdb.service.dto.Przelewy24DTO;
 import pl.kogx.netflixdb.service.dto.Przelewy24TrxDTO;
 
 import javax.servlet.http.HttpSession;
@@ -32,17 +38,6 @@ public class DonateController {
         this.p24Properties = applicationProperties.przelewy24;
     }
 
-    @GetMapping("/p24")
-    public ResponseEntity<Przelewy24DTO> getDonateInfo() {
-        log.info("donate info");
-        Przelewy24DTO dto = new Przelewy24DTO();
-        ApplicationProperties.Przelewy24 p24 = p24Properties;
-        dto.setCrc(p24.getCrc());
-        dto.setHost(p24.getHost());
-        dto.setMerchantId(p24.getMerchantId());
-        return ResponseEntity.ok(dto);
-    }
-
     @PostMapping("/p24/txnRegister")
     public ResponseEntity<String> p24TxnRegister(HttpSession session, @RequestBody Przelewy24TrxDTO p24) throws IOException {
         Response registerResponse = sendP24Register(session, p24);
@@ -54,7 +49,11 @@ public class DonateController {
 
         final String token = registerResponseString.substring(registerResponseString.lastIndexOf("token=") + 6);
         URI reqUrl = URI.create(p24Properties.getHost()).resolve("/trnRequest/" + token);
-        return ResponseEntity.ok(reqUrl.toString());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        JSONObject res = new JSONObject();
+        res.put("url", reqUrl.toASCIIString());
+        return new ResponseEntity<>(res.toString(), headers, HttpStatus.OK);
     }
 
     private Response sendP24Register(HttpSession session, @RequestBody Przelewy24TrxDTO p24) throws IOException {
@@ -70,6 +69,7 @@ public class DonateController {
             .add("p24_description", p24.getDescription())
             .add("p24_email", p24.getEmail())
             .add("p24_country", p24.getCountry())
+            .add("p24_language", p24.getLanguage())
             .add("p24_url_return", p24.getUrlReturn())
             .add("p24_transfer_label", p24.getTransferLabel())
             .add("p24_sign", DigestUtils.md5Hex(String.format("%s|%s|%s|%s|%s",

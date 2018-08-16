@@ -4,6 +4,8 @@ import { JhiEventManager } from 'ng-jhipster';
 
 import { Account, LoginModalService, Principal } from 'app/core';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
+import { ActivatedRoute } from '@angular/router';
+import { DonateModalContentComponent } from 'app/layouts/navbar/donate.component';
 
 @Component({
     selector: 'jhi-home',
@@ -15,12 +17,14 @@ export class HomeComponent implements OnInit {
     account: Account;
     modalRef: NgbModalRef;
     registrationOpen: boolean;
+    showThanks: boolean;
 
     constructor(
         private principal: Principal,
         private loginModalService: LoginModalService,
         private eventManager: JhiEventManager,
-        private profileService: ProfileService
+        private profileService: ProfileService,
+        private route: ActivatedRoute
     ) {}
 
     ngOnInit() {
@@ -31,6 +35,11 @@ export class HomeComponent implements OnInit {
         this.profileService.getProfileInfo().then(profileInfo => {
             this.registrationOpen = !profileInfo.registrationClosed;
             this.inProduction = profileInfo.inProduction;
+        });
+        this.route.queryParams.subscribe(params => {
+            if (params[DonateModalContentComponent.DONATED_PARAM]) {
+                this.showThanks = true;
+            }
         });
     }
 
