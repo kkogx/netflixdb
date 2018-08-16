@@ -18,6 +18,16 @@ public class Przelewy24TrxDTO {
 
     private String transferLabel;
 
+    private String language;
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
     public BigDecimal getAmount() {
         return amount;
     }

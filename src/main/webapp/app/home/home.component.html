@@ -7,6 +7,10 @@
         <h2 jhiTranslate="home.title">Witaj w Netflixdb!</h2>
         <p class="lead" jhiTranslate="home.subtitle">Nieoficjalny katalog polskiego Netflixa</p>
 
+        <div *ngIf="showThanks" class="alert alert-dismissible alert-success" style="max-width: 35rem;">
+            <strong jhiTranslate="donate.thanks"></strong>
+        </div>
+
         <div [ngSwitch]="isAuthenticated()">
             <div class="alert alert-success" *ngSwitchCase="true" style="max-width: 35rem;">
                 <span *ngIf="account" jhiTranslate="home.logged.message"
