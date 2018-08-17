@@ -48,6 +48,16 @@ public class ApplicationProperties {
 
         private String merchantId;
 
+        private String statusHost;
+
+        public String getStatusHost() {
+            return statusHost;
+        }
+
+        public void setStatusHost(String statusHost) {
+            this.statusHost = statusHost;
+        }
+
         public String getHost() {
             return host;
         }

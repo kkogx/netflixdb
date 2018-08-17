@@ -1,0 +1,75 @@
+<div>
+    <h2 id="page-heading">
+        <span>Przelewy 24 Trxes</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-przelewy-24-trx" [routerLink]="['/przelewy-24-trx/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span class="hidden-sm-down" >
+            Create new Przelewy 24 Trx
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+        <div class="col-sm-12">
+            <form name="searchForm" class="form-inline">
+
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="przelewy24Trxes">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
+            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="createdDate"><span>Created Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="confirmedDate"><span>Confirmed Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="email"><span>Email</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="sessionId"><span>Session Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="currency"><span>Currency</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="country"><span>Country</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="amount"><span>Amount</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+            <tr *ngFor="let przelewy24Trx of przelewy24Trxes ;trackBy: trackId">
+                <td><a [routerLink]="['/przelewy-24-trx', przelewy24Trx.id, 'view' ]">{{przelewy24Trx.id}}</a></td>
+                <td>{{przelewy24Trx.createdDate | date:'medium'}}</td>
+                <td>{{przelewy24Trx.confirmedDate | date:'medium'}}</td>
+                <td>{{przelewy24Trx.email}}</td>
+                <td>{{przelewy24Trx.sessionId}}</td>
+                <td>{{przelewy24Trx.description}}</td>
+                <td>{{przelewy24Trx.currency}}</td>
+                <td>{{przelewy24Trx.country}}</td>
+                <td>{{przelewy24Trx.amount}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/przelewy-24-trx', przelewy24Trx.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/przelewy-24-trx', przelewy24Trx.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'przelewy-24-trx/'+ przelewy24Trx.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
