@@ -1,0 +1,20 @@
+entity Przelewy24Trx {
+	createdDate Instant,
+	confirmedDate Instant,
+	email String,
+    sessionId String required,
+    description String,
+    currency String,
+    country String,
+    amount Integer,
+}
+
+// Set pagination options
+paginate Przelewy24Trx with infinite-scroll
+
+//dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl 
+// Set an angular suffix
+//angularSuffix * with kogx

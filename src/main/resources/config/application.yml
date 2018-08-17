@@ -112,6 +112,7 @@ jhipster:
 application:
     przelewy24:
         merchant-id: "***REMOVED***"
+        status-host: "netflixdb.pl"
     omdb-sync:
         api-key: "***REMOVED***"
         force-query-search: true
