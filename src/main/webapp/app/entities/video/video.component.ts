@@ -28,11 +28,11 @@ export class VideoComponent implements OnInit, OnDestroy {
     predicate: any;
     reverse: any;
     totalItems: number;
+
     currentSearch: string;
+    searchByType: string;
     imdbVoteMin: number;
-    imdbVoteMax: number;
     fwebVoteMin: number;
-    fwebVoteMax: number;
     releaseYearMin: number;
 
     genres: Observable<IGenre[]>;
@@ -58,37 +58,29 @@ export class VideoComponent implements OnInit, OnDestroy {
             this.activatedRoute.snapshot && this.activatedRoute.snapshot.params['search']
                 ? this.activatedRoute.snapshot.params['search']
                 : '';
+        this.searchByType = this.activatedRoute.snapshot.data['searchByType'];
     }
 
     loadAll() {
         this.videoService
-            .search({
-                query: this.currentSearch,
-                fwebMin: this.fwebVoteMin ? this.fwebVoteMin : 0,
-                fwebMax: this.fwebVoteMax ? this.fwebVoteMax : -1,
-                imdbMin: this.imdbVoteMin ? this.imdbVoteMin : 0,
-                imdbMax: this.imdbVoteMax ? this.imdbVoteMax : -1,
-                yearMin: this.releaseYearMin ? this.releaseYearMin : 0,
-                genres: this.selectedGenres.map(value => value.id),
-                page: this.page,
-                size: this.itemsPerPage,
-                sort: this.sort()
-            })
+            .search(
+                {
+                    query: this.currentSearch,
+                    fwebMin: this.fwebVoteMin ? this.fwebVoteMin : 0,
+                    imdbMin: this.imdbVoteMin ? this.imdbVoteMin : 0,
+                    yearMin: this.releaseYearMin ? this.releaseYearMin : 0,
+                    genres: this.selectedGenres.map(value => value.id),
+                    page: this.page,
+                    size: this.itemsPerPage,
+                    sort: this.sort()
+                },
+                this.searchByType
+            )
             .subscribe(
                 (res: HttpResponse<IVideo[]>) => this.paginateVideos(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
         return;
-        // this.videoService
-        //     .query({
-        //         page: this.page,
-        //         size: this.itemsPerPage,
-        //         sort: this.sort()
-        //     })
-        //     .subscribe(
-        //         (res: HttpResponse<IVideo[]>) => this.paginateVideos(res.body, res.headers),
-        //         (res: HttpErrorResponse) => this.onError(res.message)
-        //     );
     }
 
     reset() {
@@ -128,32 +120,13 @@ export class VideoComponent implements OnInit, OnDestroy {
 
     private ensureRanges() {
         this.fwebVoteMin = this.ensureRange(this.fwebVoteMin, 1000000);
-        this.fwebVoteMax = this.ensureRange(this.fwebVoteMax, 1000000);
         this.imdbVoteMin = this.ensureRange(this.imdbVoteMin, 2000000);
-        this.imdbVoteMax = this.ensureRange(this.imdbVoteMax, 2000000);
         this.releaseYearMin = this.ensureRange(this.releaseYearMin, 2020, 1940);
     }
 
     // called whenever min search param is changed
     public searchBlurMin(query) {
         this.ensureRanges();
-        if (this.fwebVoteMax <= this.fwebVoteMin) {
-            this.fwebVoteMax = undefined;
-        }
-        if (this.imdbVoteMax <= this.imdbVoteMin) {
-            this.imdbVoteMax = undefined;
-        }
-        this.search(query);
-    }
-
-    public searchBlurMax(query) {
-        this.ensureRanges();
-        if (this.fwebVoteMin >= this.fwebVoteMax) {
-            this.fwebVoteMin = 0;
-        }
-        if (this.imdbVoteMin >= this.imdbVoteMax) {
-            this.imdbVoteMin = 0;
-        }
         this.search(query);
     }
 
@@ -173,7 +146,7 @@ export class VideoComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.genres = this.videoService.genres();
+        this.genres = this.videoService.genres(this.searchByType);
 
         this.loadAll();
         this.principal.identity().then(account => {

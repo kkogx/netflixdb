@@ -122,7 +122,7 @@ application:
         shakti-url: "https://www.netflix.com/api/shakti/d7cab521/pathEvaluator?isWatchlistEnabled=false&isShortformEnabled=false&isVolatileBillboardsEnabled=false&falcor_server=0.1.0&withSize=true&materialize=true"
         request-sleep-millis: 2000
         request-block-size: 48
-        genre-by-id: "\
+        film-genre-by-id: "\
             1365=Action & Adventure Movies,\
             3063=Anime,\
             89844=Award winning Movies,\
@@ -142,7 +142,8 @@ application:
             4370=Sport Movies,\
             11559=Stand-up Comedy,\
             2777752=Summer of Love,\
-            8933=Thrillers,\
+            8933=Thrillers"
+        show-genre-by-id: "\
             10673=TV Action & Adventure,\
             6721=Anime TV,\
             78103=Asian TV Shows,\
