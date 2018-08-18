@@ -48,14 +48,14 @@ public class ApplicationProperties {
 
         private String merchantId;
 
-        private String statusHost;
+        private String statusUrl;
 
-        public String getStatusHost() {
-            return statusHost;
+        public String getStatusUrl() {
+            return statusUrl;
         }
 
-        public void setStatusHost(String statusHost) {
-            this.statusHost = statusHost;
+        public void setStatusUrl(String statusUrl) {
+            this.statusUrl = statusUrl;
         }
 
         public String getHost() {

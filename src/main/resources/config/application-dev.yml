@@ -143,3 +143,4 @@ application:
     przelewy24:
         host: "https://sandbox.przelewy24.pl/"
         crc: "758bea28f49ffbd5"
+        status-url: "https://requestbin.fullcontact.com/yvkhevyv"

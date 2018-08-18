@@ -79,6 +79,7 @@ export class DonateModalContentComponent implements OnInit {
     }
 
     public send() {
+        const baseUrl = document.location.protocol + '//' + document.location.host + '/';
         const p24 = new Przelewy24Trx();
         p24.country = 'PL';
         p24.language = 'pl';
@@ -86,7 +87,7 @@ export class DonateModalContentComponent implements OnInit {
         p24.description = this.description;
         p24.email = this.email;
         p24.transferLabel = this.description;
-        p24.urlReturn = document.location.href + `?${DonateModalContentComponent.DONATED_PARAM}=true`;
+        p24.urlReturn = baseUrl + `?${DonateModalContentComponent.DONATED_PARAM}=true`;
         p24.amount = this.amount;
 
         this.spinnerService.show();
