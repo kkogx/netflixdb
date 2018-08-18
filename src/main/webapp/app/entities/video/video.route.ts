@@ -35,6 +35,26 @@ export const videoRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
+        path: 'films',
+        component: VideoComponent,
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'global.title',
+            searchByType: 'film'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: 'shows',
+        component: VideoComponent,
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'global.title',
+            searchByType: 'show'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
         path: 'video/:id/view',
         component: VideoDetailComponent,
         resolve: {

@@ -10,7 +10,7 @@
     </div>
     <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="isAuthenticated()">
 
-
+        <!-- hidden donate modal -->
         <div id="przelewy24dlg" class="modal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -31,7 +31,6 @@
             </div>
         </div>
 
-
         <ul class="navbar-nav ml-auto">
             <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link" routerLink="/" (click)="collapseNavbar()">
@@ -44,10 +43,19 @@
             </li>
             <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active"
                 [routerLinkActiveOptions]="{exact: true}">
-                <a class="nav-link" routerLink="video" (click)="collapseNavbar()">
+                <a class="nav-link" routerLink="films" (click)="collapseNavbar()">
                     <span>
-                        <fa-icon [icon]="'asterisk'"></fa-icon>
-                        <span jhiTranslate="global.menu.videos">Videos</span>
+                        <fa-icon [icon]="'film'"></fa-icon>
+                        <span jhiTranslate="global.menu.films"></span>
+                    </span>
+                </a>
+            </li>
+            <li *ngSwitchCase="true" class="nav-item" routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" routerLink="shows" (click)="collapseNavbar()">
+                    <span>
+                        <fa-icon [icon]="'tv'"></fa-icon>
+                        <span jhiTranslate="global.menu.shows"></span>
                     </span>
                 </a>
             </li>

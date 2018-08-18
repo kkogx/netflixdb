@@ -116,18 +116,21 @@ public class VideoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Video> search(String query, Integer fwebMin, Integer fwebMax, Integer imdbMin, Integer imdbMax, Integer yearMin, Integer[] genres, Pageable pageable) {
-        log.debug("Request to search for a page of Videos for query={} fs={} fx={} is={} ix={} ym={} g={}", query, fwebMin, fwebMax, imdbMin, imdbMax, yearMin, genres);
+    public Page<Video> search(String query, Integer fwebMin, Integer imdbMin, Integer yearMin, String[] types, Integer[] genres, Pageable pageable) {
+        log.debug("Request to search for a page of Videos for query={} fs={} is={} ym={} t={}, g={}", query, fwebMin, imdbMin, yearMin, types, genres);
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
         if (StringUtils.isEmpty(query)) {
             query = "*";
         }
         builder = builder.must(queryStringQuery(query).field("fwebTitle").field("title"));
-        builder = applyMustBetween(builder, fwebMin, fwebMax, "fwebVotes");
-        builder = applyMustBetween(builder, imdbMin, imdbMax, "imdbVotes");
+        builder = applyMustBetween(builder, fwebMin, -1, "fwebVotes");
+        builder = applyMustBetween(builder, imdbMin, -1, "imdbVotes");
         builder = applyMustBetween(builder, yearMin, -1, "releaseYear");
-        if(!ArrayUtils.isEmpty(genres)) {
-                builder = builder.must(QueryBuilders.termsQuery("genreId", genres));
+        if (!ArrayUtils.isEmpty(genres)) {
+            builder = builder.must(QueryBuilders.termsQuery("genreId", genres));
+        }
+        if (!ArrayUtils.isEmpty(types)) {
+            builder = builder.must(QueryBuilders.termsQuery("type", types));
         }
         return videoSearchRepository.search(builder, pageable);
     }

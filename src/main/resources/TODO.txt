@@ -1,7 +1,7 @@
-- search criteria
+- sort icons
+- donates
 Go closed tests
 - donate validations
-- split movies n tv
 - improve result filtering (year distance)
 - multi genre
 Post-prod
@@ -9,8 +9,8 @@ Post-prod
 - frontend for mobile
 
 Done
-- visit count
-- donates
+- split movies n tv
+- visit countl
 - gotham font logo
 - refresh timestamp
 - add rest service for manual sync
