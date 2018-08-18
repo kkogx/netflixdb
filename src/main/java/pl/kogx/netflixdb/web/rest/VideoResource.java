@@ -23,8 +23,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * REST controller for managing Video.
@@ -39,11 +41,18 @@ public class VideoResource {
 
     private final VideoService videoService;
 
-    private final List<Genre> genres;
+    private final List<Genre> filmGenres;
+
+    private final List<Genre> showGenres;
 
     public VideoResource(VideoService videoService, ApplicationProperties properties) {
         this.videoService = videoService;
-        this.genres = ApplicationProperties.getGenreByIdMap(properties).entrySet().stream()
+        this.filmGenres = toList(ApplicationProperties.getFilmGenreByIdMap(properties));
+        this.showGenres = toList(ApplicationProperties.getShowGenreByIdMap(properties));
+    }
+
+    private List<Genre> toList(Map<String, String> genreByIdMap) {
+        return genreByIdMap.entrySet().stream()
             .map(kv -> new Genre(Long.valueOf(kv.getKey()), kv.getValue()))
             .sorted(Comparator.comparing(Genre::getName)).collect(Collectors.toList());
     }
@@ -152,15 +161,34 @@ public class VideoResource {
 
     @GetMapping("/_search/videos/range")
     @Timed
-    public ResponseEntity<List<Video>> searchVideos(@RequestParam String query,
-                                                    @RequestParam Integer fwebMin, @RequestParam Integer fwebMax,
-                                                    @RequestParam Integer imdbMin, @RequestParam Integer imdbMax,
-                                                    @RequestParam Integer yearMin,
-                                                    @RequestParam Integer[] genres,
-                                                    Pageable pageable) {
+    public ResponseEntity<List<Video>> searchVideos(@RequestParam String query, @RequestParam Integer fwebMin,
+                                                    @RequestParam Integer imdbMin, @RequestParam Integer yearMin,
+                                                    @RequestParam Integer[] genres, Pageable pageable) {
         log.debug("REST request to search for a page of Videos for query {}", query);
-        Page<Video> page = videoService.search(query, fwebMin, fwebMax, imdbMin, imdbMax, yearMin, genres, pageable);
+        Page<Video> page = videoService.search(query, fwebMin, imdbMin, yearMin, null, genres, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/videos/range");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_search/videos/range/film")
+    @Timed
+    public ResponseEntity<List<Video>> searchFilms(@RequestParam String query, @RequestParam Integer fwebMin,
+                                                   @RequestParam Integer imdbMin, @RequestParam Integer yearMin,
+                                                   @RequestParam Integer[] genres, Pageable pageable) {
+        log.debug("REST request to search for a page of Films for query {}", query);
+        Page<Video> page = videoService.search(query, fwebMin, imdbMin, yearMin, new String[]{"movie"}, genres, pageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/videos/range/film");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/_search/videos/range/show")
+    @Timed
+    public ResponseEntity<List<Video>> searchShows(@RequestParam String query, @RequestParam Integer fwebMin,
+                                                   @RequestParam Integer imdbMin, @RequestParam Integer yearMin,
+                                                   @RequestParam Integer[] genres, Pageable pageable) {
+        log.debug("REST request to search for a page of Shows for query {}", query);
+        Page<Video> page = videoService.search(query, fwebMin, imdbMin, yearMin, new String[]{"show"}, genres, pageable);
+        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/videos/range/show");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
@@ -168,7 +196,25 @@ public class VideoResource {
     @GetMapping("/videos/genres")
     public ResponseEntity<List<Genre>> getAllGenres() {
         log.debug("REST request to get all (non-empty) genres");
-        List<Genre> result = genres.stream().filter(g -> videoService.countByGenreId(g.getId()) > 0).collect(Collectors.toList());
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(filterGenres(Stream.concat(filmGenres.stream(), showGenres.stream())), HttpStatus.OK);
+    }
+
+    @Cacheable("genres")
+    @GetMapping("/videos/genres/film")
+    public ResponseEntity<List<Genre>> getFilmGenres() {
+        log.debug("REST request to get all (non-empty) film genres");
+        return new ResponseEntity<>(filterGenres(filmGenres.stream()), HttpStatus.OK);
+    }
+
+    @Cacheable("genres")
+    @GetMapping("/videos/genres/show")
+    public ResponseEntity<List<Genre>> getShowGenres() {
+        log.debug("REST request to get all (non-empty) film genres");
+        return new ResponseEntity<>(filterGenres(showGenres.stream()), HttpStatus.OK);
+    }
+
+    private List<Genre> filterGenres(Stream<Genre> genres) {
+        List<Genre> result = genres.filter(g -> videoService.countByGenreId(g.getId()) > 0).collect(Collectors.toList());
+        return result;
     }
 }

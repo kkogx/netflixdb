@@ -13,6 +13,8 @@ import {
     faClock,
     faCloud,
     faDonate,
+    faTv,
+    faFilm,
     faEye,
     faFlag,
     faHdd,
@@ -74,5 +76,7 @@ library.add(faSearch);
 library.add(faTrashAlt);
 library.add(faAsterisk);
 library.add(faDonate);
+library.add(faFilm);
+library.add(faTv);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here

@@ -39,13 +39,21 @@ export class VideoService {
         return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    search(req?: any): Observable<EntityArrayResponseType> {
+    search(req?: any, type?: string): Observable<EntityArrayResponseType> {
+        let url = this.resourceSearchUrl;
+        if (type) {
+            url += '/' + type;
+        }
         const options = createRequestOption(req);
-        return this.http.get<IVideo[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
+        return this.http.get<IVideo[]>(url, { params: options, observe: 'response' });
     }
 
-    genres(): Observable<IGenre[]> {
-        const result = this.http.get<IGenre[]>(this.resourceGenresUrl);
+    genres(type?: string): Observable<IGenre[]> {
+        let url = this.resourceGenresUrl;
+        if (type) {
+            url += '/' + type;
+        }
+        const result = this.http.get<IGenre[]>(url);
         return result;
     }
 }
