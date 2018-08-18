@@ -1,6 +1,8 @@
 {
     "videos": {
         "title": "Katalog",
+        "titleFilms": "Filmy",
+        "titleShows": "Seriale",
         "entity": {
             "title": "Tytuł EN",
             "fwebtitle": "Tytuł",

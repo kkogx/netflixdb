@@ -1,10 +1,12 @@
 package pl.kogx.netflixdb.config;
 
 import com.google.common.base.Splitter;
+import com.google.common.collect.Streams;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -127,11 +129,29 @@ public class ApplicationProperties {
 
         private String shaktiUrl;
 
-        private String genreById;
+        private String filmGenreById;
+
+        private String showGenreById;
 
         private int requestSleepMillis;
 
         private int requestBlockSize;
+
+        public String getFilmGenreById() {
+            return filmGenreById;
+        }
+
+        public void setFilmGenreById(String filmGenreById) {
+            this.filmGenreById = filmGenreById;
+        }
+
+        public String getShowGenreById() {
+            return showGenreById;
+        }
+
+        public void setShowGenreById(String showGenreById) {
+            this.showGenreById = showGenreById;
+        }
 
         public ProxySettings getProxySettings() {
             return proxySettings;
@@ -163,14 +183,6 @@ public class ApplicationProperties {
 
         public void setShaktiUrl(String shaktiUrl) {
             this.shaktiUrl = shaktiUrl;
-        }
-
-        public String getGenreById() {
-            return genreById;
-        }
-
-        public void setGenreById(String genreById) {
-            this.genreById = genreById;
         }
 
         public String getSessionCookie() {
@@ -235,8 +247,22 @@ public class ApplicationProperties {
         }
     }
 
+    public static Map<String, String> getFilmGenreByIdMap(ApplicationProperties applicationProperties) {
+        return toMap(applicationProperties.getNetflixSync().getFilmGenreById());
+    }
+
+    public static Map<String, String> getShowGenreByIdMap(ApplicationProperties applicationProperties) {
+        return toMap(applicationProperties.getNetflixSync().getShowGenreById());
+    }
+
     public static Map<String, String> getGenreByIdMap(ApplicationProperties applicationProperties) {
-        String genreById = applicationProperties.getNetflixSync().getGenreById();
+        Map<String, String> result = new HashMap<>();
+        result.putAll(getFilmGenreByIdMap(applicationProperties));
+        result.putAll(getShowGenreByIdMap(applicationProperties));
+        return result;
+    }
+
+    private static Map<String, String> toMap(String genreById) {
         if (StringUtils.isEmpty(genreById)) {
             return Collections.emptyMap();
         }
