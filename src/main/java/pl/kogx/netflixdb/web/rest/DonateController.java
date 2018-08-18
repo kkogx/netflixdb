@@ -30,6 +30,23 @@ import java.time.Instant;
 @RequestMapping("/api/donate")
 public class DonateController {
 
+    private static final String P_24_MERCHANT_ID = "p24_merchant_id";
+    private static final String P_24_POS_ID = "p24_pos_id";
+    private static final String P_24_SESSION_ID = "p24_session_id";
+    private static final String P_24_AMOUNT = "p24_amount";
+    private static final String P_24_CURRENCY = "p24_currency";
+    private static final String P_24_DESCRIPTION = "p24_description";
+    private static final String P_24_EMAIL = "p24_email";
+    private static final String P_24_COUNTRY = "p24_country";
+    private static final String P_24_LANGUAGE = "p24_language";
+    private static final String P_24_URL_RETURN = "p24_url_return";
+    private static final String P_24_URL_STATUS = "p24_url_status";
+    private static final String P_24_TRANSFER_LABEL = "p24_transfer_label";
+    private static final String P_24_SIGN = "p24_sign";
+    private static final String P_24_API_VERSION = "p24_api_version";
+    private static final String P_24_ORDER_ID = "p24_orderId";
+    private static final String P_24_NO_ERROR = "error=0";
+
     private final Logger log = LoggerFactory.getLogger(DonateController.class);
 
     private final ApplicationProperties.Przelewy24 p24Properties;
@@ -53,15 +70,16 @@ public class DonateController {
         }
 
         // send txnRegister
-        Response registerResponse = sendP24Register(p24, amount, sessionId);
-        String registerResponseString = registerResponse.returnContent().asString();
-        log.info("p24={}, regResponse={}", p24, registerResponseString);
-        if (!registerResponseString.contains("error=0")) {
-            return ResponseEntity.badRequest().body(registerResponseString);
+        Response response = sendP24Register(p24, amount, sessionId);
+        String responseString = response.returnContent().asString();
+        log.info("p24={}, regResponse={}", p24, responseString);
+        if (!responseString.contains("error=0")) {
+            log.error("txnRegister error " + responseString);
+            return ResponseEntity.badRequest().body(responseString);
         }
 
         // prepare response
-        final String token = registerResponseString.substring(registerResponseString.lastIndexOf("token=") + 6);
+        final String token = responseString.substring(responseString.lastIndexOf("token=") + 6);
         URI reqUrl = URI.create(p24Properties.getHost()).resolve("/trnRequest/" + token);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -82,24 +100,24 @@ public class DonateController {
         return p24Service.save(p24trx);
     }
 
-    private Response sendP24Register(@RequestBody Przelewy24TrxDTO p24, int amount, String sessionId) throws IOException {
+    private Response sendP24Register(@RequestBody Przelewy24TrxDTO p24, int amount, String p24_session_id) throws IOException {
         URI regUrl = URI.create(p24Properties.getHost()).resolve("/trnRegister");
         return Request.Post(regUrl).bodyForm(Form.form()
-            .add("p24_merchant_id", p24Properties.getMerchantId())
-            .add("p24_pos_id", p24Properties.getMerchantId())
-            .add("p24_session_id", sessionId)
-            .add("p24_amount", String.valueOf(amount))
-            .add("p24_currency", p24.getCurrency())
-            .add("p24_description", p24.getDescription())
-            .add("p24_email", p24.getEmail())
-            .add("p24_country", p24.getCountry())
-            .add("p24_language", p24.getLanguage())
-            .add("p24_url_return", p24.getUrlReturn())
-            .add("p24_url_status", "https://" + p24Properties.getStatusHost() + "/api/donate/txnStatus")
-            .add("p24_transfer_label", p24.getTransferLabel())
-            .add("p24_sign", DigestUtils.md5Hex(String.format("%s|%s|%s|%s|%s",
-                sessionId, p24Properties.getMerchantId(), amount, p24.getCurrency(), p24Properties.getCrc())))
-            .add("p24_api_version", "3.2").build()).execute();
+            .add(P_24_MERCHANT_ID, p24Properties.getMerchantId())
+            .add(P_24_POS_ID, p24Properties.getMerchantId())
+            .add(P_24_SESSION_ID, p24_session_id)
+            .add(P_24_AMOUNT, String.valueOf(amount))
+            .add(P_24_CURRENCY, p24.getCurrency())
+            .add(P_24_DESCRIPTION, p24.getDescription())
+            .add(P_24_EMAIL, p24.getEmail())
+            .add(P_24_COUNTRY, p24.getCountry())
+            .add(P_24_LANGUAGE, p24.getLanguage())
+            .add(P_24_URL_RETURN, p24.getUrlReturn())
+            .add(P_24_URL_STATUS, p24Properties.getStatusUrl() )
+            .add(P_24_TRANSFER_LABEL, p24.getTransferLabel())
+            .add(P_24_SIGN, DigestUtils.md5Hex(String.format("%s|%s|%s|%s|%s",
+                p24_session_id, p24Properties.getMerchantId(), amount, p24.getCurrency(), p24Properties.getCrc())))
+            .add(P_24_API_VERSION, "3.2").build()).execute();
     }
 
     @GetMapping("/p24/txnManualVerify")
@@ -136,16 +154,22 @@ public class DonateController {
         }
 
         URI verifyUrl = URI.create(p24Properties.getHost()).resolve("/trnVerify");
-        Request.Post(verifyUrl).bodyForm(Form.form()
-            .add("p24_merchant_id", p24Properties.getMerchantId())
-            .add("p24_pos_id", p24Properties.getMerchantId())
-            .add("p24_session_id", p24trx.getSessionId())
-            .add("p24_amount", p24trx.getAmount().toString())
-            .add("p24_currency", p24trx.getCurrency())
-            .add("p24_orderId", p24_order_id.toString())
-            .add("p24_sign", DigestUtils.md5Hex(String.format("%s|%s|%s|%s|%s",
-                p24trx.getSessionId(), p24_order_id, p24trx.getAmount(), p24trx.getCurrency(), p24Properties.getCrc())))
-            .add("p24_api_version", "3.2").build()).execute();
+        Response response = Request.Post(verifyUrl).bodyForm(Form.form()
+            .add(P_24_MERCHANT_ID, p24Properties.getMerchantId())
+            .add(P_24_POS_ID, p24Properties.getMerchantId())
+            .add(P_24_SESSION_ID, p24trx.getSessionId())
+            .add(P_24_AMOUNT, p24trx.getAmount().toString())
+            .add(P_24_CURRENCY, p24trx.getCurrency())
+            .add(P_24_ORDER_ID, p24_order_id.toString())
+            .add(P_24_SIGN, DigestUtils.md5Hex(String.format("%s|%s|%s|%s|%s",
+                p24_session_id, p24Properties.getMerchantId(), p24trx.getAmount(), p24trx.getCurrency(), p24Properties.getCrc())))
+            .build()).execute();
+
+        String responseString = response.returnContent().asString();
+        if (!responseString.contains(P_24_NO_ERROR)) {
+            log.error("txnRegister error " + responseString);
+            return false;
+        }
 
         p24trx.setConfirmedDate(Instant.now());
         p24Service.save(p24trx);

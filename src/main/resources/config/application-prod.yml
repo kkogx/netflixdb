@@ -138,6 +138,7 @@ application:
     przelewy24:
         host: "https://secure.przelewy24.pl/"
         crc: "***REMOVED***"
+        status-url: "https://netflixdb.pl/api/donate/txnStatus"
     netflix-sync:
         proxy-settings:
             user: "zhentarin"
