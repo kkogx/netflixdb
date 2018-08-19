@@ -162,7 +162,7 @@ public class DonateController {
             .add(P_24_CURRENCY, p24trx.getCurrency())
             .add(P_24_ORDER_ID, p24_order_id.toString())
             .add(P_24_SIGN, DigestUtils.md5Hex(String.format("%s|%s|%s|%s|%s",
-                p24_session_id, p24Properties.getMerchantId(), p24trx.getAmount(), p24trx.getCurrency(), p24Properties.getCrc())))
+                p24_session_id, p24_order_id, p24trx.getAmount(), p24trx.getCurrency(), p24Properties.getCrc())))
             .build()).execute();
 
         String responseString = response.returnContent().asString();
