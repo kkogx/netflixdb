@@ -39,10 +39,15 @@
     max-width: 820px;
 }
 
-#search-input {
+#currentSearch {
     width: 200px;
 }
 
 .ng-option {
     font-size: 0.8rem;
+}
+
+.hand,
+[ndbsortby] {
+    cursor: pointer;
 }
