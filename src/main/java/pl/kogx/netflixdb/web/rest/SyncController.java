@@ -71,6 +71,7 @@ public class SyncController {
     //@Secured(AuthoritiesConstants.ADMIN)
     public void sync() {
         log.info("all");
+        netflixSyncService.deleteAll();
         netflixSyncService.sync();
         omdbSyncService.sync();
         fwebSyncService.sync();

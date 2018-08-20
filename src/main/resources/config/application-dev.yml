@@ -143,4 +143,4 @@ application:
     przelewy24:
         host: "https://sandbox.przelewy24.pl/"
         crc: "***REMOVED***"
-        status-url: "https://requestbin.fullcontact.com/169zti01"
+        status-url: "***REMOVED***"
