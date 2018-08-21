@@ -44,7 +44,7 @@ public class DonateController {
     private static final String P_24_TRANSFER_LABEL = "p24_transfer_label";
     private static final String P_24_SIGN = "p24_sign";
     private static final String P_24_API_VERSION = "p24_api_version";
-    private static final String P_24_ORDER_ID = "p24_orderId";
+    private static final String P_24_ORDER_ID = "p24_order_id";
     private static final String P_24_NO_ERROR = "error=0";
 
     private final Logger log = LoggerFactory.getLogger(DonateController.class);
