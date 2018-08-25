@@ -131,15 +131,15 @@ export class VideoComponent implements OnInit, OnDestroy {
     }
 
     search(query) {
-        if (!query) {
-            return this.clear();
-        }
+        // if (!query) {
+        //     return this.clear();
+        // }
         this.videos = [];
         this.links = {
             last: 0
         };
         this.page = 0;
-        this.predicate = null; // '_score';
+        //this.predicate = null; // '_score';
         this.reverse = false;
         this.currentSearch = query;
         this.loadAll();
