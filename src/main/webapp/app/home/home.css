@@ -13,7 +13,7 @@ Main page styles
 .netflixdb {
     display: inline-block;
     width: 347px;
-    height: 195px;
+    height: 84px;
     background: url('../../content/images/netflixdb_347x42.png') no-repeat center top;
     background-size: contain;
 }
