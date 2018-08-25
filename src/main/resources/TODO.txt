@@ -1,8 +1,9 @@
+- improve result filtering (year distance)
+- mobile layout
 - sort icons
 - donates
 Go closed tests
 - donate validations
-- improve result filtering (year distance)
 - multi genre
 Post-prod
 - live search

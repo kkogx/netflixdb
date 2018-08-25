@@ -122,7 +122,7 @@ public class VideoService {
         if (StringUtils.isEmpty(query)) {
             query = "*";
         }
-        builder = builder.must(queryStringQuery(query).field("fwebTitle").field("title"));
+        builder = builder.must(queryStringQuery(query).field("title").field("fwebTitle"));
         builder = applyMustBetween(builder, fwebMin, -1, "fwebVotes");
         builder = applyMustBetween(builder, imdbMin, -1, "imdbVotes");
         builder = applyMustBetween(builder, yearMin, -1, "releaseYear");
@@ -136,7 +136,7 @@ public class VideoService {
     }
 
     public BoolQueryBuilder applyMustBetween(BoolQueryBuilder builder, Integer min, Integer max, String name) {
-        if (min < 0 && max < 0) {
+        if (min <= 0 && max <= 0) {
             return builder;
         }
         RangeQueryBuilder betweenBuilder = QueryBuilders.rangeQuery(name);
