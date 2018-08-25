@@ -139,7 +139,7 @@ export class VideoComponent implements OnInit, OnDestroy {
             last: 0
         };
         this.page = 0;
-        //this.predicate = null; // '_score';
+        // this.predicate = null; // '_score';
         this.reverse = false;
         this.currentSearch = query;
         this.loadAll();
