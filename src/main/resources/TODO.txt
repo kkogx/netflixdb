@@ -1,17 +1,17 @@
-- improve result filtering (year distance)
-- mobile layout
-- sort icons
-- donates
 Go closed tests
+- donates
 - donate validations
+- mobile layout
 - multi genre
+- sort icons
+- improve result filtering (year distance)
 Post-prod
 - live search
 - frontend for mobile
 
 Done
 - split movies n tv
-- visit countl
+- visit count
 - gotham font logo
 - refresh timestamp
 - add rest service for manual sync
