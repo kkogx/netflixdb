@@ -117,7 +117,7 @@ public class VideoService {
 
     @Transactional(readOnly = true)
     public Page<Video> search(String query, Integer fwebMin, Integer imdbMin, Integer yearMin, String[] types, Integer[] genres, Pageable pageable) {
-        log.debug("Request to search for a page of Videos for query={} fs={} is={} ym={} t={}, g={}", query, fwebMin, imdbMin, yearMin, types, genres);
+        log.info("Request to search for a page of Videos for query={} fs={} is={} ym={} t={}, g={}", query, fwebMin, imdbMin, yearMin, types, genres);
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
         if (StringUtils.isEmpty(query)) {
             query = "*";
