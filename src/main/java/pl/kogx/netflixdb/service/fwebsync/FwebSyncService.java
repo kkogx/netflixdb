@@ -99,7 +99,7 @@ public class FwebSyncService extends AbstractSyncService {
         try {
             fwebVideoData = tryFindVideo(video);
         } catch (FilmwebException e) {
-            log.warn("Exception code={}, msg={}, label={}", e.getCode(), e.getFilmwebMessage(), e.getLabel());
+            log.warn("Exception code={}, msg={}, label={}, video={}", e.getCode(), e.getFilmwebMessage(), e.getLabel(), video);
         }
         if (fwebVideoData == null) {
             return false;
