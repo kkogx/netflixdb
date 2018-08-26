@@ -164,5 +164,5 @@
         "idexists": "Nowy {{entityName}} nie może jeszcze mieć przypisanego ID",
         "idnull": "Invalid ID"
     },
-    "footer": "Netflix jest znakiem towarowym należącym do Netflix, Inc. Ta strona nie jest promowana ani powiązana z netflix.com"
+    "footer": "Netflix jest znakiem towarowym należącym do Netflix, Inc. Ta strona nie jest powiązana ani promowane przez netflix.com"
 }
