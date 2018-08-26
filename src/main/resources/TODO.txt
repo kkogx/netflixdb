@@ -5,6 +5,7 @@ Go closed tests
 - multi genre
 - sort icons
 - improve result filtering (year distance)
+- enable logstash
 Post-prod
 - live search
 - frontend for mobile

@@ -3,6 +3,7 @@
         "title": "Katalog",
         "titleFilms": "Filmy",
         "titleShows": "Seriale",
+        "totalCount": "( {{ total }} )",
         "entity": {
             "title": "Tytuł EN",
             "fwebtitle": "Tytuł",

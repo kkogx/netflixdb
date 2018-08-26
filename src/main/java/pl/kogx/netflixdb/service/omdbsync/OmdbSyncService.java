@@ -99,7 +99,7 @@ public class OmdbSyncService extends AbstractSyncService {
             omdbVideo = tryFindVideo(video);
         } catch (OMDBException e) {
             if (e.getExceptionType() != ApiExceptionType.ID_NOT_FOUND) {
-                log.warn("Exception type={}, code={}", e.getExceptionType(), e.getResponseCode());
+                log.warn("Exception type={}, code={}, video={}", e.getExceptionType(), e.getResponseCode(), video);
             }
         }
         if (omdbVideo == null) {
