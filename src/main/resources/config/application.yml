@@ -110,6 +110,8 @@ jhipster:
 # ===================================================================
 
 application:
+    alias-by-title: "\
+        Seven=Se7en"
     przelewy24:
         merchant-id: "78599"
     omdb-sync:

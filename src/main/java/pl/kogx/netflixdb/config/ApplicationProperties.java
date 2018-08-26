@@ -1,7 +1,6 @@
 package pl.kogx.netflixdb.config;
 
 import com.google.common.base.Splitter;
-import com.google.common.collect.Streams;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -17,6 +16,16 @@ import java.util.Map;
  */
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 public class ApplicationProperties {
+
+    private String aliasByTitle;
+
+    public String getAliasByTitle() {
+        return aliasByTitle;
+    }
+
+    public void setAliasByTitle(String aliasByTitle) {
+        this.aliasByTitle = aliasByTitle;
+    }
 
     public final NetflixSync netflixSync = new NetflixSync();
 
@@ -248,11 +257,15 @@ public class ApplicationProperties {
     }
 
     public static Map<String, String> getFilmGenreByIdMap(ApplicationProperties applicationProperties) {
-        return toMap(applicationProperties.getNetflixSync().getFilmGenreById());
+        return split(applicationProperties.getNetflixSync().getFilmGenreById());
     }
 
     public static Map<String, String> getShowGenreByIdMap(ApplicationProperties applicationProperties) {
-        return toMap(applicationProperties.getNetflixSync().getShowGenreById());
+        return split(applicationProperties.getNetflixSync().getShowGenreById());
+    }
+
+    public static Map<String, String> getAliasByTitleMap(ApplicationProperties applicationProperties) {
+        return split(applicationProperties.getAliasByTitle());
     }
 
     public static Map<String, String> getGenreByIdMap(ApplicationProperties applicationProperties) {
@@ -262,10 +275,10 @@ public class ApplicationProperties {
         return result;
     }
 
-    private static Map<String, String> toMap(String genreById) {
-        if (StringUtils.isEmpty(genreById)) {
+    private static Map<String, String> split(String keySepValue) {
+        if (StringUtils.isEmpty(keySepValue)) {
             return Collections.emptyMap();
         }
-        return Collections.unmodifiableMap(Splitter.on(",").withKeyValueSeparator("=").split(genreById));
+        return Collections.unmodifiableMap(Splitter.on(",").withKeyValueSeparator("=").split(keySepValue));
     }
 }
