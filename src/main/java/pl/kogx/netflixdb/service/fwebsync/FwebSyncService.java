@@ -3,8 +3,8 @@ package pl.kogx.netflixdb.service.fwebsync;
 import info.talacha.filmweb.api.FilmwebApi;
 import info.talacha.filmweb.connection.FilmwebException;
 import info.talacha.filmweb.models.Item;
+import info.talacha.filmweb.search.models.FilmSearchResult;
 import info.talacha.filmweb.search.models.ItemSearchResult;
-import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.elasticsearch.common.collect.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +20,7 @@ import pl.kogx.netflixdb.service.sync.AbstractSyncService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,12 +31,14 @@ public class FwebSyncService extends AbstractSyncService {
 
     private static final int PAGE_SIZE = 50;
 
-    private FilmwebApi fwebApi = new FilmwebApi();
+    private final FilmwebApi fwebApi = new FilmwebApi();
 
+    private final Map<String, String> aliasByTitle;
 
     @Autowired
     public FwebSyncService(VideoService videoService, ApplicationProperties applicationProperties) {
         super(videoService, applicationProperties);
+        this.aliasByTitle = ApplicationProperties.getAliasByTitleMap(applicationProperties);
     }
 
     @Override
@@ -59,7 +62,7 @@ public class FwebSyncService extends AbstractSyncService {
         if (video != null) {
             result = syncVideo(video);
         }
-        log.info("Sync complete, result=", result);
+        log.info("Sync complete, result={}", result);
     }
 
     private Tuple<Integer, Integer> syncByGenre(String genreId, String genreName) {
@@ -132,10 +135,24 @@ public class FwebSyncService extends AbstractSyncService {
     }
 
     private Item tryFindSeries(String title, Integer releaseYear) throws FilmwebException {
+        title = aliasByTitle.getOrDefault(title, title);
         // show dates tend to be fucked up in Netflix, prefer search by title without year
-        ItemSearchResult res = filterByTitleDistance(title, findSeries(title));
+        ItemSearchResult res = filterByBestTitleDistance(title, findSeries(title), f -> f.getTitle());
         if (res == null) {
-            res = filterByTitleDistance(title, findSeries(title, releaseYear));
+            res = filterByBestTitleDistance(title, findSeries(title, releaseYear), f -> f.getTitle());
+        }
+        if (res == null) {
+            return null;
+        }
+        return fwebApi.getFilmData(res.getId());
+    }
+
+    private Item tryFindFilm(String title, Integer releaseYear) throws FilmwebException {
+        title = aliasByTitle.getOrDefault(title, title);
+        // with movies the approach is opposite, first try to find by title and year
+        ItemSearchResult res = filterByBestTitleDistance(title, toList(fwebApi.findFilm(title, releaseYear)), f -> f.getTitle());
+        if (res == null) {
+            res = filterByBestTitleDistance(title, toList(fwebApi.findFilm(title)), f -> f.getTitle());
         }
         if (res == null) {
             return null;
@@ -151,28 +168,7 @@ public class FwebSyncService extends AbstractSyncService {
         return Stream.concat(fwebApi.findSeries(title, releaseYear).stream(), fwebApi.findProgram(title, releaseYear).stream()).collect(Collectors.toList());
     }
 
-    private Item tryFindFilm(String title, Integer releaseYear) throws FilmwebException {
-        // with movies the approach is opposite, first try to find by title and year
-        ItemSearchResult res = filterByTitleDistance(title, fwebApi.findFilm(title, releaseYear).stream().collect(Collectors.toList()));
-        if (res == null) {
-            res = filterByTitleDistance(title, fwebApi.findFilm(title).stream().collect(Collectors.toList()));
-        }
-        if (res == null) {
-            return null;
-        }
-        return fwebApi.getFilmData(res.getId());
-    }
-
-    private ItemSearchResult filterByTitleDistance(String title, List<ItemSearchResult> films) {
-        ItemSearchResult best = null;
-        int bestDist = Integer.MAX_VALUE;
-        for (ItemSearchResult res : films) {
-            int dist = new LevenshteinDistance().apply(title, res.getTitle());
-            if (dist < bestDist) {
-                best = res;
-                bestDist = dist;
-            }
-        }
-        return bestDist < title.length() / 3 ? best : null;
+    private List<ItemSearchResult> toList(List<FilmSearchResult> list) {
+        return list.stream().collect(Collectors.toList());
     }
 }

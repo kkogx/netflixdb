@@ -64,15 +64,15 @@
                 },
                 "catalogue": {
                     "header": "Szukasz filmu na wieczór?",
-                    "intro": "Znajdziesz tu pełny katalog Netflixa, wraz z ocenami z innych serwisów filmowych, takich jak IMDB lub Filmweb."
+                    "intro": "Znajdziesz tu pełny katalog polskiego Netflixa, wraz z ocenami z innych serwisów filmowych, takich jak IMDB lub Filmweb."
                 },
                 "donate": {
                     "header": "Wsparcie",
-                    "intro": "Netflixdb.pl tworzy obecnie jedna osoba, w swoim prywatnym czasie. Katalog powstał dla celów prywatnych ale został upubliczniony. Pomimo tego że działamy bezinteresownie, utrzymanie netflixdb.pl nie jest darmowe, dlatego jeśli możesz wspomóc jego dalszy rozwój - kliknij we Wsparcie."
+                    "intro": "Netflixdb.pl tworzy obecnie jedna osoba, w swoim prywatnym czasie. Katalog powstał dla celów prywatnych ale został upubliczniony. Pomimo tego że działamy bezinteresownie, utrzymanie netflixdb.pl nie jest darmowe, dlatego jeśli chcesz wspomóc jego dalszy rozwój - kliknij we Wsparcie."
                 },
                 "knowhow": {
                     "header": "Czy wiedziałeś o tym?",
-                    "youtube": "Miniatury filmów zawierają odnośnik do Youtube, gdzie możesz obejrzeć zwiastun filmu przed jego obejrzeniem!",
+                    "youtube": "Kliknij w okładkę filmu aby obejrzeć jego zwiastun!",
                     "tooltip": "Kliknięcie na tytuł filmu otwiera krótki opis filmu."
                 },
                 "beta": {
@@ -80,7 +80,7 @@
                     "roadmap": "Przed nami jeszcze dużo zmian, w planach między innymi:",
                     "private": "oznaczanie filmów które już widziałeś",
                     "score": "własne oceny użytkowników",
-                    "search": "lepsze kryteria wyszukiwania",
+                    "search": "rozbudowane kryteria wyszukiwania",
                     "mobile": "wersję na urządzenia mobilne",
                     "visit": "Odwiedzaj nas regularnie!"
                 },
@@ -164,5 +164,5 @@
         "idexists": "Nowy {{entityName}} nie może jeszcze mieć przypisanego ID",
         "idnull": "Invalid ID"
     },
-    "footer": "Netflix jest znakiem towarowym należącym do Netflix, Inc."
+    "footer": "Netflix jest znakiem towarowym należącym do Netflix, Inc. Ta strona nie jest promowana ani powiązana z netflix.com"
 }

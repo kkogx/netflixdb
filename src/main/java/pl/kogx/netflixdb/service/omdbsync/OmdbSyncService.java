@@ -2,6 +2,7 @@ package pl.kogx.netflixdb.service.omdbsync;
 
 import com.omertron.omdbapi.OMDBException;
 import com.omertron.omdbapi.OmdbApi;
+import com.omertron.omdbapi.model.OmdbVideoBasic;
 import com.omertron.omdbapi.model.OmdbVideoFull;
 import com.omertron.omdbapi.tools.OmdbBuilder;
 import org.apache.commons.lang.StringUtils;
@@ -18,10 +19,7 @@ import pl.kogx.netflixdb.service.sync.AbstractSyncService;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Service
 public class OmdbSyncService extends AbstractSyncService {
@@ -32,12 +30,15 @@ public class OmdbSyncService extends AbstractSyncService {
 
     private static final String OMDB_UNAVAILABLE_TAG = "N/A";
 
+    private final Map<String, String> aliasByTitle;
+
     private final OmdbApi omdbApi;
 
     @Autowired
     public OmdbSyncService(VideoService videoService, ApplicationProperties applicationProperties) {
         super(videoService, applicationProperties);
         this.omdbApi = new OmdbApi(applicationProperties.getOmdbSync().getApiKey());
+        this.aliasByTitle = ApplicationProperties.getAliasByTitleMap(applicationProperties);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class OmdbSyncService extends AbstractSyncService {
         if (video != null) {
             result = syncVideo(video);
         }
-        log.info("Sync complete, result=", result);
+        log.info("Sync complete, result={}", result);
     }
 
     private Tuple<Integer, Integer> syncByGenre(String genreId, String genreName) {
@@ -136,17 +137,17 @@ public class OmdbSyncService extends AbstractSyncService {
     }
 
     private OmdbVideoFull tryFindVideo(VideoDTO video) throws OMDBException {
-        OmdbVideoFull result;
+        OmdbVideoBasic result;
         if (StringUtils.isEmpty(video.getImdbID()) || applicationProperties.getOmdbSync().getForceQuerySearch()) {
             if (isMovie(video.getType())) {
-                // with movies the approach is opposite, first try to find by title and year
+                // first try to find by title and year
                 result = tryFindVideo(video.getType(), video.getTitle(), video.getReleaseYear());
                 if (result == null) {
-                    result = tryFindVideo(video.getType(), video.getTitle());
+                    result = tryFindVideo(video.getType(), video.getTitle(), null);
                 }
             } else {
                 // show dates tend to be fucked up in Netflix, prefer search by title
-                result = tryFindVideo(video.getType(), video.getTitle());
+                result = tryFindVideo(video.getType(), video.getTitle(), null);
                 if (result == null) {
                     result = tryFindVideo(video.getType(), video.getTitle(), video.getReleaseYear());
                 }
@@ -154,9 +155,12 @@ public class OmdbSyncService extends AbstractSyncService {
 
         } else {
             // find by imdb
-            result = tryFindVideo(video.getType(), video.getImdbID(), null, null);
+            result = doTryFindVideo(video.getImdbID());
         }
-        return result;
+        if (result == null) {
+            return null;
+        }
+        return omdbApi.getInfo(new OmdbBuilder().setImdbId(result.getImdbID()).build());
     }
 
     private OmdbBuilder createOmdbBuilder() {
@@ -165,21 +169,31 @@ public class OmdbSyncService extends AbstractSyncService {
         return omdbBuilder;
     }
 
-    private OmdbVideoFull tryFindVideo(String type, String title, Integer releaseYear) throws OMDBException {
-        return tryFindVideo(type, null, title, releaseYear);
-    }
-
-    private OmdbVideoFull tryFindVideo(String type, String title) throws OMDBException {
-        return tryFindVideo(type, null, title, null);
-    }
-
-    private OmdbVideoFull tryFindVideo(String type, String imdbID, String title, Integer releaseYear) throws OMDBException {
-        OmdbBuilder omdbBuilder = createOmdbBuilder();
-        if (StringUtils.isNotEmpty(imdbID)) {
-            omdbBuilder.setImdbId(imdbID);
+    private OmdbVideoBasic tryFindVideo(String type, String title, Integer releaseYear) throws OMDBException {
+        title = aliasByTitle.getOrDefault(title, title);
+        OmdbVideoBasic omdbVideoBasic = doTryFindVideo(type,  title, null, releaseYear);
+        if (omdbVideoBasic == null) {
+            // try with searchTerm instead of title
+            omdbVideoBasic = doTryFindVideo(type,  null, title, releaseYear);
         }
+        return omdbVideoBasic;
+    }
+
+    private OmdbVideoBasic doTryFindVideo(String imdbID) throws OMDBException {
+        OmdbBuilder omdbBuilder = createOmdbBuilder();
+        omdbBuilder.setImdbId(imdbID);
+        return omdbApi.getInfo(omdbBuilder.build());
+    }
+
+    private OmdbVideoBasic doTryFindVideo(String type, String title, String searchTerm, Integer releaseYear) throws OMDBException {
+        String keyTitle = null;
+        OmdbBuilder omdbBuilder = createOmdbBuilder();
         if (StringUtils.isNotEmpty(title)) {
+            keyTitle = title;
             omdbBuilder.setTitle(title);
+        } else if (StringUtils.isNotEmpty(searchTerm)) {
+            keyTitle = searchTerm;
+            omdbBuilder.setSearchTerm(searchTerm);
         }
         if (releaseYear != null) {
             omdbBuilder.setYear(releaseYear);
@@ -187,6 +201,14 @@ public class OmdbSyncService extends AbstractSyncService {
         if (isMovie(type)) {
             omdbBuilder.setTypeMovie();
         }
-        return omdbApi.getInfo(omdbBuilder.build());
+        List<OmdbVideoBasic> result = omdbApi.search(omdbBuilder.build()).getResults();
+        if (result == null || result.isEmpty()) {
+            return null;
+        }
+        if(keyTitle == null) {
+            return result.get(0);
+        } else {
+            return filterByBestTitleDistance(keyTitle, result, f -> f.getTitle());
+        }
     }
 }

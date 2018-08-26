@@ -1,5 +1,6 @@
 package pl.kogx.netflixdb.service.sync;
 
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.elasticsearch.common.collect.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.service.VideoService;
 
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public abstract class AbstractSyncService {
 
@@ -57,5 +60,18 @@ public abstract class AbstractSyncService {
         if (!execute) {
             throw new InterruptedException();
         }
+    }
+
+    protected final <T> T filterByBestTitleDistance(String title, List<T> films, Function<T, String> titleSupplier) {
+        T best = null;
+        int bestDist = Integer.MAX_VALUE;
+        for (T res : films) {
+            int dist = new LevenshteinDistance().apply(title, titleSupplier.apply(res));
+            if (dist < bestDist) {
+                best = res;
+                bestDist = dist;
+            }
+        }
+        return bestDist <= title.length() / 3 ? best : null;
     }
 }
