@@ -17,36 +17,42 @@ import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
             </button>
         </div>
         <div class="modal-body">
-            <img src="../../../content/images/przelewy24_150.png">
             <ng4-loading-spinner></ng4-loading-spinner>
-            <form class="form-inline">
-                <div class="donate-form input-group mt-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" jhiTranslate="donate.form.amount"></span>
-                    </div>
-                    <input type="number" class="form-control" name="amount" required [(ngModel)]="amount"/>
-                    <div class="input-group-append"><span class="input-group-text">{{currency}}</span></div>
-                </div>
-                <div class="donate-form input-group mt-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" jhiTranslate="donate.form.email"></span>
-                    </div>
-                    <input type="email" class="form-control" name="email"  required [(ngModel)]="email"/>
-                </div>
-                <div class="donate-form input-group mt-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" jhiTranslate="donate.form.description"></span>
-                    </div>
-                    <input type="text" class="form-control" name="description" [(ngModel)]="description"/>
-                </div>
+            <form ngNoForm action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_parent">
+                <input type="hidden" name="cmd" value="_s-xclick">
+                <input type="hidden" name="hosted_button_id" value="ZSYP4WDE2767U">
+                <input type="image" src="https://www.paypalobjects.com/pl_PL/PL/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal – Płać wygodnie i bezpiecznie">
+                <img alt="" border="0" src="https://www.paypalobjects.com/pl_PL/i/scr/pixel.gif" width="1" height="1">
             </form>
+            <!--<img src="../../../content/images/przelewy24_150.png">-->
+            <!--<form class="form-inline">-->
+                <!--<div class="donate-form input-group mt-3">-->
+                    <!--<div class="input-group-prepend">-->
+                        <!--<span class="input-group-text" jhiTranslate="donate.form.amount"></span>-->
+                    <!--</div>-->
+                    <!--<input type="number" class="form-control" name="amount" required [(ngModel)]="amount"/>-->
+                    <!--<div class="input-group-append"><span class="input-group-text">{{currency}}</span></div>-->
+                <!--</div>-->
+                <!--<div class="donate-form input-group mt-3">-->
+                    <!--<div class="input-group-prepend">-->
+                        <!--<span class="input-group-text" jhiTranslate="donate.form.email"></span>-->
+                    <!--</div>-->
+                    <!--<input type="email" class="form-control" name="email"  required [(ngModel)]="email"/>-->
+                <!--</div>-->
+                <!--<div class="donate-form input-group mt-3">-->
+                    <!--<div class="input-group-prepend">-->
+                        <!--<span class="input-group-text" jhiTranslate="donate.form.description"></span>-->
+                    <!--</div>-->
+                    <!--<input type="text" class="form-control" name="description" [(ngModel)]="description"/>-->
+                <!--</div>-->
+            <!--</form>-->
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="activeModal.close('Close click')"
                     jhiTranslate="donate.cancel"></button>
-            <button type="button" class="btn btn-primary" (click)=send() jhiTranslate="donate.send"></button>
-            <button type="button" class="btn btn-success" (click)=redirect() jhiTranslate="donate.pay"
-                    [disabled]="!showResponse"></button>
+            <!--<button type="button" class="btn btn-primary" (click)=send() jhiTranslate="donate.send"></button>-->
+            <!--<button type="button" class="btn btn-success" (click)=redirect() jhiTranslate="donate.pay"-->
+                    <!--[disabled]="!showResponse"></button>-->
         </div>
     `
 })
