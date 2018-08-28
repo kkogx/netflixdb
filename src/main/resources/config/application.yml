@@ -65,7 +65,7 @@ server:
 info:
     # Comma separated list of profiles that will trigger the ribbon to show
     display-ribbon-on-profiles: "dev,test,prod,swagger"
-    registrationClosed: true
+    registration-closed: true
 
 # ===================================================================
 # JHipster specific properties

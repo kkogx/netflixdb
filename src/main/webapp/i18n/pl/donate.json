@@ -8,7 +8,10 @@
             "email": "Email"
         },
         "cancel": "Anuluj",
-        "send": "Wygeneruj link do P24",
+        "generatep24": "Wygeneruj link do P24",
+        "returnlabel": "Powrót do Netflixdb.pl",
+        "donor": "Darczyńca",
+        "generatedotpay": "Wygeneruj link DotPay",
         "pay": "Wyślij",
         "thanks": "Dotacja została wysłana. Dziękujemy za wsparcie!"
     }
