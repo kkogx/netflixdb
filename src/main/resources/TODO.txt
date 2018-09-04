@@ -1,16 +1,16 @@
-Go closed tests
-- donates
-- donate validations
 - mobile layout
 - multi genre
 - sort icons
-- improve result filtering (year distance)
 - enable logstash
 Post-prod
+- donates
+- improve result filtering (year distance)
 - live search
 - frontend for mobile
 
 Done
+- donate validations
+- Go closed tests
 - split movies n tv
 - visit count
 - gotham font logo
