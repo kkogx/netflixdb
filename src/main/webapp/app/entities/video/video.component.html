@@ -1,11 +1,11 @@
 <div>
     <h3 id="page-heading">
         <ng-container [ngSwitch]="true">
-            <span *ngSwitchCase="searchByType === 'film'" jhiTranslate="videos.titleFilms"></span>
-            <span *ngSwitchCase="searchByType === 'show'" jhiTranslate="videos.titleShows"></span>
+            <span *ngSwitchCase="searchByType === 'film'" jhiTranslate="videos.titlefilms"></span>
+            <span *ngSwitchCase="searchByType === 'show'" jhiTranslate="videos.titleshows"></span>
             <span *ngSwitchDefault jhiTranslate="videos.title"></span>
         </ng-container>
-        <small *ngIf="totalItems" class="text-muted" jhiTranslate="videos.totalCount" translateValues="{total: '{{ totalItems }}'}"></small>
+        <small *ngIf="totalItems" class="text-muted" jhiTranslate="videos.totalcount" translateValues="{total: '{{ totalItems }}'}"></small>
         <button *jhiHasAnyAuthority="'ROLE_ADMIN'" id="jh-create-entity"
                 class="btn btn-primary float-right jh-create-entity create-video"
                 [routerLink]="['/video/new']">
@@ -77,7 +77,7 @@
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
-                <th><span>Podgląd</span>
+                <th><span jhiTranslate="videos.entity.preview"></span>
                 </th>
                 <th><span jhiTranslate="videos.entity.fwebtitle">Fweb Title</span>
                 </th>
@@ -94,28 +94,28 @@
                     </div>
                 </th>
                 <th jhiSortBy="fwebRating">
-                    <img src="../../../content/images/filmweb30inv.png">
+                    <img class="fweb-logo" src="../../../content/images/filmweb30inv.png">
                     <div class="text-nowrap text-right">
                         <span jhiTranslate="videos.entity.fwebrating">Fweb Rating</span>
                         <fa-icon [icon]="'sort'"></fa-icon>
                     </div>
                 </th>
                 <th jhiSortBy="fwebVotes">
-                    <img src="../../../content/images/filmweb30inv.png">
+                    <img class="fweb-logo" src="../../../content/images/filmweb30inv.png">
                     <div class="text-nowrap text-right">
                         <span jhiTranslate="videos.entity.fwebvotes">Fweb Votes</span>
                         <fa-icon [icon]="'sort'"></fa-icon>
                     </div>
                 </th>
                 <th jhiSortBy="imdbRating">
-                    <img src="../../../content/images/icons8-imdb-40.png">
+                    <img class="imdb-logo" src="../../../content/images/icons8-imdb-40.png">
                     <div class="text-nowrap">
                         <span jhiTranslate="videos.entity.imdbrating">Imdb Rating</span>
                         <fa-icon [icon]="'sort'"></fa-icon>
                     </div>
                 </th>
                 <th jhiSortBy="imdbVotes">
-                    <img src="../../../content/images/icons8-imdb-40.png">
+                    <img class="imdb-logo" src="../../../content/images/icons8-imdb-40.png">
                     <div class="text-nowrap">
                         <span jhiTranslate="videos.entity.imdbvotes">Imdb Votes</span>
                         <fa-icon [icon]="'sort'"></fa-icon>
@@ -127,16 +127,17 @@
             <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']"
                    [infiniteScrollDistance]="0">
             <tr *ngFor="let video of videos ;trackBy: trackId">
-                <td><a
-                    href="https://www.youtube.com/results?search_query={{video.title}} {{video.releaseYear}} trailer">
-                    <div class="boxart-260-146"
-                         lazyLoad="{{video.boxart}}" width="260px" height="146px"
-                         defaultImage='../../content/images/netflixdb_260x146_blur.png'>
-                        <img src="../../../content/images/youtube-play160.png" width="30" height="30" align="right">
-                    </div>
-                </a></td>
+                <td data-title="">
+                    <a href="https://www.youtube.com/results?search_query={{video.title}} {{video.releaseYear}} trailer">
+                        <div class="boxart-260-146"
+                             lazyLoad="{{video.boxart}}" width="260px" height="146px"
+                             defaultImage='../../content/images/netflixdb_260x146_blur.png'>
+                            <img src="../../../content/images/youtube-play160.png" width="30" height="30" align="right">
+                        </div>
+                    </a>
+                </td>
                 <!--<td>{{video.title}}</td>-->
-                <td>
+                <td data-title="{{'videos.entity.fwebtitle' | translate}}:">
                     <div *ngIf="video.fwebTitle" placement="right" class="underline-on-hover"
                             ngbPopover="{{video.fwebPlot}}" triggers="click:mouseleave">
                         {{video.fwebTitle}}
@@ -144,12 +145,12 @@
                     <!--<div>{{video.fwebTitle}}</div>-->
                     <div class="text-muted">{{video.title}}</div>
                 </td>
-                <td class="text-right">{{video.releaseYear}}</td>
-                <td>{{video.genre}}</td>
-                <td class="text-right">{{video.fwebRating}}</td>
-                <td class="text-right">{{video.fwebVotes}}</td>
-                <td class="text-right">{{video.imdbRating}}</td>
-                <td class="text-right">{{video.imdbVotes}}</td>
+                <td data-title="{{'videos.entity.releaseyear' | translate}}:" class="text-right">{{video.releaseYear}}</td>
+                <td data-title="{{'videos.entity.genre' | translate}}:">{{video.genre}}</td>
+                <td data-title="{{'videos.entity.fwebratingfull' | translate}}:" class="text-right">{{video.fwebRating}}</td>
+                <td data-title="{{'videos.entity.fwebvotesfull' | translate}}:" class="text-right">{{video.fwebVotes}}</td>
+                <td data-title="{{'videos.entity.imdbratingfull' | translate}}:" class="text-right">{{video.imdbRating}}</td>
+                <td data-title="{{'videos.entity.imdbvotesfull' | translate}}:" class="text-right">{{video.imdbVotes}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"

@@ -1,18 +1,23 @@
 {
     "videos": {
         "title": "Katalog",
-        "titleFilms": "Filmy",
-        "titleShows": "Seriale",
-        "totalCount": "( {{ total }} )",
+        "titlefilms": "Filmy",
+        "titleshows": "Seriale",
+        "totalcount": "( {{ total }} )",
         "entity": {
             "title": "Tytuł EN",
+            "preview": "Podgląd",
             "fwebtitle": "Tytuł",
             "releaseyear": "Rok",
             "genre": "Gatunek",
             "fwebrating": "ocena",
+            "fwebratingfull": "Filmweb ocena",
             "fwebvotes": "głosy",
+            "fwebvotesfull": "Filmweb głosy",
             "imdbrating": "ocena",
+            "imdbratingfull": "IMDB ocena",
             "imdbvotes": "głosy",
+            "imdbvotesfull": "IMDB głosy",
             "plot": "opis",
             "plotUpper": "Opis"
         },
