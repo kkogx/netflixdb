@@ -29,7 +29,7 @@ export const videoRoute: Routes = [
         path: 'video',
         component: VideoComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: [],
             pageTitle: 'global.title'
         },
         canActivate: [UserRouteAccessService]
@@ -38,7 +38,7 @@ export const videoRoute: Routes = [
         path: 'films',
         component: VideoComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: [],
             pageTitle: 'global.title',
             searchByType: 'film'
         },
@@ -48,7 +48,7 @@ export const videoRoute: Routes = [
         path: 'shows',
         component: VideoComponent,
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: [],
             pageTitle: 'global.title',
             searchByType: 'show'
         },
