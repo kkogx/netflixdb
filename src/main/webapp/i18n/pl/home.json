@@ -1,6 +1,7 @@
 {
     "home": {
-        "title": "Witaj w Netflixdb!",
+        "title": "Netflixdb.pl",
+        "welcome": "Witaj w Netflixdb!",
         "subtitle": "Nieoficjalny katalog polskiego Netflixa",
         "logged": {
             "message": "Jesteś zalogowany jako użytkownik \"{{username}}\"."
