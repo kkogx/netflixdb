@@ -4,6 +4,7 @@ export interface IVideo {
     fwebTitle?: string;
     releaseYear?: number;
     genre?: string;
+    genres?: string;
     genreId?: number;
     original?: boolean;
     type?: string;
@@ -30,6 +31,7 @@ export class Video implements IVideo {
         public fwebTitle?: string,
         public releaseYear?: number,
         public genre?: string,
+        public genres?: string,
         public genreId?: number,
         public original?: boolean,
         public type?: string,
