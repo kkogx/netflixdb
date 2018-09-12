@@ -44,6 +44,8 @@ public class NetflixSyncService extends AbstractSyncService {
             }
         } catch (JsonObject.JsonUnmarshallException e) {
             log.error("Unable to process the response, API has changed?", e);
+        } catch (Exception e) {
+            log.error("Exception when syncing from netflix", e);
         }
         videoService.deleteByTimestampBefore(timestamp);
         return countTotal;
@@ -103,7 +105,7 @@ public class NetflixSyncService extends AbstractSyncService {
                 videoDTO.setOriginal(json.get("summary").get("value").getBool("isOriginal"));
                 videoDTO.setTitle(json.get("title").getString("value"));
                 videoDTO.setReleaseYear(json.get("releaseYear").getInt("value"));
-                Collection<Long> genreIds = new ArrayList<>(videoDTO.getGenreIds());
+                List<Long> genreIds = new ArrayList<>(videoDTO.getGenreIds());
                 genreIds.add(Long.valueOf(genreId));
                 videoDTO.setGenreIds(genreIds);
                 videoDTO.setGenre(genre);
