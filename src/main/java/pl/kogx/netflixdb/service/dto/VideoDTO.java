@@ -2,8 +2,9 @@ package pl.kogx.netflixdb.service.dto;
 
 import org.springframework.format.annotation.NumberFormat;
 import pl.kogx.netflixdb.domain.Video;
+import pl.kogx.netflixdb.service.util.GenreResolver;
 
-import java.util.Date;
+import java.util.*;
 
 /**
  * A DTO representing a video, with his authorities.
@@ -21,6 +22,10 @@ public class VideoDTO {
     private String genre;
 
     private Long genreId;
+
+    private Collection<Long> genreIds = new HashSet<>();
+
+    private String genres;
 
     private Boolean original;
 
@@ -68,6 +73,7 @@ public class VideoDTO {
         this.releaseYear = video.getReleaseYear();
         this.genre = video.getGenre();
         this.genreId = video.getGenreId();
+        this.genreIds = video.getGenreIds();
         this.original = video.getOriginal();
         this.type = video.getType();
         this.omdbAvailable = video.getOmdbAvailable();
@@ -85,6 +91,34 @@ public class VideoDTO {
         this.boxart = video.getBoxart();
         this.timestamp = video.getTimestamp();
         this.fwebPlot = video.getFwebPlot();
+    }
+
+    public Video toVideo() {
+        Video video = new Video();
+        video.setId(this.id);
+        video.setTitle(this.title);
+        video.setReleaseYear(this.releaseYear);
+        video.setGenre(this.genre);
+        video.setGenreId(this.genreId);
+        video.setGenreIds(new ArrayList<>(this.genreIds));
+        video.setOriginal(this.original);
+        video.setType(this.type);
+        video.setOmdbAvailable(this.omdbAvailable);
+        video.setFwebAvailable(this.fwebAvailable);
+        video.setImdbRating(this.imdbRating);
+        video.setFwebRating(this.fwebRating);
+        video.setImdbVotes(this.imdbVotes);
+        video.setFwebVotes(this.fwebVotes);
+        video.setMetascore(this.metascore);
+        video.setTomatoRating(this.tomatoRating);
+        video.setTomatoUserRating(this.tomatoUserRating);
+        video.setImdbID(this.imdbID);
+        video.setFwebID(this.fwebID);
+        video.setFwebTitle(this.fwebTitle);
+        video.setBoxart(this.boxart);
+        video.setTimestamp(this.timestamp);
+        video.setFwebPlot(this.fwebPlot);
+        return video;
     }
 
     private static Float round (Float value, int precision) {
@@ -269,6 +303,23 @@ public class VideoDTO {
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Collection<Long> getGenreIds() {
+        return Collections.unmodifiableCollection(genreIds);
+    }
+
+    public void setGenreIds(Collection<Long> genreIds) {
+        this.genreIds = new HashSet<>(genreIds);
+        this.genres = null;
+    }
+
+    public void setGenres(String genres) {
+        this.genres = genres;
+    }
+
+    public String getGenres() {
+        return genres;
     }
 
     @Override

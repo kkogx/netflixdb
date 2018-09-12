@@ -5,7 +5,9 @@ import org.springframework.format.annotation.NumberFormat;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @org.springframework.data.elasticsearch.annotations.Document(indexName = "videos")
@@ -24,6 +26,8 @@ public class Video implements Serializable {
     private String genre;
 
     private Long genreId;
+
+    private List<Long> genreIds = new ArrayList<>();
 
     private Boolean original;
 
@@ -244,6 +248,14 @@ public class Video implements Serializable {
         this.fwebPlot = fwebPlot;
     }
 
+    public List<Long> getGenreIds() {
+        return genreIds;
+    }
+
+    public void setGenreIds(List<Long> genreIds) {
+        this.genreIds = genreIds;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -255,6 +267,7 @@ public class Video implements Serializable {
             Objects.equals(releaseYear, video.releaseYear) &&
             Objects.equals(genre, video.genre) &&
             Objects.equals(genreId, video.genreId) &&
+            Objects.equals(genreIds, video.genreIds) &&
             Objects.equals(original, video.original) &&
             Objects.equals(type, video.type) &&
             Objects.equals(omdbAvailable, video.omdbAvailable) &&
@@ -276,7 +289,7 @@ public class Video implements Serializable {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, title, fwebTitle, releaseYear, genre, genreId, original, type, omdbAvailable, fwebAvailable, imdbRating, fwebRating, imdbVotes, fwebVotes, metascore, tomatoRating, tomatoUserRating, imdbID, fwebID, boxart, timestamp, fwebPlot);
+        return Objects.hash(id, title, fwebTitle, releaseYear, genre, genreId, genreIds, original, type, omdbAvailable, fwebAvailable, imdbRating, fwebRating, imdbVotes, fwebVotes, metascore, tomatoRating, tomatoUserRating, imdbID, fwebID, boxart, timestamp, fwebPlot);
     }
 
     @Override

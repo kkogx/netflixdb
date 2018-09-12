@@ -47,7 +47,8 @@ public class VideoService {
     }
 
     public VideoDTO findById(Long id) {
-        return new VideoDTO(videoSearchRepository.findById(id).orElse(null));
+        Optional<Video> video = videoSearchRepository.findById(id);
+        return video.map(VideoDTO::new).orElse(null);
     }
 
 
@@ -127,7 +128,7 @@ public class VideoService {
         builder = applyMustBetween(builder, imdbMin, -1, "imdbVotes");
         builder = applyMustBetween(builder, yearMin, -1, "releaseYear");
         if (!ArrayUtils.isEmpty(genres)) {
-            builder = builder.must(QueryBuilders.termsQuery("genreId", genres));
+            builder = builder.must(QueryBuilders.termsQuery("genreIds", genres));
         }
         if (!ArrayUtils.isEmpty(types)) {
             builder = builder.must(QueryBuilders.termsQuery("type", types));
@@ -135,7 +136,7 @@ public class VideoService {
         return videoSearchRepository.search(builder, pageable);
     }
 
-    public BoolQueryBuilder applyMustBetween(BoolQueryBuilder builder, Integer min, Integer max, String name) {
+    private BoolQueryBuilder applyMustBetween(BoolQueryBuilder builder, Integer min, Integer max, String name) {
         if (min <= 0 && max <= 0) {
             return builder;
         }

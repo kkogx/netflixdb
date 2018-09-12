@@ -16,9 +16,8 @@ import pl.kogx.netflixdb.service.dto.VideoDTO;
 import pl.kogx.netflixdb.service.sync.AbstractSyncService;
 import pl.kogx.netflixdb.service.util.JsonObject;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class NetflixSyncService extends AbstractSyncService {
@@ -95,15 +94,18 @@ public class NetflixSyncService extends AbstractSyncService {
             JSONArray videos = JsonPath.read(response.getBody(), "$..videos.*");
             for (Object video : videos) {
                 super.checkIfNotInterrupted();
-                VideoDTO videoDTO = new VideoDTO();
-                videoDTO.setTimestamp(new Date());
                 JsonObject json = new JsonObject(video);
-                videoDTO.setId(json.get("summary").get("value").getLong("id"));
+                Long id = json.get("summary").get("value").getLong("id");
+                VideoDTO videoDTO = Optional.ofNullable(videoService.findById(id)).orElse(new VideoDTO());
+                videoDTO.setTimestamp(new Date());
+                videoDTO.setId(id);
                 videoDTO.setType(json.get("summary").get("value").getString("type"));
                 videoDTO.setOriginal(json.get("summary").get("value").getBool("isOriginal"));
                 videoDTO.setTitle(json.get("title").getString("value"));
                 videoDTO.setReleaseYear(json.get("releaseYear").getInt("value"));
-                videoDTO.setGenreId(Long.valueOf(genreId));
+                Collection<Long> genreIds = new ArrayList<>(videoDTO.getGenreIds());
+                genreIds.add(Long.valueOf(genreId));
+                videoDTO.setGenreIds(genreIds);
                 videoDTO.setGenre(genre);
                 videoDTO.setBoxart(json.get("boxarts").get("_260x146").get("jpg").get("value").getString("url"));
                 videoService.updateVideo(videoDTO);
