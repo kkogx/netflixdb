@@ -23,7 +23,7 @@ public class VideoDTO {
 
     private Long genreId;
 
-    private Collection<Long> genreIds = new HashSet<>();
+    private List<Long> genreIds = new ArrayList<>();
 
     private String genres;
 
@@ -305,12 +305,12 @@ public class VideoDTO {
         this.timestamp = timestamp;
     }
 
-    public Collection<Long> getGenreIds() {
-        return Collections.unmodifiableCollection(genreIds);
+    public List<Long> getGenreIds() {
+        return genreIds;
     }
 
-    public void setGenreIds(Collection<Long> genreIds) {
-        this.genreIds = new HashSet<>(genreIds);
+    public void setGenreIds(List<Long> genreIds) {
+        this.genreIds = genreIds;
         this.genres = null;
     }
 
