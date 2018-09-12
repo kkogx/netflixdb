@@ -44,6 +44,8 @@ public class NetflixSyncService extends AbstractSyncService {
             }
         } catch (JsonObject.JsonUnmarshallException e) {
             log.error("Unable to process the response, API has changed?", e);
+        } catch (Exception e) {
+            log.error("Exception when syncing from netflix", e);
         }
         videoService.deleteByTimestampBefore(timestamp);
         return countTotal;
