@@ -43,7 +43,7 @@ public class VideoService {
     }
 
     public Page<VideoDTO> findByGenreId(Long genreId, Pageable pageable) {
-        return videoSearchRepository.findAllByGenreIdsContaining(genreId, pageable).map(VideoDTO::new);
+        return videoSearchRepository.findByGenreIds(genreId, pageable).map(VideoDTO::new);
     }
 
     public VideoDTO findById(Long id) {
