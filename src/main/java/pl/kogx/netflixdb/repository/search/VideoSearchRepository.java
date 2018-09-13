@@ -15,7 +15,7 @@ public interface VideoSearchRepository extends ElasticsearchRepository<Video, Lo
     @Override
     Video save(Video entity);
 
-    Page<Video> findAllByGenreId(Long genreId, Pageable pageable);
+    Page<Video> findAllByGenreIdsContaining(Long genreId, Pageable pageable);
 
     void deleteByTimestampBefore(long timestamp);
 
