@@ -17,7 +17,6 @@ import pl.kogx.netflixdb.service.sync.AbstractSyncService;
 import pl.kogx.netflixdb.service.util.JsonObject;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class NetflixSyncService extends AbstractSyncService {
@@ -36,11 +35,11 @@ public class NetflixSyncService extends AbstractSyncService {
     @Override
     public Tuple<Long, Long> doSync() throws InterruptedException {
         Date timestamp = new Date();
-        Tuple<Long, Long> countTotal = new Tuple(0l, 0l);
+        Tuple<Long, Long> countTotal = new Tuple(0L, 0L);
         try {
             for (Map.Entry<String, String> genreById : genreByIdMap.entrySet()) {
                 int count = syncByGenre(genreById.getKey().trim(), genreById.getValue().trim());
-                countTotal = Tuple.tuple(countTotal.v1() + count, 0l);
+                countTotal = Tuple.tuple(countTotal.v1() + count, 0L);
             }
         } catch (JsonObject.JsonUnmarshallException e) {
             log.error("Unable to process the response, API has changed?", e);
@@ -55,8 +54,8 @@ public class NetflixSyncService extends AbstractSyncService {
         int rnd = new Random().nextInt(1000);
         try {
             Thread.sleep(applicationProperties.getNetflixSync().getRequestSleepMillis() + rnd);
-        } catch (InterruptedException ignore) {
-            log.warn("Exception when thread sleep", ignore);
+        } catch (InterruptedException ignored) {
+            log.warn("Exception when thread sleep", ignored);
         }
     }
 

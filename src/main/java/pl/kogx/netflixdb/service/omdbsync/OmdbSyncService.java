@@ -42,7 +42,7 @@ public class OmdbSyncService extends AbstractSyncService {
     }
 
     @Override
-    public Tuple<Long, Long> doSync() {
+    public Tuple<Long, Long> doSync() throws InterruptedException {
         Tuple<Long, Long> countTotal = Tuple.tuple(0L, 0L);
         List<String> keys = new ArrayList<>(genreByIdMap.keySet());
         Collections.shuffle(keys);
@@ -59,12 +59,15 @@ public class OmdbSyncService extends AbstractSyncService {
         boolean result = false;
         VideoDTO video = videoService.findById(id);
         if (video != null) {
-            result = syncVideo(video);
+            try {
+                result = syncVideo(video);
+            } catch (InterruptedException ignored) {
+            }
         }
         log.info("Sync complete, result={}", result);
     }
 
-    private Tuple<Integer, Integer> syncByGenre(String genreId, String genreName) {
+    private Tuple<Integer, Integer> syncByGenre(String genreId, String genreName) throws InterruptedException {
         log.info("OMDB Fetching by genre id={}, name={} ...", genreId, genreName);
 
         int syncedCount = 0;
@@ -93,7 +96,9 @@ public class OmdbSyncService extends AbstractSyncService {
         return Tuple.tuple(syncedCount, failedCount);
     }
 
-    private boolean syncVideo(VideoDTO video) {
+    private boolean syncVideo(VideoDTO video) throws InterruptedException {
+        super.checkIfNotInterrupted();
+
         OmdbVideoFull omdbVideo = null;
         try {
             omdbVideo = tryFindVideo(video);
@@ -208,7 +213,7 @@ public class OmdbSyncService extends AbstractSyncService {
         if(keyTitle == null) {
             return result.get(0);
         } else {
-            return filterByBestTitleDistance(keyTitle, result, f -> f.getTitle());
+            return filterByBestTitleDistance(keyTitle, result, OmdbVideoBasic::getTitle);
         }
     }
 }
