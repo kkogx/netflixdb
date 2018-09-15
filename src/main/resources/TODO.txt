@@ -1,5 +1,3 @@
-- mobile layout
-- multi genre
 - sort icons
 - enable logstash
 Post-prod
@@ -9,6 +7,8 @@ Post-prod
 - frontend for mobile
 
 Done
+- mobile layout
+- multi genre
 - donate validations
 - Go closed tests
 - split movies n tv

@@ -42,7 +42,7 @@ public class FwebSyncService extends AbstractSyncService {
     }
 
     @Override
-    public Tuple<Long, Long> doSync() {
+    public Tuple<Long, Long> doSync() throws InterruptedException {
         Tuple<Long, Long> countTotal = Tuple.tuple(0L, 0L);
         log.info("Starting filmweb sync");
         List<String> keys = new ArrayList<>(genreByIdMap.keySet());
@@ -60,12 +60,15 @@ public class FwebSyncService extends AbstractSyncService {
         boolean result = false;
         VideoDTO video = videoService.findById(id);
         if (video != null) {
-            result = syncVideo(video);
+            try {
+                result = syncVideo(video);
+            } catch (InterruptedException ignored) {
+            }
         }
         log.info("Sync complete, result={}", result);
     }
 
-    private Tuple<Integer, Integer> syncByGenre(String genreId, String genreName) {
+    private Tuple<Integer, Integer> syncByGenre(String genreId, String genreName) throws InterruptedException {
         log.info("FWEB Fetching by genre id={}, name={} ...", genreId, genreName);
 
         int syncedCount = 0;
@@ -94,7 +97,9 @@ public class FwebSyncService extends AbstractSyncService {
         return Tuple.tuple(syncedCount, failedCount);
     }
 
-    private boolean syncVideo(VideoDTO video) {
+    private boolean syncVideo(VideoDTO video) throws InterruptedException {
+        super.checkIfNotInterrupted();
+
         Item fwebVideoData = null;
         try {
             fwebVideoData = tryFindVideo(video);
@@ -137,9 +142,9 @@ public class FwebSyncService extends AbstractSyncService {
     private Item tryFindSeries(String title, Integer releaseYear) throws FilmwebException {
         title = aliasByTitle.getOrDefault(title, title);
         // show dates tend to be fucked up in Netflix, prefer search by title without year
-        ItemSearchResult res = filterByBestTitleDistance(title, findSeries(title), f -> f.getTitle());
+        ItemSearchResult res = filterByBestTitleDistance(title, findSeries(title), ItemSearchResult::getTitle);
         if (res == null) {
-            res = filterByBestTitleDistance(title, findSeries(title, releaseYear), f -> f.getTitle());
+            res = filterByBestTitleDistance(title, findSeries(title, releaseYear), ItemSearchResult::getTitle);
         }
         if (res == null) {
             return null;
@@ -150,9 +155,9 @@ public class FwebSyncService extends AbstractSyncService {
     private Item tryFindFilm(String title, Integer releaseYear) throws FilmwebException {
         title = aliasByTitle.getOrDefault(title, title);
         // with movies the approach is opposite, first try to find by title and year
-        ItemSearchResult res = filterByBestTitleDistance(title, toList(fwebApi.findFilm(title, releaseYear)), f -> f.getTitle());
+        ItemSearchResult res = filterByBestTitleDistance(title, toList(fwebApi.findFilm(title, releaseYear)), ItemSearchResult::getTitle);
         if (res == null) {
-            res = filterByBestTitleDistance(title, toList(fwebApi.findFilm(title)), f -> f.getTitle());
+            res = filterByBestTitleDistance(title, toList(fwebApi.findFilm(title)), ItemSearchResult::getTitle);
         }
         if (res == null) {
             return null;
@@ -169,6 +174,6 @@ public class FwebSyncService extends AbstractSyncService {
     }
 
     private List<ItemSearchResult> toList(List<FilmSearchResult> list) {
-        return list.stream().collect(Collectors.toList());
+        return new ArrayList<>(list);
     }
 }
