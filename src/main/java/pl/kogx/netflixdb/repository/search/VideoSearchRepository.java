@@ -19,6 +19,6 @@ public interface VideoSearchRepository extends ElasticsearchRepository<Video, Lo
 
     void deleteByTimestampBefore(long timestamp);
 
-    long countByGenreId(long genreId);
+    long countByGenreIds(long genreId);
 }
 

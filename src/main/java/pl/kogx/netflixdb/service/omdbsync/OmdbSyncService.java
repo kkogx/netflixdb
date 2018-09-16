@@ -210,7 +210,7 @@ public class OmdbSyncService extends AbstractSyncService {
         if (result == null || result.isEmpty()) {
             return null;
         }
-        if(keyTitle == null) {
+        if (keyTitle == null) {
             return result.get(0);
         } else {
             return filterByBestTitleDistance(keyTitle, result, OmdbVideoBasic::getTitle);

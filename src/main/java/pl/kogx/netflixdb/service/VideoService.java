@@ -155,6 +155,6 @@ public class VideoService {
     }
 
     public long countByGenreId(long genreId) {
-        return videoSearchRepository.countByGenreId(genreId);
+        return videoSearchRepository.countByGenreIds(genreId);
     }
 }
