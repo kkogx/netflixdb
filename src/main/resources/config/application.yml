@@ -111,7 +111,8 @@ jhipster:
 
 application:
     alias-by-title: "\
-        Seven=Se7en"
+        Seven=Se7en,\"
+        Treehouse Detectives=SKIP"
     przelewy24:
         merchant-id: "***REMOVED***"
     omdb-sync:

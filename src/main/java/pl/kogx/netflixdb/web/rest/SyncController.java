@@ -63,7 +63,7 @@ public class SyncController {
     public void sync(@PathVariable("type") String type, @PathVariable("id") Long id) {
         log.info("all type={} id={}", type, id);
         Optional<AbstractSyncService> service = getServiceForType(type);
-        service.ifPresent(abstractSyncService -> abstractSyncService.syncMovie(id));
+        service.ifPresent(abstractSyncService -> abstractSyncService.syncVideo(id));
     }
 
     @Async

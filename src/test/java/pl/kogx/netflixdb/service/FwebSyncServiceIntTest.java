@@ -33,6 +33,6 @@ public class FwebSyncServiceIntTest {
 
     @Test
     public void testIndividual() {
-        fwebSyncService.syncMovie(80114869L);
+        fwebSyncService.syncVideo(80114869L);
     }
 }
