@@ -33,6 +33,6 @@ public class NetflixSyncServiceIntTest {
 
     @Test
     public void testIndividual() {
-        netflixSyncService.syncMovie(207856L);
+        netflixSyncService.syncVideo(207856L);
     }
 }

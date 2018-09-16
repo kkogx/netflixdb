@@ -6,102 +6,40 @@ import com.omertron.omdbapi.model.OmdbVideoBasic;
 import com.omertron.omdbapi.model.OmdbVideoFull;
 import com.omertron.omdbapi.tools.OmdbBuilder;
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.common.collect.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.yamj.api.common.exception.ApiExceptionType;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.service.VideoService;
 import pl.kogx.netflixdb.service.dto.VideoDTO;
-import pl.kogx.netflixdb.service.sync.AbstractSyncService;
+import pl.kogx.netflixdb.service.sync.AbstractRepoSyncService;
+import pl.kogx.netflixdb.service.util.GenreResolver;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
 
 @Service
-public class OmdbSyncService extends AbstractSyncService {
+public class OmdbSyncService extends AbstractRepoSyncService {
 
     private static final NumberFormat NUMBER_FORMAT_US = NumberFormat.getInstance(Locale.US);
 
-    private static final int PAGE_SIZE = 50;
-
     private static final String OMDB_UNAVAILABLE_TAG = "N/A";
-
-    private final Map<String, String> aliasByTitle;
 
     private final OmdbApi omdbApi;
 
     @Autowired
-    public OmdbSyncService(VideoService videoService, ApplicationProperties applicationProperties) {
-        super(videoService, applicationProperties);
+    public OmdbSyncService(VideoService videoService, ApplicationProperties applicationProperties, GenreResolver genreResolver) {
+        super(videoService, applicationProperties, genreResolver);
         this.omdbApi = new OmdbApi(applicationProperties.getOmdbSync().getApiKey());
-        this.aliasByTitle = ApplicationProperties.getAliasByTitleMap(applicationProperties);
     }
 
     @Override
-    public Tuple<Long, Long> doSync() throws InterruptedException {
-        Tuple<Long, Long> countTotal = Tuple.tuple(0L, 0L);
-        List<String> keys = new ArrayList<>(genreByIdMap.keySet());
-        Collections.shuffle(keys);
-        for (String genreId : keys) {
-            Tuple<Integer, Integer> count = syncByGenre(genreId.trim(), genreByIdMap.get(genreId).trim());
-            countTotal = Tuple.tuple(countTotal.v1() + count.v1(), countTotal.v2() + count.v2());
-        }
-        return countTotal;
-    }
-
-    @Override
-    public void syncMovie(long id) {
-        log.info("Starting OMDB sync");
-        boolean result = false;
-        VideoDTO video = videoService.findById(id);
-        if (video != null) {
-            try {
-                result = syncVideo(video);
-            } catch (InterruptedException ignored) {
-            }
-        }
-        log.info("Sync complete, result={}", result);
-    }
-
-    private Tuple<Integer, Integer> syncByGenre(String genreId, String genreName) throws InterruptedException {
-        log.info("OMDB Fetching by genre id={}, name={} ...", genreId, genreName);
-
-        int syncedCount = 0;
-        int failedCount = 0;
-
-        int pageNum = 0;
-        Page<VideoDTO> page;
-        do {
-            page = videoService.findByGenreId(Long.valueOf(genreId), PageRequest.of(pageNum, PAGE_SIZE));
-            for (VideoDTO video : page) {
-                boolean result = syncVideo(video);
-                if (result) {
-                    syncedCount += 1;
-                    if (syncedCount % 100 == 0) {
-                        log.info("OMDB Fetched {} videos", syncedCount);
-                    }
-                } else {
-                    failedCount += 1;
-                }
-            }
-            pageNum += 1;
-        } while (!page.isLast());
-
-        log.info("OMDB Fetched {} videos, failed to sync {}", syncedCount, failedCount);
-
-        return Tuple.tuple(syncedCount, failedCount);
-    }
-
-    private boolean syncVideo(VideoDTO video) throws InterruptedException {
-        super.checkIfNotInterrupted();
-
+    protected boolean doSyncVideo(VideoDTO video, String title) {
         OmdbVideoFull omdbVideo = null;
         try {
-            omdbVideo = tryFindVideo(video);
+            omdbVideo = tryFindVideo(video, title);
         } catch (OMDBException e) {
             if (e.getExceptionType() != ApiExceptionType.ID_NOT_FOUND) {
                 log.warn("Exception type={}, code={}, video={}", e.getExceptionType(), e.getResponseCode(), video);
@@ -141,14 +79,14 @@ public class OmdbSyncService extends AbstractSyncService {
         return "movie".equalsIgnoreCase(type);
     }
 
-    private OmdbVideoFull tryFindVideo(VideoDTO video) throws OMDBException {
+    private OmdbVideoFull tryFindVideo(VideoDTO video, String title) throws OMDBException {
         OmdbVideoBasic result;
         if (StringUtils.isEmpty(video.getImdbID()) || applicationProperties.getOmdbSync().getForceQuerySearch()) {
             if (isMovie(video.getType())) {
                 // first try to find by title and year
-                result = tryFindVideo(video.getType(), video.getTitle(), video.getReleaseYear());
+                result = tryFindVideo(video.getType(), title, video.getReleaseYear());
                 if (result == null) {
-                    result = tryFindVideo(video.getType(), video.getTitle(), null);
+                    result = tryFindVideo(video.getType(), title, null);
                 }
             } else {
                 // show dates tend to be fucked up in Netflix, prefer search by title
@@ -175,7 +113,6 @@ public class OmdbSyncService extends AbstractSyncService {
     }
 
     private OmdbVideoBasic tryFindVideo(String type, String title, Integer releaseYear) throws OMDBException {
-        title = aliasByTitle.getOrDefault(title, title);
         OmdbVideoBasic omdbVideoBasic = doTryFindVideo(type,  title, null, releaseYear);
         if (omdbVideoBasic == null) {
             // try with searchTerm instead of title

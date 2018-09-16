@@ -14,6 +14,7 @@ import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.service.VideoService;
 import pl.kogx.netflixdb.service.dto.VideoDTO;
 import pl.kogx.netflixdb.service.sync.AbstractSyncService;
+import pl.kogx.netflixdb.service.util.GenreResolver;
 import pl.kogx.netflixdb.service.util.JsonObject;
 
 import java.util.*;
@@ -26,8 +27,8 @@ public class NetflixSyncService extends AbstractSyncService {
     private final RestTemplate shaktiRestTemplate;
 
     @Autowired
-    public NetflixSyncService(VideoService videoService, NetflixRequestBuilder requestBuilder, ApplicationProperties applicationProperties, RestTemplate shaktiRestTemplate) {
-        super(videoService, applicationProperties);
+    public NetflixSyncService(VideoService videoService, ApplicationProperties applicationProperties, GenreResolver genreResolver, NetflixRequestBuilder requestBuilder, RestTemplate shaktiRestTemplate) {
+        super(videoService, applicationProperties, genreResolver);
         this.requestBuilder = requestBuilder;
         this.shaktiRestTemplate = shaktiRestTemplate;
     }
@@ -35,17 +36,7 @@ public class NetflixSyncService extends AbstractSyncService {
     @Override
     public Tuple<Long, Long> doSync() throws InterruptedException {
         Date timestamp = new Date();
-        Tuple<Long, Long> countTotal = new Tuple(0L, 0L);
-        try {
-            for (Map.Entry<String, String> genreById : genreByIdMap.entrySet()) {
-                int count = syncByGenre(genreById.getKey().trim(), genreById.getValue().trim());
-                countTotal = Tuple.tuple(countTotal.v1() + count, 0L);
-            }
-        } catch (JsonObject.JsonUnmarshallException e) {
-            log.error("Unable to process the response, API has changed?", e);
-        } catch (Exception e) {
-            log.error("Exception when syncing from netflix", e);
-        }
+        Tuple<Long, Long>  countTotal = super.doSync();
         videoService.deleteByTimestampBefore(timestamp);
         return countTotal;
     }
@@ -59,7 +50,17 @@ public class NetflixSyncService extends AbstractSyncService {
         }
     }
 
-    private int syncByGenre(String genreId, String genreName) throws JsonObject.JsonUnmarshallException, InterruptedException {
+    @Override
+    protected Tuple<Integer, Integer> syncByGenre(String genreId, String genreName) throws InterruptedException {
+        try {
+            return doSyncByGenre(genreId, genreName);
+        } catch (JsonObject.JsonUnmarshallException e) {
+            log.error("Unable to process the response, API has changed?", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Tuple<Integer, Integer> doSyncByGenre(String genreId, String genreName) throws JsonObject.JsonUnmarshallException, InterruptedException {
         log.info("Fetching by genre id={}, name={}", genreId, genreName);
         final int BLOCK_SIZE = applicationProperties.getNetflixSync().getRequestBlockSize();
         int from = 0, countTotal = 0, count;
@@ -77,7 +78,7 @@ public class NetflixSyncService extends AbstractSyncService {
         if (countTotal == 0) {
             log.warn("No titles fetched for genre id={}, name={}", genreId, genreName);
         }
-        return countTotal;
+        return Tuple.tuple(countTotal, 0);
     }
 
     private int syncByGenre(String genreId, String genre, int from, int to) throws JsonObject.JsonUnmarshallException, InterruptedException {
@@ -120,7 +121,7 @@ public class NetflixSyncService extends AbstractSyncService {
     }
 
     @Override
-    public void syncMovie(long id) {
+    public void syncVideo(long id) {
 
         HttpEntity<String> request = requestBuilder.body(id).build();
 

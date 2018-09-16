@@ -33,6 +33,6 @@ public class OmdbSyncServiceIntTest {
 
     @Test
     public void testIndividual() {
-        omdbSyncService.syncMovie(70143836L);
+        omdbSyncService.syncVideo(70143836L);
     }
 }
