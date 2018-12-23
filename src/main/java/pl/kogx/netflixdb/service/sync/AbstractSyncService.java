@@ -1,20 +1,16 @@
 package pl.kogx.netflixdb.service.sync;
 
-import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.elasticsearch.common.collect.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.kogx.netflixdb.config.ApplicationProperties;
-import pl.kogx.netflixdb.domain.Genre;
 import pl.kogx.netflixdb.service.VideoService;
 import pl.kogx.netflixdb.service.util.GenreResolver;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 public abstract class AbstractSyncService {
 
@@ -42,6 +38,15 @@ public abstract class AbstractSyncService {
     public void stop() {
         this.execute = false;
     }
+
+    public void sync(Long id) {
+        if (id == null) {
+            sync();
+        } else {
+            syncVideo(id);
+        }
+    }
+
 
     public void sync() {
         this.execute = true;

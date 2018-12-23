@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kogx.netflixdb.domain.Video;
@@ -73,6 +74,17 @@ public class VideoService {
     public Page<Video> findAll(Pageable pageable) {
         log.debug("Request to get all Videos");
         return videoSearchRepository.findAll(pageable);
+    }
+
+    /**
+     * Get all the videos.
+     *
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public Iterable<Video> findAll() {
+        log.debug("Request to get all Videos");
+        return videoSearchRepository.findAll(Sort.by("id"));
     }
 
 

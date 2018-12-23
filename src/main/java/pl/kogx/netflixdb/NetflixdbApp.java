@@ -19,11 +19,15 @@ import pl.kogx.netflixdb.config.DefaultProfileUtil;
 import pl.kogx.netflixdb.service.fwebsync.FwebSyncService;
 import pl.kogx.netflixdb.service.netflixsync.NetflixSyncService;
 import pl.kogx.netflixdb.service.omdbsync.OmdbSyncService;
+import pl.kogx.netflixdb.service.util.VideoDiffService;
+import pl.kogx.netflixdb.service.util.VideoExportService;
 
 import javax.annotation.PostConstruct;
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 
 @SpringBootApplication
 @EnableAsync
@@ -38,17 +42,23 @@ public class NetflixdbApp implements ApplicationRunner {
 
     private final FwebSyncService fwebSyncService;
 
+    private final VideoExportService exportService;
+
+    private final VideoDiffService diffService;
+
     private final Environment env;
 
     private boolean scheduled = false;
 
     @Autowired
-    public NetflixdbApp(Environment env, NetflixSyncService netflixSyncService, OmdbSyncService omdbSyncService, FwebSyncService fwebSyncService) {
+    public NetflixdbApp(Environment env, NetflixSyncService netflixSyncService, OmdbSyncService omdbSyncService, FwebSyncService fwebSyncService, VideoExportService exportService, VideoDiffService diffService) {
         this.env = env;
         this.netflixSyncService = netflixSyncService;
         this.omdbSyncService = omdbSyncService;
         this.fwebSyncService = fwebSyncService;
-     }
+        this.exportService = exportService;
+        this.diffService = diffService;
+    }
 
     /**
      * Initializes netflixdb.
@@ -107,37 +117,48 @@ public class NetflixdbApp implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        log.info("Application was executed with args:");
-        for(String opt: args.getOptionNames()) {
-            log.info("{}={}", opt, args.getOptionValues(opt));
-        }
-
-        for(String opt : args.getOptionNames()) {
-            switch(opt) {
+        log.info("Application was executed with args: " + Arrays.toString(args.getSourceArgs()));
+        for (String opt : args.getSourceArgs()) {
+            switch (opt) {
                 case "scheduled": {
                     scheduled = getBooleanOptionValue(args, opt);
                     break;
                 }
                 case "sync": {
-                    netflixSyncService.sync();
-                    fwebSyncService.sync();
-                    omdbSyncService.sync();
+                    doSync(null);
                     break;
+                }
+                case "export": {
+                    exportService.exportVideos("exported_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".json");
+                    break;
+                }
+                case "diff": {
+                    Long id = getLongOptionValue(args, opt);
+                    //          doSync(id);
+                    diffService.diff(id);
                 }
             }
         }
     }
 
+    private void doSync(Long id) {
+        netflixSyncService.sync(id);
+        omdbSyncService.sync(id);
+        fwebSyncService.sync(id);
+    }
+
     @Scheduled(fixedDelay = 1000 * 60 * 10 /* 10 minutes */)
     public void syncMoviesScheduled() {
         if (scheduled) {
-            netflixSyncService.sync();
-            fwebSyncService.sync();
-            omdbSyncService.sync();
+            doSync(null);
         }
     }
 
     private boolean getBooleanOptionValue(ApplicationArguments args, String opt) {
-        return args.getOptionValues(opt).isEmpty() ? false : Boolean.valueOf(args.getOptionValues(opt).get(0));
+        return (args.getOptionValues(opt) == null || args.getOptionValues(opt).isEmpty()) ? false : Boolean.valueOf(args.getOptionValues(opt).get(0));
+    }
+
+    private Long getLongOptionValue(ApplicationArguments args, String opt) {
+        return (args.getOptionValues(opt) == null || args.getOptionValues(opt).isEmpty()) ? null : Long.valueOf(args.getOptionValues(opt).get(0));
     }
 }
