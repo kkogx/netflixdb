@@ -46,7 +46,7 @@ public abstract class AbstractRepoSyncService extends AbstractSyncService {
     }
 
     @Override
-    public void syncVideo(long id) {
+    public void doSync(long id) {
         log.info("Starting sync by id=" + id);
         boolean result = false;
         VideoDTO video = videoService.findById(id);

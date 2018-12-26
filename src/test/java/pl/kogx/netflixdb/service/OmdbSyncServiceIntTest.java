@@ -28,11 +28,11 @@ public class OmdbSyncServiceIntTest {
 
     @Test
     public void test() {
-        omdbSyncService.sync();
+        omdbSyncService.syncAll();
     }
 
     @Test
     public void testIndividual() {
-        omdbSyncService.syncVideo(70143836L);
+        omdbSyncService.doSync(70143836L);
     }
 }

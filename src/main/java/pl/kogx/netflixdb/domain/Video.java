@@ -319,4 +319,19 @@ public class Video implements Serializable {
             ", fwebPlot='" + fwebPlot + '\'' +
             '}';
     }
+
+    public String toShortString() {
+        return "Video{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", fwebTitle='" + fwebTitle + '\'' +
+            ", releaseYear=" + releaseYear +
+            ", imdbRating=" + imdbRating +
+            ", fwebRating=" + fwebRating +
+            ", imdbVotes=" + imdbVotes +
+            ", fwebVotes=" + fwebVotes +
+            ", imdbID='" + imdbID + '\'' +
+            ", fwebID=" + fwebID +
+            '}';
+    }
 }
