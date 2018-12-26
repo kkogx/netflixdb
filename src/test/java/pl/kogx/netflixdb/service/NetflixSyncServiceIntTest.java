@@ -27,12 +27,12 @@ public class NetflixSyncServiceIntTest {
 
     @Test
     public void test() {
-        netflixSyncService.sync();
+        netflixSyncService.syncAll();
     }
 
 
     @Test
     public void testIndividual() {
-        netflixSyncService.syncVideo(207856L);
+        netflixSyncService.doSync(207856L);
     }
 }

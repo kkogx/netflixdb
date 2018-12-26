@@ -28,11 +28,11 @@ public class FwebSyncServiceIntTest {
 
     @Test
     public void test() {
-        fwebSyncService.sync();
+        fwebSyncService.syncAll();
     }
 
     @Test
     public void testIndividual() {
-        fwebSyncService.syncVideo(80114869L);
+        fwebSyncService.doSync(80114869L);
     }
 }

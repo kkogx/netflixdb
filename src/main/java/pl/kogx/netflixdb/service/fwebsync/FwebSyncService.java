@@ -15,7 +15,6 @@ import pl.kogx.netflixdb.service.dto.VideoDTO;
 import pl.kogx.netflixdb.service.sync.AbstractRepoSyncService;
 import pl.kogx.netflixdb.service.util.GenreResolver;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -67,7 +66,7 @@ public class FwebSyncService extends AbstractRepoSyncService {
             }
 
         } else {
-            // find by imdb
+            // find by fweb id
             result = fwebApi.getFilmData(video.getFwebID());
         }
         return result;
@@ -87,9 +86,9 @@ public class FwebSyncService extends AbstractRepoSyncService {
 
     private Item tryFindFilm(String title, Integer releaseYear) throws FilmwebException {
         // with movies the approach is opposite, first try to find by title and year
-        ItemSearchResult res = filterByBestTitleDistance(title, toList(fwebApi.findFilm(title, releaseYear)), ItemSearchResult::getTitle);
+        ItemSearchResult res = filterByBestTitleDistance(title, filterByYear(fwebApi.findFilm(title, releaseYear), releaseYear), ItemSearchResult::getTitle);
         if (res == null) {
-            res = filterByBestTitleDistance(title, toList(fwebApi.findFilm(title)), ItemSearchResult::getTitle);
+            res = filterByBestTitleDistance(title, filterByYear(fwebApi.findFilm(title), releaseYear), ItemSearchResult::getTitle);
         }
         if (res == null) {
             return null;
@@ -105,7 +104,7 @@ public class FwebSyncService extends AbstractRepoSyncService {
         return Stream.concat(fwebApi.findSeries(title, releaseYear).stream(), fwebApi.findProgram(title, releaseYear).stream()).collect(Collectors.toList());
     }
 
-    private List<ItemSearchResult> toList(List<FilmSearchResult> list) {
-        return new ArrayList<>(list);
+    private List<ItemSearchResult> filterByYear(List<FilmSearchResult> list, Integer releaseYear) {
+        return list.stream().filter(f -> releaseYear == f.getYear()).collect(Collectors.toList());
     }
 }

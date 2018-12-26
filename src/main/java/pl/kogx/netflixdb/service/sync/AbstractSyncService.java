@@ -40,20 +40,16 @@ public abstract class AbstractSyncService {
     }
 
     public void sync(Long id) {
-        if (id == null) {
-            sync();
-        } else {
-            syncVideo(id);
-        }
+        this.execute = true;
+        doSync(id);
     }
 
-
-    public void sync() {
+    public void syncAll() {
         this.execute = true;
         long time = System.currentTimeMillis();
-        log.info("Starting sync");
+        log.info("Starting syncAll");
         try {
-            Tuple<Long, Long> countTotal = doSync();
+            Tuple<Long, Long> countTotal = doSyncAll();
             log.info("Sync complete, syncedCount={}, failedCount={}, took {} millis",
                 countTotal.v1(), countTotal.v2(), System.currentTimeMillis() - time);
         } catch (InterruptedException e) {
@@ -61,7 +57,7 @@ public abstract class AbstractSyncService {
         }
     }
 
-    protected Tuple<Long, Long> doSync() throws InterruptedException {
+    protected Tuple<Long, Long> doSyncAll() throws InterruptedException {
         Tuple<Long, Long> countTotal = Tuple.tuple(0L, 0L);
         List<String> keys = new ArrayList<>(genreResolver.getGenreByIdMap().keySet());
         Collections.shuffle(keys);
@@ -74,7 +70,7 @@ public abstract class AbstractSyncService {
 
     protected abstract Tuple<Integer, Integer> syncByGenre(String genreId, String genreName) throws InterruptedException;
 
-    public abstract void syncVideo(long id);
+    public abstract void doSync(long id);
 
     protected void checkIfNotInterrupted() throws InterruptedException {
         if (!execute) {

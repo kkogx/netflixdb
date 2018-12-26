@@ -34,9 +34,9 @@ public class NetflixSyncService extends AbstractSyncService {
     }
 
     @Override
-    public Tuple<Long, Long> doSync() throws InterruptedException {
+    public Tuple<Long, Long> doSyncAll() throws InterruptedException {
         Date timestamp = new Date();
-        Tuple<Long, Long>  countTotal = super.doSync();
+        Tuple<Long, Long> countTotal = super.doSyncAll();
         videoService.deleteByTimestampBefore(timestamp);
         return countTotal;
     }
@@ -121,7 +121,7 @@ public class NetflixSyncService extends AbstractSyncService {
     }
 
     @Override
-    public void syncVideo(long id) {
+    public void doSync(long id) {
 
         HttpEntity<String> request = requestBuilder.body(id).build();
 

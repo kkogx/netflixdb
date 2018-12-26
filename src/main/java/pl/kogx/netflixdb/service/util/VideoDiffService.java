@@ -39,8 +39,11 @@ public class VideoDiffService {
     }
 
     public void diff(Long id) throws IOException {
-        this.doDiff(id == null ? videoService.findAll()
-            : Collections.singleton(videoService.findOne(id).get()));
+        this.doDiff(Collections.singleton(videoService.findOne(id).get()));
+    }
+
+    public void diffAll() throws IOException {
+        this.doDiff(videoService.findAll());
     }
 
     private void doDiff(Iterable<Video> videos) throws IOException {
@@ -62,8 +65,8 @@ public class VideoDiffService {
                 if (!truthFwebTitle.equalsIgnoreCase(videoFwebTitle) || !truthImdbId.equals(videoImdbId)
                     || truthFwebId != videoFwebId) {
                     log.info("Diff found id=" + truth.getId());
-                    log.info("\t Truth=" + truth.toString());
-                    log.info("\t Found=" + video.toString());
+                    log.info("\t Truth=" + truth.toShortString());
+                    log.info("\t Found=" + video.toShortString());
                 }
             }
             ++count;

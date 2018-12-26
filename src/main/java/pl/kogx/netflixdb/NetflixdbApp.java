@@ -23,6 +23,7 @@ import pl.kogx.netflixdb.service.omdbsync.OmdbSyncService;
 import pl.kogx.netflixdb.service.util.VideoDiffService;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -128,7 +129,9 @@ public class NetflixdbApp implements ApplicationRunner {
                     break;
                 }
                 case "sync": {
-                    doSync(null);
+                    Long id = getLongOptionValue(args, opt);
+                    doDelete(id);
+                    doSync(id);
                     break;
                 }
                 case "export": {
@@ -137,8 +140,7 @@ public class NetflixdbApp implements ApplicationRunner {
                 }
                 case "diff": {
                     Long id = getLongOptionValue(args, opt);
-                    doSync(id);
-                    diffService.diff(id);
+                    doDiff(id);
                     break;
                 }
                 case "difftop": {
@@ -161,11 +163,35 @@ public class NetflixdbApp implements ApplicationRunner {
         return ids;
     }
 
+    private void doDiff(Long id) throws IOException {
+        log.info("Diff id=" + id);
+        if (id == null) {
+            diffService.diffAll();
+        } else {
+            diffService.diff(id);
+        }
+    }
+
     private void doSync(Long id) {
         log.info("Syncing id=" + id);
-        netflixSyncService.sync(id);
-        omdbSyncService.sync(id);
-        fwebSyncService.sync(id);
+        if (id == null) {
+            netflixSyncService.syncAll();
+            omdbSyncService.syncAll();
+            fwebSyncService.syncAll();
+        } else {
+            netflixSyncService.sync(id);
+            omdbSyncService.sync(id);
+            fwebSyncService.sync(id);
+        }
+    }
+
+    private void doDelete(Long id) {
+        log.info("Deleting id=" + id);
+        if (id == null) {
+            videoService.deleteAll();
+        } else {
+            videoService.delete(id);
+        }
     }
 
     @Scheduled(fixedDelay = 1000 * 60 * 10 /* 10 minutes */)

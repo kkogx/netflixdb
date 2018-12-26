@@ -16,7 +16,7 @@ import pl.kogx.netflixdb.service.sync.AbstractSyncService;
 import java.util.Optional;
 
 /**
- * REST controller for managing sync service.
+ * REST controller for managing syncAll service.
  */
 @RestController
 @RequestMapping("/api")
@@ -63,7 +63,7 @@ public class SyncController {
     public void sync(@PathVariable("type") String type, @PathVariable("id") Long id) {
         log.info("all type={} id={}", type, id);
         Optional<AbstractSyncService> service = getServiceForType(type);
-        service.ifPresent(abstractSyncService -> abstractSyncService.syncVideo(id));
+        service.ifPresent(abstractSyncService -> abstractSyncService.doSync(id));
     }
 
     @Async
@@ -72,9 +72,9 @@ public class SyncController {
     public void sync() {
         log.info("all");
         netflixSyncService.deleteAll();
-        netflixSyncService.sync();
-        omdbSyncService.sync();
-        fwebSyncService.sync();
+        netflixSyncService.syncAll();
+        omdbSyncService.syncAll();
+        fwebSyncService.syncAll();
     }
 
     @Async
@@ -83,7 +83,7 @@ public class SyncController {
     public void sync(@PathVariable("type") String type) {
         log.info("all type={}", type);
         Optional<AbstractSyncService> service = getServiceForType(type);
-        service.ifPresent(AbstractSyncService::sync);
+        service.ifPresent(AbstractSyncService::syncAll);
     }
 
     @PostMapping("/sync/{type}/stop")
