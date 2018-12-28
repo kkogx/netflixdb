@@ -79,7 +79,7 @@ public class VideoDiffService {
 
     private String getMostRecentJson(String prefix) {
         List<File> files = Arrays.stream(new File(".").listFiles(file -> file.getName().startsWith(prefix))).sorted().collect(Collectors.toList());
-        log.info("Comparing with " + files.get(0).getName());
+        log.info("Comparing with " + files.get(files.size() - 1).getName());
         return files.get(0).getName();
     }
 
