@@ -49,7 +49,7 @@ public class VideoExportService {
     }
 
     public Collection<Video> importVideos(String filename) throws IOException {
-        log.info("Importing from" + filename);
+        log.info("Importing from " + filename);
         BufferedReader in = new BufferedReader(new FileReader(filename));
         try {
             Collection<Video> videos = Arrays.asList(gson.fromJson(in, Video[].class));

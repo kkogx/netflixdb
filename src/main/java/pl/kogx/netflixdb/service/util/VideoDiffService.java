@@ -51,6 +51,7 @@ public class VideoDiffService {
         String fileToImport = getMostRecentJson("exported_");
         Map<Long, Video> truthMap = exportService.importVideos(fileToImport).stream().collect(Collectors.toMap(Video::getId, Function.identity()));
         int count = 0;
+        int diffs = 0;
         log.info("Comparing videos...");
         for (Video video : videos) {
             Video truth = truthMap.get(video.getId());
@@ -67,12 +68,13 @@ public class VideoDiffService {
                     log.info("Diff found id=" + truth.getId());
                     log.info("\t Truth=" + truth.toShortString());
                     log.info("\t Found=" + video.toShortString());
+                    ++diffs;
                 }
             }
             ++count;
         }
         System.out.println();
-        log.info("Compared videos count=" + count);
+        log.info("Compared videos count=" + count + " diffs=" + diffs);
     }
 
     private String getMostRecentJson(String prefix) {

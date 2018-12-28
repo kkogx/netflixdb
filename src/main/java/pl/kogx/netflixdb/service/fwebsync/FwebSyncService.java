@@ -86,9 +86,11 @@ public class FwebSyncService extends AbstractRepoSyncService {
 
     private Item tryFindFilm(String title, Integer releaseYear) throws FilmwebException {
         // with movies the approach is opposite, first try to find by title and year
-        ItemSearchResult res = filterByBestTitleDistance(title, filterByYear(fwebApi.findFilm(title, releaseYear), releaseYear), ItemSearchResult::getTitle);
+        List<FilmSearchResult> filmsByTitleAndYear = fwebApi.findFilm(title, releaseYear);
+        ItemSearchResult res = filterByBestTitleDistance(title, filterByYear(filmsByTitleAndYear, releaseYear), ItemSearchResult::getTitle);
         if (res == null) {
-            res = filterByBestTitleDistance(title, filterByYear(fwebApi.findFilm(title), releaseYear), ItemSearchResult::getTitle);
+            List<FilmSearchResult> filmsByTitle = fwebApi.findFilm(title);
+            res = filterByBestTitleDistance(title, filterByYear(filmsByTitle, releaseYear), ItemSearchResult::getTitle);
         }
         if (res == null) {
             return null;
@@ -104,7 +106,7 @@ public class FwebSyncService extends AbstractRepoSyncService {
         return Stream.concat(fwebApi.findSeries(title, releaseYear).stream(), fwebApi.findProgram(title, releaseYear).stream()).collect(Collectors.toList());
     }
 
-    private List<ItemSearchResult> filterByYear(List<FilmSearchResult> list, Integer releaseYear) {
+    private List<ItemSearchResult> filterByYear(List<FilmSearchResult> list, int releaseYear) {
         return list.stream().filter(f -> releaseYear == f.getYear()).collect(Collectors.toList());
     }
 }
