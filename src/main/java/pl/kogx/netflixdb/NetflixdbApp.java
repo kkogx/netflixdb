@@ -119,38 +119,37 @@ public class NetflixdbApp implements ApplicationRunner {
             env.getActiveProfiles());
     }
 
+    private static enum Options {
+        SCHEDULED, SYNC, EXPORT, DIFF, DIFFTOP
+    }
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("Application was executed with args: " + Arrays.toString(args.getSourceArgs()));
-        for (String opt : args.getOptionNames()) {
-            switch (opt) {
-                case "scheduled": {
-                    scheduled = getBooleanOptionValue(args, opt);
-                    break;
-                }
-                case "sync": {
-                    Long id = getLongOptionValue(args, opt);
-                    doDelete(id);
-                    doSync(id);
-                    break;
-                }
-                case "export": {
-                    diffService.exportVideos("exported_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".json");
-                    break;
-                }
-                case "diff": {
-                    Long id = getLongOptionValue(args, opt);
-                    doDiff(id);
-                    break;
-                }
-                case "difftop": {
-                    Integer count = getIntOptionValue(args, opt);
-                    List<Long> ids = syncTop(Integer.valueOf(count));
-                    diffService.diffTop(ids);
-                    break;
-                }
-            }
+        if (containsOption(args, Options.SCHEDULED)) {
+            scheduled = getBooleanOptionValue(args, Options.SCHEDULED);
         }
+        if (containsOption(args, Options.SYNC)) {
+            Long id = getLongOptionValue(args, Options.SYNC);
+            doDelete(id);
+            doSync(id);
+        }
+        if (containsOption(args, Options.EXPORT)) {
+            diffService.exportVideos("exported_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".json");
+        }
+        if (containsOption(args, Options.DIFF)) {
+            Long id = getLongOptionValue(args, Options.DIFF);
+            doDiff(id);
+        }
+        if (containsOption(args, Options.DIFFTOP)) {
+            Integer count = getIntOptionValue(args, Options.DIFFTOP);
+            List<Long> ids = syncTop(Integer.valueOf(count));
+            diffService.diffTop(ids);
+        }
+    }
+
+    private boolean containsOption(ApplicationArguments args, Options opt) {
+        return args.getOptionNames().contains(opt.name().toLowerCase());
     }
 
     private List<Long> syncTop(int count) {
@@ -201,15 +200,18 @@ public class NetflixdbApp implements ApplicationRunner {
         }
     }
 
-    private boolean getBooleanOptionValue(ApplicationArguments args, String opt) {
+    private boolean getBooleanOptionValue(ApplicationArguments args, Options optVo) {
+        String opt = optVo.name().toLowerCase();
         return (args.getOptionValues(opt) == null || args.getOptionValues(opt).isEmpty()) ? false : Boolean.valueOf(args.getOptionValues(opt).get(0));
     }
 
-    private Long getLongOptionValue(ApplicationArguments args, String opt) {
+    private Long getLongOptionValue(ApplicationArguments args, Options optVo) {
+        String opt = optVo.name().toLowerCase();
         return (args.getOptionValues(opt) == null || args.getOptionValues(opt).isEmpty()) ? null : Long.valueOf(args.getOptionValues(opt).get(0));
     }
 
-    private Integer getIntOptionValue(ApplicationArguments args, String opt) {
+    private Integer getIntOptionValue(ApplicationArguments args, Options optVo) {
+        String opt = optVo.name().toLowerCase();
         return (args.getOptionValues(opt) == null || args.getOptionValues(opt).isEmpty()) ? null : Integer.valueOf(args.getOptionValues(opt).get(0));
     }
 }
