@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.config.DefaultProfileUtil;
+import pl.kogx.netflixdb.domain.Video;
 import pl.kogx.netflixdb.service.VideoService;
 import pl.kogx.netflixdb.service.fwebsync.FwebSyncService;
 import pl.kogx.netflixdb.service.netflixsync.NetflixSyncService;
@@ -23,13 +24,9 @@ import pl.kogx.netflixdb.service.omdbsync.OmdbSyncService;
 import pl.kogx.netflixdb.service.util.VideoDiffService;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -119,8 +116,9 @@ public class NetflixdbApp implements ApplicationRunner {
             env.getActiveProfiles());
     }
 
-    private static enum Options {
-        SCHEDULED, SYNC, EXPORT, DIFF, DIFFTOP
+    private enum Options {
+        DIFF, DIFF_TOP, EXPORT, SCHEDULED, SYNC, SYNC_EMPTY
+
     }
 
     @Override
@@ -130,20 +128,24 @@ public class NetflixdbApp implements ApplicationRunner {
             scheduled = getBooleanOptionValue(args, Options.SCHEDULED);
         }
         if (containsOption(args, Options.SYNC)) {
-            Long id = getLongOptionValue(args, Options.SYNC);
-            doDelete(id);
-            doSync(id);
+            List<Long> ids = getLongListOptionValue(args, Options.SYNC);
+            doDelete(ids);
+            doSync(ids);
+        }
+        if (containsOption(args, Options.SYNC_EMPTY)) {
+            List<Long> ids = videoService.findByEmptyRating().stream().map(Video::getId).collect(Collectors.toList());
+            doSync(ids);
         }
         if (containsOption(args, Options.EXPORT)) {
             diffService.exportVideos("exported_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".json");
         }
         if (containsOption(args, Options.DIFF)) {
-            Long id = getLongOptionValue(args, Options.DIFF);
-            doDiff(id);
+            List<Long> ids = getLongListOptionValue(args, Options.DIFF);
+            doDiff(ids);
         }
-        if (containsOption(args, Options.DIFFTOP)) {
-            Integer count = getIntOptionValue(args, Options.DIFFTOP);
-            List<Long> ids = syncTop(Integer.valueOf(count));
+        if (containsOption(args, Options.DIFF_TOP)) {
+            Integer count = getIntOptionValue(args, Options.DIFF_TOP);
+            List<Long> ids = syncTop(count);
             diffService.diffTop(ids);
         }
     }
@@ -155,41 +157,41 @@ public class NetflixdbApp implements ApplicationRunner {
     private List<Long> syncTop(int count) {
         log.info("Syncing top count=" + count);
         List<Long> ids = StreamSupport.stream(videoService.findAll().spliterator(), false)
-            .map(v -> v.getId()).collect(Collectors.toList()).subList(0, count);
-        for (Long id : ids) {
-            doSync(id);
-        }
+            .map(Video::getId).collect(Collectors.toList()).subList(0, count);
+        doSync(ids);
         return ids;
     }
 
-    private void doDiff(Long id) throws IOException {
-        log.info("Diff id=" + id);
-        if (id == null) {
+    private void doDiff(List<Long> ids) {
+        log.info("Diff ids=" + ids);
+        if (ids.isEmpty()) {
             diffService.diffAll();
         } else {
-            diffService.diff(id);
+            ids.forEach(diffService::diff);
         }
     }
 
-    private void doSync(Long id) {
-        log.info("Syncing id=" + id);
-        if (id == null) {
-            netflixSyncService.syncAll();
-            omdbSyncService.syncAll();
-            fwebSyncService.syncAll();
+    private void doSync(List<Long> ids) {
+        log.info("Syncing ids size={} content={}", ids.size(), ids);
+        if (ids.isEmpty()) {
+//            netflixSyncService.syncAll();
+//            omdbSyncService.syncAll();
+//            fwebSyncService.syncAll();
         } else {
-            netflixSyncService.sync(id);
-            omdbSyncService.sync(id);
-            fwebSyncService.sync(id);
+            ids.forEach(id -> {
+                netflixSyncService.sync(id);
+                omdbSyncService.sync(id);
+                fwebSyncService.sync(id);
+            });
         }
     }
 
-    private void doDelete(Long id) {
-        log.info("Deleting id=" + id);
-        if (id == null) {
+    private void doDelete(List<Long> ids) {
+        log.info("Deleting ids=" + ids);
+        if (ids.isEmpty()) {
             videoService.deleteAll();
         } else {
-            videoService.delete(id);
+            ids.forEach(videoService::delete);
         }
     }
 
@@ -205,9 +207,10 @@ public class NetflixdbApp implements ApplicationRunner {
         return (args.getOptionValues(opt) == null || args.getOptionValues(opt).isEmpty()) ? false : Boolean.valueOf(args.getOptionValues(opt).get(0));
     }
 
-    private Long getLongOptionValue(ApplicationArguments args, Options optVo) {
+    private List<Long> getLongListOptionValue(ApplicationArguments args, Options optVo) {
         String opt = optVo.name().toLowerCase();
-        return (args.getOptionValues(opt) == null || args.getOptionValues(opt).isEmpty()) ? null : Long.valueOf(args.getOptionValues(opt).get(0));
+        return (args.getOptionValues(opt) == null || args.getOptionValues(opt).isEmpty()) ?
+            Collections.emptyList() : args.getOptionValues(opt).stream().map(Long::valueOf).collect(Collectors.toList());
     }
 
     private Integer getIntOptionValue(ApplicationArguments args, Options optVo) {

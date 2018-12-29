@@ -17,7 +17,9 @@ import pl.kogx.netflixdb.repository.search.VideoSearchRepository;
 import pl.kogx.netflixdb.service.dto.VideoDTO;
 import pl.kogx.netflixdb.service.util.NullAwareBeanUtilsBean;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
@@ -145,6 +147,10 @@ public class VideoService {
         if (!ArrayUtils.isEmpty(types)) {
             builder = builder.must(QueryBuilders.termsQuery("type", types));
         }
+
+        // filter out results without imdb and fweb ratings
+        builder.should(QueryBuilders.existsQuery("omdbAvailable"));
+        builder.should(QueryBuilders.existsQuery("fwebAvailable"));
         return videoSearchRepository.search(builder, pageable);
     }
 
@@ -168,5 +174,14 @@ public class VideoService {
 
     public long countByGenreId(long genreId) {
         return videoSearchRepository.countByGenreIds(genreId);
+    }
+
+    public List<Video> findByEmptyRating() {
+        BoolQueryBuilder builder = QueryBuilders.boolQuery();
+        builder.should(QueryBuilders.boolQuery().mustNot(QueryBuilders.existsQuery("omdbAvailable")));
+        builder.should(QueryBuilders.boolQuery().mustNot(QueryBuilders.existsQuery("fwebAvailable")));
+        List<Video> result = new ArrayList<>();
+        videoSearchRepository.search(builder).forEach(result::add);
+        return result;
     }
 }

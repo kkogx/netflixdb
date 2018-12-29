@@ -11,8 +11,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.util.StringUtils;
-import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.domain.Genre;
 import pl.kogx.netflixdb.domain.Video;
 import pl.kogx.netflixdb.service.VideoService;
@@ -24,7 +22,10 @@ import pl.kogx.netflixdb.web.rest.util.PaginationUtil;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -160,6 +161,7 @@ public class VideoResource {
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/videos");
         return new ResponseEntity<>(page.getContent()
             .stream()
+            .filter(v -> v.getOmdbAvailable() || v.getFwebAvailable())
             .map(this::mapVideoToDTO)
             .collect(Collectors.toList()), headers, HttpStatus.OK);
     }

@@ -33,20 +33,28 @@ public class VideoDiffService {
     }
 
 
-    public void diffTop(List<Long> ids) throws IOException {
+    public void diffTop(List<Long> ids) {
         log.info("diffTop ids=" + ids.toString());
         doDiff(ids.stream().map(id -> videoService.findOne(id).get())::iterator);
     }
 
-    public void diff(Long id) throws IOException {
+    public void diff(Long id) {
         this.doDiff(Collections.singleton(videoService.findOne(id).get()));
     }
 
-    public void diffAll() throws IOException {
+    public void diffAll() {
         this.doDiff(videoService.findAll());
     }
 
-    private void doDiff(Iterable<Video> videos) throws IOException {
+    private void doDiff(Iterable<Video> videos) {
+        try {
+            doDiffInternal(videos);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void doDiffInternal(Iterable<Video> videos) throws IOException {
         log.info("doDiff");
         String fileToImport = getMostRecentJson("exported_");
         Map<Long, Video> truthMap = exportService.importVideos(fileToImport).stream().collect(Collectors.toMap(Video::getId, Function.identity()));
@@ -61,8 +69,8 @@ public class VideoDiffService {
                 String videoFwebTitle = StringUtils.defaultString(video.getFwebTitle());
                 String truthImdbId = StringUtils.defaultString(truth.getImdbID());
                 String videoImdbId = StringUtils.defaultString(video.getImdbID());
-                long truthFwebId = Optional.ofNullable(truth.getFwebID()).orElse(0l);
-                long videoFwebId = Optional.ofNullable(video.getFwebID()).orElse(0l);
+                long truthFwebId = Optional.ofNullable(truth.getFwebID()).orElse(0L);
+                long videoFwebId = Optional.ofNullable(video.getFwebID()).orElse(0L);
                 if (!truthFwebTitle.equalsIgnoreCase(videoFwebTitle) || !truthImdbId.equals(videoImdbId)
                     || truthFwebId != videoFwebId) {
                     log.info("Diff found id=" + truth.getId());
@@ -79,8 +87,9 @@ public class VideoDiffService {
 
     private String getMostRecentJson(String prefix) {
         List<File> files = Arrays.stream(new File(".").listFiles(file -> file.getName().startsWith(prefix))).sorted().collect(Collectors.toList());
-        log.info("Comparing with " + files.get(files.size() - 1).getName());
-        return files.get(0).getName();
+        File file = files.get(files.size() - 1);
+        log.info("Comparing with " + file.getName());
+        return file.getName();
     }
 
     public void exportVideos(String filename) throws IOException {
