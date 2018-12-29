@@ -99,17 +99,11 @@ public class NetflixSyncService extends AbstractSyncService {
                 JsonObject json = new JsonObject(video);
                 Long id = json.get("summary").get("value").getLong("id");
                 VideoDTO videoDTO = Optional.ofNullable(videoService.findById(id)).orElse(new VideoDTO());
-                videoDTO.setTimestamp(new Date());
-                videoDTO.setId(id);
-                videoDTO.setType(json.get("summary").get("value").getString("type"));
-                videoDTO.setOriginal(json.get("summary").get("value").getBool("isOriginal"));
-                videoDTO.setTitle(json.get("title").getString("value"));
-                videoDTO.setReleaseYear(json.get("releaseYear").getInt("value"));
+                mapToVideoDTO(json, videoDTO);
                 List<Long> genreIds = new ArrayList<>(videoDTO.getGenreIds());
                 genreIds.add(Long.valueOf(genreId));
                 videoDTO.setGenreIds(genreIds);
                 videoDTO.setGenre(genre);
-                videoDTO.setBoxart(json.get("boxarts").get("_260x146").get("jpg").get("value").getString("url"));
                 videoService.updateVideo(videoDTO);
                 count += 1;
             }
@@ -118,6 +112,17 @@ public class NetflixSyncService extends AbstractSyncService {
         }
 
         return count;
+    }
+
+    private void mapToVideoDTO(JsonObject json, VideoDTO videoDTO) throws JsonObject.JsonUnmarshallException {
+        Long id = json.get("summary").get("value").getLong("id");
+        videoDTO.setTimestamp(new Date());
+        videoDTO.setId(id);
+        videoDTO.setType(json.get("summary").get("value").getString("type"));
+        videoDTO.setOriginal(json.get("summary").get("value").getBool("isOriginal"));
+        videoDTO.setTitle(json.get("title").getString("value"));
+        videoDTO.setReleaseYear(json.get("releaseYear").getInt("value"));
+        videoDTO.setBoxart(json.get("boxarts").get("_260x146").get("jpg").get("value").getString("url"));
     }
 
     @Override
@@ -133,17 +138,11 @@ public class NetflixSyncService extends AbstractSyncService {
         try {
             if (response.getStatusCode() == HttpStatus.OK) {
                 JSONArray videos = JsonPath.read(response.getBody(), "$.." + id);
-                VideoDTO videoDTO = new VideoDTO();
+                VideoDTO videoDTO = Optional.ofNullable(videoService.findById(id)).orElse(new VideoDTO());
                 videoDTO.setTimestamp(new Date());
                 videoDTO.setId(id);
                 JsonObject json = new JsonObject(videos.get(0));
-                videoDTO.setType(json.get("summary").get("value").getString("type"));
-                videoDTO.setOriginal(json.get("summary").get("value").getBool("isOriginal"));
-                videoDTO.setTitle(json.get("title").getString("value"));
-                videoDTO.setReleaseYear(json.get("releaseYear").getInt("value"));
-                videoDTO.setGenreId(null);
-                videoDTO.setGenre(null);
-                videoDTO.setBoxart(json.get("boxarts").get("_260x146").get("jpg").get("value").getString("url"));
+                mapToVideoDTO(json, videoDTO);
                 videoService.updateVideo(videoDTO);
             } else {
                 log.warn("Invalid HttpStatus retrieved when fetching by genre, status={}", response.getStatusCode());
