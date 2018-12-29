@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import pl.kogx.netflixdb.domain.Video;
 import pl.kogx.netflixdb.security.AuthoritiesConstants;
+import pl.kogx.netflixdb.service.VideoService;
 import pl.kogx.netflixdb.service.fwebsync.FwebSyncService;
 import pl.kogx.netflixdb.service.netflixsync.NetflixSyncService;
 import pl.kogx.netflixdb.service.omdbsync.OmdbSyncService;
@@ -30,10 +32,13 @@ public class SyncController {
 
     private final FwebSyncService fwebSyncService;
 
-    public SyncController(NetflixSyncService netflixSyncService, OmdbSyncService omdbSyncService, FwebSyncService fwebSyncService) {
+    private final VideoService videoService;
+
+    public SyncController(NetflixSyncService netflixSyncService, OmdbSyncService omdbSyncService, FwebSyncService fwebSyncService, VideoService videoService) {
         this.netflixSyncService = netflixSyncService;
         this.omdbSyncService = omdbSyncService;
         this.fwebSyncService = fwebSyncService;
+        this.videoService = videoService;
     }
 
     private Optional<AbstractSyncService> getServiceForType(String type) {
@@ -75,6 +80,18 @@ public class SyncController {
         netflixSyncService.syncAll();
         omdbSyncService.syncAll();
         fwebSyncService.syncAll();
+    }
+
+    @Async
+    @PostMapping("/sync_empty/all")
+    //@Secured(AuthoritiesConstants.ADMIN)
+    public void syncEmpty() {
+        log.info("sync_empty");
+        videoService.findByEmptyRating().stream().map(Video::getId).forEach(id -> {
+            netflixSyncService.sync(id);
+            omdbSyncService.sync(id);
+            fwebSyncService.sync(id);
+        });
     }
 
     @Async

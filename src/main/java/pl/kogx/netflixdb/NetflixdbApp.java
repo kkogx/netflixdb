@@ -174,9 +174,9 @@ public class NetflixdbApp implements ApplicationRunner {
     private void doSync(List<Long> ids) {
         log.info("Syncing ids size={} content={}", ids.size(), ids);
         if (ids.isEmpty()) {
-//            netflixSyncService.syncAll();
-//            omdbSyncService.syncAll();
-//            fwebSyncService.syncAll();
+            netflixSyncService.syncAll();
+            omdbSyncService.syncAll();
+            fwebSyncService.syncAll();
         } else {
             ids.forEach(id -> {
                 netflixSyncService.sync(id);
