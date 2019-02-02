@@ -1,0 +1,107 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="netflixdbApp.video.home.title">Videos</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-video" [routerLink]="['/video/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span class="hidden-sm-down"  jhiTranslate="netflixdbApp.video.home.createLabel">
+            Create new Video
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+        <div class="col-sm-12">
+            <form name="searchForm" class="form-inline">
+                <div class="input-group w-100 mt-3">
+                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'netflixdbApp.video.home.search' | translate }}">
+                    <button class="input-group-append btn btn-info" (click)="search(currentSearch)">
+                        <fa-icon [icon]="'search'"></fa-icon>
+                    </button>
+                    <button class="input-group-append btn btn-danger" (click)="clear()" *ngIf="currentSearch">
+                        <fa-icon [icon]="'trash-alt'"></fa-icon>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="videos">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="title"><span jhiTranslate="netflixdbApp.video.title">Title</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fwebTitle"><span jhiTranslate="netflixdbApp.video.fwebTitle">Fweb Title</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="releaseYear"><span jhiTranslate="netflixdbApp.video.releaseYear">Release Year</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="genre"><span jhiTranslate="netflixdbApp.video.genre">Genre</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="genreId"><span jhiTranslate="netflixdbApp.video.genreId">Genre Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="original"><span jhiTranslate="netflixdbApp.video.original">Original</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="type"><span jhiTranslate="netflixdbApp.video.type">Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="omdbAvailable"><span jhiTranslate="netflixdbApp.video.omdbAvailable">Omdb Available</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fwebAvailable"><span jhiTranslate="netflixdbApp.video.fwebAvailable">Fweb Available</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="imdbRating"><span jhiTranslate="netflixdbApp.video.imdbRating">Imdb Rating</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fwebRating"><span jhiTranslate="netflixdbApp.video.fwebRating">Fweb Rating</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="imdbVotes"><span jhiTranslate="netflixdbApp.video.imdbVotes">Imdb Votes</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fwebVotes"><span jhiTranslate="netflixdbApp.video.fwebVotes">Fweb Votes</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="metascore"><span jhiTranslate="netflixdbApp.video.metascore">Metascore</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="tomatoRating"><span jhiTranslate="netflixdbApp.video.tomatoRating">Tomato Rating</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="tomatoUserRating"><span jhiTranslate="netflixdbApp.video.tomatoUserRating">Tomato User Rating</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="imdbID"><span jhiTranslate="netflixdbApp.video.imdbID">Imdb ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fwebID"><span jhiTranslate="netflixdbApp.video.fwebID">Fweb ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="boxart"><span jhiTranslate="netflixdbApp.video.boxart">Boxart</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fwebPlot"><span jhiTranslate="netflixdbApp.video.fwebPlot">Fweb Plot</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+            <tr *ngFor="let video of videos ;trackBy: trackId">
+                <td><a [routerLink]="['/video', video.id, 'view' ]">{{video.id}}</a></td>
+                <td>{{video.title}}</td>
+                <td>{{video.fwebTitle}}</td>
+                <td>{{video.releaseYear}}</td>
+                <td>{{video.genre}}</td>
+                <td>{{video.genreId}}</td>
+                <td>{{video.original}}</td>
+                <td>{{video.type}}</td>
+                <td>{{video.omdbAvailable}}</td>
+                <td>{{video.fwebAvailable}}</td>
+                <td>{{video.imdbRating}}</td>
+                <td>{{video.fwebRating}}</td>
+                <td>{{video.imdbVotes}}</td>
+                <td>{{video.fwebVotes}}</td>
+                <td>{{video.metascore}}</td>
+                <td>{{video.tomatoRating}}</td>
+                <td>{{video.tomatoUserRating}}</td>
+                <td>{{video.imdbID}}</td>
+                <td>{{video.fwebID}}</td>
+                <td>{{video.boxart}}</td>
+                <td>{{video.fwebPlot}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/video', video.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/video', video.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'video/'+ video.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

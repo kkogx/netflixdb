@@ -1,0 +1,55 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="przelewy24Trx">
+            <h2><span jhiTranslate="netflixdbApp.przelewy24Trx.detail.title">Przelewy 24 Trx</span> {{przelewy24Trx.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="netflixdbApp.przelewy24Trx.createdDate">Created Date</span></dt>
+                <dd>
+                    <span>{{przelewy24Trx.createdDate}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.przelewy24Trx.confirmedDate">Confirmed Date</span></dt>
+                <dd>
+                    <span>{{przelewy24Trx.confirmedDate}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.przelewy24Trx.email">Email</span></dt>
+                <dd>
+                    <span>{{przelewy24Trx.email}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.przelewy24Trx.sessionId">Session Id</span></dt>
+                <dd>
+                    <span>{{przelewy24Trx.sessionId}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.przelewy24Trx.description">Description</span></dt>
+                <dd>
+                    <span>{{przelewy24Trx.description}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.przelewy24Trx.currency">Currency</span></dt>
+                <dd>
+                    <span>{{przelewy24Trx.currency}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.przelewy24Trx.country">Country</span></dt>
+                <dd>
+                    <span>{{przelewy24Trx.country}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.przelewy24Trx.amount">Amount</span></dt>
+                <dd>
+                    <span>{{przelewy24Trx.amount}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/przelewy-24-trx', przelewy24Trx.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

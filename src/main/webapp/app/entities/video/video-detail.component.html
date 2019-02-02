@@ -1,0 +1,103 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="video">
+            <h2><span jhiTranslate="netflixdbApp.video.detail.title">Video</span> {{video.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="netflixdbApp.video.title">Title</span></dt>
+                <dd>
+                    <span>{{video.title}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.fwebTitle">Fweb Title</span></dt>
+                <dd>
+                    <span>{{video.fwebTitle}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.releaseYear">Release Year</span></dt>
+                <dd>
+                    <span>{{video.releaseYear}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.genre">Genre</span></dt>
+                <dd>
+                    <span>{{video.genre}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.genreId">Genre Id</span></dt>
+                <dd>
+                    <span>{{video.genreId}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.original">Original</span></dt>
+                <dd>
+                    <span>{{video.original}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.type">Type</span></dt>
+                <dd>
+                    <span>{{video.type}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.omdbAvailable">Omdb Available</span></dt>
+                <dd>
+                    <span>{{video.omdbAvailable}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.fwebAvailable">Fweb Available</span></dt>
+                <dd>
+                    <span>{{video.fwebAvailable}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.imdbRating">Imdb Rating</span></dt>
+                <dd>
+                    <span>{{video.imdbRating}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.fwebRating">Fweb Rating</span></dt>
+                <dd>
+                    <span>{{video.fwebRating}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.imdbVotes">Imdb Votes</span></dt>
+                <dd>
+                    <span>{{video.imdbVotes}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.fwebVotes">Fweb Votes</span></dt>
+                <dd>
+                    <span>{{video.fwebVotes}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.metascore">Metascore</span></dt>
+                <dd>
+                    <span>{{video.metascore}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.tomatoRating">Tomato Rating</span></dt>
+                <dd>
+                    <span>{{video.tomatoRating}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.tomatoUserRating">Tomato User Rating</span></dt>
+                <dd>
+                    <span>{{video.tomatoUserRating}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.imdbID">Imdb ID</span></dt>
+                <dd>
+                    <span>{{video.imdbID}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.fwebID">Fweb ID</span></dt>
+                <dd>
+                    <span>{{video.fwebID}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.boxart">Boxart</span></dt>
+                <dd>
+                    <span>{{video.boxart}}</span>
+                </dd>
+                <dt><span jhiTranslate="netflixdbApp.video.fwebPlot">Fweb Plot</span></dt>
+                <dd>
+                    <span>{{video.fwebPlot}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/video', video.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

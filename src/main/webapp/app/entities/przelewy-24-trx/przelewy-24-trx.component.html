@@ -1,0 +1,83 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="netflixdbApp.przelewy24Trx.home.title">Przelewy 24 Trxes</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-przelewy-24-trx" [routerLink]="['/przelewy-24-trx/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span class="hidden-sm-down"  jhiTranslate="netflixdbApp.przelewy24Trx.home.createLabel">
+            Create new Przelewy 24 Trx
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+        <div class="col-sm-12">
+            <form name="searchForm" class="form-inline">
+                <div class="input-group w-100 mt-3">
+                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'netflixdbApp.przelewy24Trx.home.search' | translate }}">
+                    <button class="input-group-append btn btn-info" (click)="search(currentSearch)">
+                        <fa-icon [icon]="'search'"></fa-icon>
+                    </button>
+                    <button class="input-group-append btn btn-danger" (click)="clear()" *ngIf="currentSearch">
+                        <fa-icon [icon]="'trash-alt'"></fa-icon>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive" *ngIf="przelewy24Trxes">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="createdDate"><span jhiTranslate="netflixdbApp.przelewy24Trx.createdDate">Created Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="confirmedDate"><span jhiTranslate="netflixdbApp.przelewy24Trx.confirmedDate">Confirmed Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="email"><span jhiTranslate="netflixdbApp.przelewy24Trx.email">Email</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="sessionId"><span jhiTranslate="netflixdbApp.przelewy24Trx.sessionId">Session Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="description"><span jhiTranslate="netflixdbApp.przelewy24Trx.description">Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="currency"><span jhiTranslate="netflixdbApp.przelewy24Trx.currency">Currency</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="country"><span jhiTranslate="netflixdbApp.przelewy24Trx.country">Country</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="amount"><span jhiTranslate="netflixdbApp.przelewy24Trx.amount">Amount</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+            <tr *ngFor="let przelewy24Trx of przelewy24Trxes ;trackBy: trackId">
+                <td><a [routerLink]="['/przelewy-24-trx', przelewy24Trx.id, 'view' ]">{{przelewy24Trx.id}}</a></td>
+                <td>{{przelewy24Trx.createdDate | date:'medium'}}</td>
+                <td>{{przelewy24Trx.confirmedDate | date:'medium'}}</td>
+                <td>{{przelewy24Trx.email}}</td>
+                <td>{{przelewy24Trx.sessionId}}</td>
+                <td>{{przelewy24Trx.description}}</td>
+                <td>{{przelewy24Trx.currency}}</td>
+                <td>{{przelewy24Trx.country}}</td>
+                <td>{{przelewy24Trx.amount}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/przelewy-24-trx', przelewy24Trx.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/przelewy-24-trx', przelewy24Trx.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'przelewy-24-trx/'+ przelewy24Trx.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

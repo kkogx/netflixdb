@@ -1,0 +1,124 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-video-heading" jhiTranslate="netflixdbApp.video.home.createOrEditLabel">Create or edit a Video</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!video.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="video.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.title" for="field_title">Title</label>
+                    <input type="text" class="form-control" name="title" id="field_title"
+                        [(ngModel)]="video.title" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.fwebTitle" for="field_fwebTitle">Fweb Title</label>
+                    <input type="text" class="form-control" name="fwebTitle" id="field_fwebTitle"
+                        [(ngModel)]="video.fwebTitle" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.releaseYear" for="field_releaseYear">Release Year</label>
+                    <input type="number" class="form-control" name="releaseYear" id="field_releaseYear"
+                        [(ngModel)]="video.releaseYear" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.genre" for="field_genre">Genre</label>
+                    <input type="text" class="form-control" name="genre" id="field_genre"
+                        [(ngModel)]="video.genre" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.genreId" for="field_genreId">Genre Id</label>
+                    <input type="number" class="form-control" name="genreId" id="field_genreId"
+                        [(ngModel)]="video.genreId" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.original" for="field_original">Original</label>
+                    <input type="checkbox" class="form-control" name="original" id="field_original"
+                        [(ngModel)]="video.original" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.type" for="field_type">Type</label>
+                    <input type="text" class="form-control" name="type" id="field_type"
+                        [(ngModel)]="video.type" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.omdbAvailable" for="field_omdbAvailable">Omdb Available</label>
+                    <input type="checkbox" class="form-control" name="omdbAvailable" id="field_omdbAvailable"
+                        [(ngModel)]="video.omdbAvailable" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.fwebAvailable" for="field_fwebAvailable">Fweb Available</label>
+                    <input type="checkbox" class="form-control" name="fwebAvailable" id="field_fwebAvailable"
+                        [(ngModel)]="video.fwebAvailable" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.imdbRating" for="field_imdbRating">Imdb Rating</label>
+                    <input type="number" class="form-control" name="imdbRating" id="field_imdbRating"
+                        [(ngModel)]="video.imdbRating" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.fwebRating" for="field_fwebRating">Fweb Rating</label>
+                    <input type="number" class="form-control" name="fwebRating" id="field_fwebRating"
+                        [(ngModel)]="video.fwebRating" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.imdbVotes" for="field_imdbVotes">Imdb Votes</label>
+                    <input type="number" class="form-control" name="imdbVotes" id="field_imdbVotes"
+                        [(ngModel)]="video.imdbVotes" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.fwebVotes" for="field_fwebVotes">Fweb Votes</label>
+                    <input type="number" class="form-control" name="fwebVotes" id="field_fwebVotes"
+                        [(ngModel)]="video.fwebVotes" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.metascore" for="field_metascore">Metascore</label>
+                    <input type="number" class="form-control" name="metascore" id="field_metascore"
+                        [(ngModel)]="video.metascore" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.tomatoRating" for="field_tomatoRating">Tomato Rating</label>
+                    <input type="number" class="form-control" name="tomatoRating" id="field_tomatoRating"
+                        [(ngModel)]="video.tomatoRating" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.tomatoUserRating" for="field_tomatoUserRating">Tomato User Rating</label>
+                    <input type="number" class="form-control" name="tomatoUserRating" id="field_tomatoUserRating"
+                        [(ngModel)]="video.tomatoUserRating" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.imdbID" for="field_imdbID">Imdb ID</label>
+                    <input type="text" class="form-control" name="imdbID" id="field_imdbID"
+                        [(ngModel)]="video.imdbID" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.fwebID" for="field_fwebID">Fweb ID</label>
+                    <input type="number" class="form-control" name="fwebID" id="field_fwebID"
+                        [(ngModel)]="video.fwebID" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.boxart" for="field_boxart">Boxart</label>
+                    <input type="text" class="form-control" name="boxart" id="field_boxart"
+                        [(ngModel)]="video.boxart" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.video.fwebPlot" for="field_fwebPlot">Fweb Plot</label>
+                    <input type="text" class="form-control" name="fwebPlot" id="field_fwebPlot"
+                        [(ngModel)]="video.fwebPlot" />
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

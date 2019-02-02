@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+
+    <property name="now" value="now()" dbms="mysql"/>
+    <property name="autoIncrement" value="true"/>
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
+
+    <!--
+        Added the entity Video.
+    -->
+    <changeSet id="20180722091912-1" author="jhipster">
+        <createTable tableName="video">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="fweb_title" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="release_year" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="genre" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="genre_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="original" type="bit">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="jhi_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="omdb_available" type="bit">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="fweb_available" type="bit">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="imdb_rating" type="${floatType}">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="fweb_rating" type="${floatType}">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="imdb_votes" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="fweb_votes" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="metascore" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="tomato_rating" type="${floatType}">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="tomato_user_rating" type="${floatType}">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="imdb_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="fweb_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="boxart" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="fweb_plot" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+        
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+</databaseChangeLog>

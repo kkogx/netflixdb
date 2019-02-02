@@ -1,0 +1,74 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-przelewy-24-trx-heading" jhiTranslate="netflixdbApp.przelewy24Trx.home.createOrEditLabel">Create or edit a Przelewy 24 Trx</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!przelewy24Trx.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="przelewy24Trx.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.przelewy24Trx.createdDate" for="field_createdDate">Created Date</label>
+                    <div class="d-flex">
+                        <input id="field_createdDate" type="datetime-local" class="form-control" name="createdDate" [(ngModel)]="createdDate"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.przelewy24Trx.confirmedDate" for="field_confirmedDate">Confirmed Date</label>
+                    <div class="d-flex">
+                        <input id="field_confirmedDate" type="datetime-local" class="form-control" name="confirmedDate" [(ngModel)]="confirmedDate"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.przelewy24Trx.email" for="field_email">Email</label>
+                    <input type="text" class="form-control" name="email" id="field_email"
+                        [(ngModel)]="przelewy24Trx.email" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.przelewy24Trx.sessionId" for="field_sessionId">Session Id</label>
+                    <input type="text" class="form-control" name="sessionId" id="field_sessionId"
+                        [(ngModel)]="przelewy24Trx.sessionId" required/>
+                    <div [hidden]="!(editForm.controls.sessionId?.dirty && editForm.controls.sessionId?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.sessionId?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.przelewy24Trx.description" for="field_description">Description</label>
+                    <input type="text" class="form-control" name="description" id="field_description"
+                        [(ngModel)]="przelewy24Trx.description" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.przelewy24Trx.currency" for="field_currency">Currency</label>
+                    <input type="text" class="form-control" name="currency" id="field_currency"
+                        [(ngModel)]="przelewy24Trx.currency" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.przelewy24Trx.country" for="field_country">Country</label>
+                    <input type="text" class="form-control" name="country" id="field_country"
+                        [(ngModel)]="przelewy24Trx.country" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="netflixdbApp.przelewy24Trx.amount" for="field_amount">Amount</label>
+                    <input type="number" class="form-control" name="amount" id="field_amount"
+                        [(ngModel)]="przelewy24Trx.amount" />
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
