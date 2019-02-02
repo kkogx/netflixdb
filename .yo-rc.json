@@ -27,5 +27,9 @@
     "testFrameworks": [],
     "jhiPrefix": "jhi",
     "enableTranslation": true
+    "languages": [
+      "en",
+      "pl"
+    ]
   }
 }
