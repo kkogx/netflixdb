@@ -26,6 +26,6 @@
     "clientPackageManager": "yarn",
     "testFrameworks": [],
     "jhiPrefix": "jhi",
-    "enableTranslation": false
+    "enableTranslation": true
   }
 }
