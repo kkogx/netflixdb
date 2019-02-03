@@ -1,6 +1,5 @@
 package pl.kogx.netflixdb.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +68,6 @@ public class VideoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/videos")
-    @Timed
     public ResponseEntity<VideoDTO> createVideo(@RequestBody VideoDTO video) throws URISyntaxException {
         log.debug("REST request to save Video : {}", video);
         if (video.getId() != null) {
@@ -88,9 +86,9 @@ public class VideoResource {
      * @return the ResponseEntity with status 200 (OK) and with body the updated video,
      * or with status 400 (Bad Request) if the video is not valid,
      * or with status 500 (Internal Server Error) if the video couldn't be updated
+     * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/videos")
-    @Timed
     public ResponseEntity<VideoDTO> updateVideo(@RequestBody VideoDTO video) {
         log.debug("REST request to update Video : {}", video);
         if (video.getId() == null) {
@@ -109,7 +107,6 @@ public class VideoResource {
      * @return the ResponseEntity with status 200 (OK) and the list of videos in body
      */
     @GetMapping("/videos")
-    @Timed
     public ResponseEntity<List<VideoDTO>> getAllVideos(Pageable pageable) {
         log.debug("REST request to get a page of Videos");
         Page<Video> page = videoService.findAll(pageable);
@@ -124,7 +121,6 @@ public class VideoResource {
      * @return the ResponseEntity with status 200 (OK) and with body the video, or with status 404 (Not Found)
      */
     @GetMapping("/videos/{id}")
-    @Timed
     public ResponseEntity<VideoDTO> getVideo(@PathVariable Long id) {
         log.debug("REST request to get Video : {}", id);
         Optional<Video> video = videoService.findOne(id);
@@ -138,7 +134,6 @@ public class VideoResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/videos/{id}")
-    @Timed
     public ResponseEntity<Void> deleteVideo(@PathVariable Long id) {
         log.debug("REST request to delete Video : {}", id);
         videoService.delete(id);
@@ -154,7 +149,6 @@ public class VideoResource {
      * @return the result of the search
      */
     @GetMapping("/_search/videos")
-    @Timed
     public ResponseEntity<List<VideoDTO>> searchVideos(@RequestParam String query, Pageable pageable) {
         log.debug("REST request to search for a page of Videos for query {}", query);
         Page<Video> page = videoService.search(query, pageable);
@@ -167,7 +161,6 @@ public class VideoResource {
     }
 
     @GetMapping("/_search/videos/range")
-    @Timed
     public ResponseEntity<List<VideoDTO>> searchVideos(@RequestParam String query, @RequestParam Integer fwebMin,
                                                     @RequestParam Integer imdbMin, @RequestParam Integer yearMin,
                                                     @RequestParam Integer[] genres, Pageable pageable) {
@@ -181,7 +174,6 @@ public class VideoResource {
     }
 
     @GetMapping("/_search/videos/range/film")
-    @Timed
     public ResponseEntity<List<VideoDTO>> searchFilms(@RequestParam String query, @RequestParam Integer fwebMin,
                                                    @RequestParam Integer imdbMin, @RequestParam Integer yearMin,
                                                    @RequestParam Integer[] genres, Pageable pageable) {
@@ -195,7 +187,6 @@ public class VideoResource {
     }
 
     @GetMapping("/_search/videos/range/show")
-    @Timed
     public ResponseEntity<List<VideoDTO>> searchShows(@RequestParam String query, @RequestParam Integer fwebMin,
                                                    @RequestParam Integer imdbMin, @RequestParam Integer yearMin,
                                                    @RequestParam Integer[] genres, Pageable pageable) {

@@ -15,9 +15,9 @@ export class Przelewy24TrxDeleteDialogComponent {
     przelewy24Trx: IPrzelewy24Trx;
 
     constructor(
-        private przelewy24TrxService: Przelewy24TrxService,
+        protected przelewy24TrxService: Przelewy24TrxService,
         public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
+        protected eventManager: JhiEventManager
     ) {}
 
     clear() {
@@ -40,9 +40,9 @@ export class Przelewy24TrxDeleteDialogComponent {
     template: ''
 })
 export class Przelewy24TrxDeletePopupComponent implements OnInit, OnDestroy {
-    private ngbModalRef: NgbModalRef;
+    protected ngbModalRef: NgbModalRef;
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
+    constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected modalService: NgbModal) {}
 
     ngOnInit() {
         this.activatedRoute.data.subscribe(({ przelewy24Trx }) => {
@@ -54,11 +54,11 @@ export class Przelewy24TrxDeletePopupComponent implements OnInit, OnDestroy {
                 this.ngbModalRef.componentInstance.przelewy24Trx = przelewy24Trx;
                 this.ngbModalRef.result.then(
                     result => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.router.navigate(['/przelewy-24-trx', { outlets: { popup: null } }]);
                         this.ngbModalRef = null;
                     },
                     reason => {
-                        this.router.navigate([{ outlets: { popup: null } }], { replaceUrl: true, queryParamsHandling: 'merge' });
+                        this.router.navigate(['/przelewy-24-trx', { outlets: { popup: null } }]);
                         this.ngbModalRef = null;
                     }
                 );

@@ -1,8 +1,8 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 
 import { NgbDateMomentAdapter } from './util/datepicker-adapter';
-import { NetflixdbSharedLibsModule, NetflixdbSharedCommonModule, JhiLoginModalComponent, HasAnyAuthorityDirective } from './';
+import { HasAnyAuthorityDirective, JhiLoginModalComponent, NetflixdbSharedCommonModule, NetflixdbSharedLibsModule } from './';
 
 @NgModule({
     imports: [NetflixdbSharedLibsModule, NetflixdbSharedCommonModule],
@@ -12,4 +12,10 @@ import { NetflixdbSharedLibsModule, NetflixdbSharedCommonModule, JhiLoginModalCo
     exports: [NetflixdbSharedCommonModule, JhiLoginModalComponent, HasAnyAuthorityDirective],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class NetflixdbSharedModule {}
+export class NetflixdbSharedModule {
+    static forRoot() {
+        return {
+            ngModule: NetflixdbSharedModule
+        };
+    }
+}

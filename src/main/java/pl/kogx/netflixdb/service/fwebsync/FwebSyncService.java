@@ -2,6 +2,7 @@ package pl.kogx.netflixdb.service.fwebsync;
 
 import info.talacha.filmweb.api.FilmwebApi;
 import info.talacha.filmweb.connection.FilmwebException;
+import info.talacha.filmweb.models.Film;
 import info.talacha.filmweb.models.Item;
 import info.talacha.filmweb.search.models.FilmSearchResult;
 import info.talacha.filmweb.search.models.ItemSearchResult;
@@ -38,6 +39,8 @@ public class FwebSyncService extends AbstractRepoSyncService {
             fwebVideoData = tryFindVideo(video, title);
         } catch (FilmwebException e) {
             log.warn("Exception code={}, msg={}, label={}, video={}", e.getCode(), e.getFilmwebMessage(), e.getLabel(), video);
+        } catch (RuntimeException e) {
+            log.warn("Exception msg={}, label={}, video={}", e.getMessage(), video);
         }
         if (fwebVideoData == null) {
             return false;
@@ -81,7 +84,7 @@ public class FwebSyncService extends AbstractRepoSyncService {
         if (res == null) {
             return null;
         }
-        return fwebApi.getFilmData(res.getId());
+        return tryGetFilmData(res);
     }
 
     private Item tryFindFilm(String title, Integer releaseYear) throws FilmwebException {
@@ -102,7 +105,15 @@ public class FwebSyncService extends AbstractRepoSyncService {
         if (res == null) {
             return null;
         }
-        return fwebApi.getFilmData(res.getId());
+        return tryGetFilmData(res);
+    }
+
+    private Film tryGetFilmData(ItemSearchResult res) throws FilmwebException {
+        try {
+            return fwebApi.getFilmData(res.getId());
+        } catch (IndexOutOfBoundsException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private List<ItemSearchResult> findSeries(String title) {

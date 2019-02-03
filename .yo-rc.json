@@ -1,35 +1,36 @@
 {
-  "generator-jhipster": {
-    "promptValues": {
-      "packageName": "pl.kogx.netflixdb"
-    },
-    "jhipsterVersion": "5.0.2",
-    "applicationType": "monolith",
-    "baseName": "netflixdb",
-    "packageName": "pl.kogx.netflixdb",
-    "packageFolder": "pl/kogx/netflixdb",
-    "serverPort": "8080",
-    "authenticationType": "jwt",
-    "cacheProvider": "no",
-    "websocket": false,
-    "databaseType": "sql",
-    "devDatabaseType": "h2Disk",
-    "prodDatabaseType": "mysql",
-    "searchEngine": "elasticsearch",
-    "messageBroker": false,
-    "serviceDiscoveryType": false,
-    "buildTool": "maven",
-    "enableSwaggerCodegen": false,
-    "jwtSecretKey": "3d60acf5ebb169712b9bcf42f217aa2e6d3b30f9",
-    "clientFramework": "angularX",
-    "useSass": false,
-    "clientPackageManager": "yarn",
-    "testFrameworks": [],
-    "jhiPrefix": "jhi",
-    "enableTranslation": true,
-    "languages": [
-      "en",
-      "pl"
-    ]
-  }
+    "generator-jhipster": {
+        "promptValues": {
+            "packageName": "pl.kogx.netflixdb"
+        },
+        "jhipsterVersion": "5.8.1",
+        "applicationType": "monolith",
+        "baseName": "netflixdb",
+        "packageName": "pl.kogx.netflixdb",
+        "packageFolder": "pl/kogx/netflixdb",
+        "serverPort": "8080",
+        "authenticationType": "jwt",
+        "cacheProvider": "no",
+        "websocket": false,
+        "databaseType": "sql",
+        "devDatabaseType": "h2Disk",
+        "prodDatabaseType": "mysql",
+        "searchEngine": "elasticsearch",
+        "messageBroker": false,
+        "serviceDiscoveryType": false,
+        "buildTool": "maven",
+        "enableSwaggerCodegen": false,
+        "jwtSecretKey": "3d60acf5ebb169712b9bcf42f217aa2e6d3b30f9",
+        "clientFramework": "angularX",
+        "useSass": false,
+        "clientPackageManager": "yarn",
+        "testFrameworks": [],
+        "jhiPrefix": "jhi",
+        "enableTranslation": true,
+        "languages": ["pl", "en"],
+        "enableHibernateCache": false,
+        "entitySuffix": "",
+        "dtoSuffix": "DTO",
+        "otherModules": []
+    }
 }

@@ -1,5 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { JhiLanguageService } from 'ng-jhipster';
+import { JhiLanguageHelper } from 'app/core';
 
 import { NetflixdbSharedModule } from 'app/shared';
 import {
@@ -29,6 +31,15 @@ const ENTITY_STATES = [...przelewy24TrxRoute, ...przelewy24TrxPopupRoute];
         Przelewy24TrxDeleteDialogComponent,
         Przelewy24TrxDeletePopupComponent
     ],
+    providers: [{ provide: JhiLanguageService, useClass: JhiLanguageService }],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class NetflixdbPrzelewy24TrxModule {}
+export class NetflixdbPrzelewy24TrxModule {
+    constructor(private languageService: JhiLanguageService, private languageHelper: JhiLanguageHelper) {
+        this.languageHelper.language.subscribe((languageKey: string) => {
+            if (languageKey !== undefined) {
+                this.languageService.changeLanguage(languageKey);
+            }
+        });
+    }
+}

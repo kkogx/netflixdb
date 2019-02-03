@@ -10,7 +10,7 @@ import { IVideo } from 'app/shared/model/video.model';
 export class VideoDetailComponent implements OnInit {
     video: IVideo;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+    constructor(protected activatedRoute: ActivatedRoute) {}
 
     ngOnInit() {
         this.activatedRoute.data.subscribe(({ video }) => {

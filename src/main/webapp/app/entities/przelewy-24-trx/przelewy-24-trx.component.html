@@ -59,7 +59,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'przelewy-24-trx/'+ przelewy24Trx.id + '/delete'} }]"
+                                [routerLink]="['/', 'przelewy-24-trx', { outlets: { popup: przelewy24Trx.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

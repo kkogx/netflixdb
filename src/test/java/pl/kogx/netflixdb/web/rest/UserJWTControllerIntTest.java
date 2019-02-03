@@ -1,11 +1,5 @@
 package pl.kogx.netflixdb.web.rest;
 
-import pl.kogx.netflixdb.NetflixdbApp;
-import pl.kogx.netflixdb.domain.User;
-import pl.kogx.netflixdb.repository.UserRepository;
-import pl.kogx.netflixdb.security.jwt.TokenProvider;
-import pl.kogx.netflixdb.web.rest.vm.LoginVM;
-import pl.kogx.netflixdb.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,14 +11,16 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import pl.kogx.netflixdb.NetflixdbApp;
+import pl.kogx.netflixdb.domain.User;
+import pl.kogx.netflixdb.repository.UserRepository;
+import pl.kogx.netflixdb.security.jwt.TokenProvider;
+import pl.kogx.netflixdb.web.rest.errors.ExceptionTranslator;
+import pl.kogx.netflixdb.web.rest.vm.LoginVM;
 
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.isEmptyString;
-import static org.hamcrest.Matchers.not;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the UserJWTController REST controller.

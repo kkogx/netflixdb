@@ -23,6 +23,8 @@ spring:
         name:
         username:
         password:
+        hikari:
+            auto-commit: false
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedH2Dialect
         database: H2
@@ -35,6 +37,7 @@ spring:
                 implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
         properties:
             hibernate.id.new_generator_mappings: true
+            hibernate.connection.provider_disables_autocommit: true
             hibernate.cache.use_second_level_cache: false
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: false
@@ -45,8 +48,7 @@ spring:
             cluster-nodes: 172.18.0.2:9300
             properties:
                 path:
-                    logs: target/elasticsearch/log
-                    data: target/elasticsearch/data
+                    home: target/elasticsearch
     liquibase:
         contexts: test
     mail:
@@ -59,14 +61,9 @@ spring:
     thymeleaf:
         mode: HTML
 
-
 server:
     port: 10344
     address: localhost
-
-info:
-    project:
-        version: #project.version#
 
 # ===================================================================
 # JHipster specific properties
@@ -92,12 +89,12 @@ jhipster:
     security:
         authentication:
             jwt:
-                secret: 3d60acf5ebb169712b9bcf42f217aa2e6d3b30f9
+                # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
+                base64-secret: 3d60acf5ebb169712b9bcf42f217aa2e6d3b30f9
                 # Token is valid 24 hours
                 token-validity-in-seconds: 86400
-    metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
-        jmx.enabled: false
-        logs: # Reports Dropwizard metrics in the logs
+    metrics:
+        logs: # Reports metrics in the logs
             enabled: false
             report-frequency: 60 # in seconds
 

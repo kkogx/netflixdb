@@ -1,13 +1,11 @@
 package pl.kogx.netflixdb.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.kogx.netflixdb.domain.Przelewy24Trx;
@@ -47,7 +45,6 @@ public class Przelewy24TrxResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/przelewy-24-trxes")
-    @Timed
     public ResponseEntity<Przelewy24Trx> createPrzelewy24Trx(@Valid @RequestBody Przelewy24Trx przelewy24Trx) throws URISyntaxException {
         log.debug("REST request to save Przelewy24Trx : {}", przelewy24Trx);
         if (przelewy24Trx.getId() != null) {
@@ -69,7 +66,6 @@ public class Przelewy24TrxResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/przelewy-24-trxes")
-    @Timed
     public ResponseEntity<Przelewy24Trx> updatePrzelewy24Trx(@Valid @RequestBody Przelewy24Trx przelewy24Trx) throws URISyntaxException {
         log.debug("REST request to update Przelewy24Trx : {}", przelewy24Trx);
         if (przelewy24Trx.getId() == null) {
@@ -88,12 +84,11 @@ public class Przelewy24TrxResource {
      * @return the ResponseEntity with status 200 (OK) and the list of przelewy24Trxes in body
      */
     @GetMapping("/przelewy-24-trxes")
-    @Timed
     public ResponseEntity<List<Przelewy24Trx>> getAllPrzelewy24Trxes(Pageable pageable) {
         log.debug("REST request to get a page of Przelewy24Trxes");
         Page<Przelewy24Trx> page = przelewy24TrxService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/przelewy-24-trxes");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -103,7 +98,6 @@ public class Przelewy24TrxResource {
      * @return the ResponseEntity with status 200 (OK) and with body the przelewy24Trx, or with status 404 (Not Found)
      */
     @GetMapping("/przelewy-24-trxes/{id}")
-    @Timed
     public ResponseEntity<Przelewy24Trx> getPrzelewy24Trx(@PathVariable Long id) {
         log.debug("REST request to get Przelewy24Trx : {}", id);
         Optional<Przelewy24Trx> przelewy24Trx = przelewy24TrxService.findOne(id);
@@ -117,7 +111,6 @@ public class Przelewy24TrxResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/przelewy-24-trxes/{id}")
-    @Timed
     public ResponseEntity<Void> deletePrzelewy24Trx(@PathVariable Long id) {
         log.debug("REST request to delete Przelewy24Trx : {}", id);
         przelewy24TrxService.delete(id);
@@ -132,12 +125,11 @@ public class Przelewy24TrxResource {
      * @return the result of the search
      */
     @GetMapping("/_search/przelewy-24-trxes")
-    @Timed
     public ResponseEntity<List<Przelewy24Trx>> searchPrzelewy24Trxes(Pageable pageable) {
         log.debug("REST request to search for a page of Przelewy24Trxes for {}");
         Page<Przelewy24Trx> page = przelewy24TrxService.search( pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders("*", page, "/api/_search/przelewy-24-trxes");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
 }

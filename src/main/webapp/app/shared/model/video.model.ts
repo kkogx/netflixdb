@@ -50,8 +50,8 @@ export class Video implements IVideo {
         public timestamp?: Date,
         public fwebPlot?: string
     ) {
-        this.original = false;
-        this.omdbAvailable = false;
-        this.fwebAvailable = false;
+        this.original = this.original || false;
+        this.omdbAvailable = this.omdbAvailable || false;
+        this.fwebAvailable = this.fwebAvailable || false;
     }
 }

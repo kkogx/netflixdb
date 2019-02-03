@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot, Routes } from '@angular/router';
 import { UserRouteAccessService } from 'app/core';
-import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { IVideo, Video } from 'app/shared/model/video.model';
 import { VideoService } from './video.service';
 import { VideoComponent } from './video.component';
@@ -15,10 +15,13 @@ import { VideoDeletePopupComponent } from './video-delete-dialog.component';
 export class VideoResolve implements Resolve<IVideo> {
     constructor(private service: VideoService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IVideo> {
         const id = route.params['id'] ? route.params['id'] : null;
         if (id) {
-            return this.service.find(id).pipe(map((video: HttpResponse<Video>) => video.body));
+            return this.service.find(id).pipe(
+                filter((response: HttpResponse<Video>) => response.ok),
+                map((video: HttpResponse<Video>) => video.body)
+            );
         }
         return of(new Video());
     }

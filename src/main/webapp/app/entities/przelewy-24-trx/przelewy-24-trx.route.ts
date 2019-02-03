@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot, Routes } from '@angular/router';
 import { UserRouteAccessService } from 'app/core';
-import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { IPrzelewy24Trx, Przelewy24Trx } from 'app/shared/model/przelewy-24-trx.model';
 import { Przelewy24TrxService } from './przelewy-24-trx.service';
 import { Przelewy24TrxComponent } from './przelewy-24-trx.component';
@@ -15,10 +15,13 @@ import { Przelewy24TrxDeletePopupComponent } from './przelewy-24-trx-delete-dial
 export class Przelewy24TrxResolve implements Resolve<IPrzelewy24Trx> {
     constructor(private service: Przelewy24TrxService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IPrzelewy24Trx> {
         const id = route.params['id'] ? route.params['id'] : null;
         if (id) {
-            return this.service.find(id).pipe(map((przelewy24Trx: HttpResponse<Przelewy24Trx>) => przelewy24Trx.body));
+            return this.service.find(id).pipe(
+                filter((response: HttpResponse<Przelewy24Trx>) => response.ok),
+                map((przelewy24Trx: HttpResponse<Przelewy24Trx>) => przelewy24Trx.body)
+            );
         }
         return of(new Przelewy24Trx());
     }
@@ -26,47 +29,47 @@ export class Przelewy24TrxResolve implements Resolve<IPrzelewy24Trx> {
 
 export const przelewy24TrxRoute: Routes = [
     {
-        path: 'przelewy-24-trx',
+        path: '',
         component: Przelewy24TrxComponent,
         data: {
             authorities: ['ROLE_USER'],
-            pageTitle: 'Przelewy24Trxes'
+            pageTitle: 'netflixdbApp.przelewy24Trx.home.title'
         },
         canActivate: [UserRouteAccessService]
     },
     {
-        path: 'przelewy-24-trx/:id/view',
+        path: ':id/view',
         component: Przelewy24TrxDetailComponent,
         resolve: {
             przelewy24Trx: Przelewy24TrxResolve
         },
         data: {
             authorities: ['ROLE_USER'],
-            pageTitle: 'Przelewy24Trxes'
+            pageTitle: 'netflixdbApp.przelewy24Trx.home.title'
         },
         canActivate: [UserRouteAccessService]
     },
     {
-        path: 'przelewy-24-trx/new',
+        path: 'new',
         component: Przelewy24TrxUpdateComponent,
         resolve: {
             przelewy24Trx: Przelewy24TrxResolve
         },
         data: {
             authorities: ['ROLE_USER'],
-            pageTitle: 'Przelewy24Trxes'
+            pageTitle: 'netflixdbApp.przelewy24Trx.home.title'
         },
         canActivate: [UserRouteAccessService]
     },
     {
-        path: 'przelewy-24-trx/:id/edit',
+        path: ':id/edit',
         component: Przelewy24TrxUpdateComponent,
         resolve: {
             przelewy24Trx: Przelewy24TrxResolve
         },
         data: {
             authorities: ['ROLE_USER'],
-            pageTitle: 'Przelewy24Trxes'
+            pageTitle: 'netflixdbApp.przelewy24Trx.home.title'
         },
         canActivate: [UserRouteAccessService]
     }
@@ -74,14 +77,14 @@ export const przelewy24TrxRoute: Routes = [
 
 export const przelewy24TrxPopupRoute: Routes = [
     {
-        path: 'przelewy-24-trx/:id/delete',
+        path: ':id/delete',
         component: Przelewy24TrxDeletePopupComponent,
         resolve: {
             przelewy24Trx: Przelewy24TrxResolve
         },
         data: {
             authorities: ['ROLE_USER'],
-            pageTitle: 'Przelewy24Trxes'
+            pageTitle: 'netflixdbApp.przelewy24Trx.home.title'
         },
         canActivate: [UserRouteAccessService],
         outlet: 'popup'

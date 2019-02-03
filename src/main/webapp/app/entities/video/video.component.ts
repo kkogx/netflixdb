@@ -1,15 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { JhiAlertService, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 
 import { IVideo } from 'app/shared/model/video.model';
-import { Principal } from 'app/core';
+import { AccountService } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
 import { VideoService } from './video.service';
-import { Observable } from 'rxjs/Observable';
 import { IGenre } from 'app/shared/model/genre.model';
 
 @Component({
@@ -39,12 +38,12 @@ export class VideoComponent implements OnInit, OnDestroy {
     selectedGenres: IGenre[] = [];
 
     constructor(
-        private videoService: VideoService,
-        private jhiAlertService: JhiAlertService,
-        private eventManager: JhiEventManager,
-        private parseLinks: JhiParseLinks,
-        private activatedRoute: ActivatedRoute,
-        private principal: Principal
+        protected videoService: VideoService,
+        protected jhiAlertService: JhiAlertService,
+        protected eventManager: JhiEventManager,
+        protected parseLinks: JhiParseLinks,
+        protected activatedRoute: ActivatedRoute,
+        protected accountService: AccountService
     ) {
         this.videos = [];
         this.itemsPerPage = ITEMS_PER_PAGE;
@@ -149,7 +148,7 @@ export class VideoComponent implements OnInit, OnDestroy {
         this.genres = this.videoService.genres(this.searchByType);
 
         this.loadAll();
-        this.principal.identity().then(account => {
+        this.accountService.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInVideos();
@@ -178,7 +177,7 @@ export class VideoComponent implements OnInit, OnDestroy {
         return [];
     }
 
-    private paginateVideos(data: IVideo[], headers: HttpHeaders) {
+    protected paginateVideos(data: IVideo[], headers: HttpHeaders) {
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
         if (this.predicate != null && this.runtimeSortAttrs.find(value => value === this.predicate)) {
@@ -198,7 +197,7 @@ export class VideoComponent implements OnInit, OnDestroy {
         }
     }
 
-    private onError(errorMessage: string) {
+    protected onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
     }
 }

@@ -11,7 +11,6 @@ import {
     JhiHealthCheckComponent,
     JhiHealthModalComponent,
     JhiMetricsMonitoringComponent,
-    JhiMetricsMonitoringModalComponent,
     LogsComponent,
     UserMgmtComponent,
     UserMgmtDeleteDialogComponent,
@@ -38,10 +37,10 @@ import {
         JhiHealthCheckComponent,
         JhiHealthModalComponent,
         JhiDocsComponent,
-        JhiMetricsMonitoringComponent,
-        JhiMetricsMonitoringModalComponent
+        JhiMetricsMonitoringComponent
     ],
-    entryComponents: [UserMgmtDeleteDialogComponent, JhiHealthModalComponent, JhiMetricsMonitoringModalComponent],
+    providers: [{ provide: JhiLanguageService, useClass: JhiLanguageService }],
+    entryComponents: [UserMgmtDeleteDialogComponent, JhiHealthModalComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class NetflixdbAdminModule {
