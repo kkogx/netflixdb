@@ -21,9 +21,9 @@
             "status": "Status"
         },
         "status": {
-            "UNKNOWN": "UNKNOWN",
-            "UP": "DOSTĘPNE",
-            "DOWN": "NIEDZIAŁAJĄCY"
+            "UNKNOWN": "NIEZNANY",
+            "UP": "DOSTĘPNA",
+            "DOWN": "NIEDOSTĘPNA"
         }
     }
 }

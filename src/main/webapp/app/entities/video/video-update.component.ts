@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
 import { IVideo } from 'app/shared/model/video.model';
 import { VideoService } from './video.service';
 
@@ -11,10 +10,10 @@ import { VideoService } from './video.service';
     templateUrl: './video-update.component.html'
 })
 export class VideoUpdateComponent implements OnInit {
-    private _video: IVideo;
+    video: IVideo;
     isSaving: boolean;
 
-    constructor(private videoService: VideoService, private activatedRoute: ActivatedRoute) {}
+    constructor(protected videoService: VideoService, protected activatedRoute: ActivatedRoute) {}
 
     ngOnInit() {
         this.isSaving = false;
@@ -36,24 +35,16 @@ export class VideoUpdateComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<IVideo>>) {
+    protected subscribeToSaveResponse(result: Observable<HttpResponse<IVideo>>) {
         result.subscribe((res: HttpResponse<IVideo>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
     }
 
-    private onSaveSuccess() {
+    protected onSaveSuccess() {
         this.isSaving = false;
         this.previousState();
     }
 
-    private onSaveError() {
+    protected onSaveError() {
         this.isSaving = false;
-    }
-
-    get video() {
-        return this._video;
-    }
-
-    set video(video: IVideo) {
-        this._video = video;
     }
 }

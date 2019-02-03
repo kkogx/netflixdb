@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { throwError } from 'rxjs';
 
 import { NetflixdbTestModule } from '../../../test.module';
-import { AccountService, Principal } from 'app/core';
+import { AccountService } from 'app/core';
 import { SettingsComponent } from 'app/account/settings/settings.component';
 
 describe('Component Tests', () => {
@@ -10,25 +10,21 @@ describe('Component Tests', () => {
         let comp: SettingsComponent;
         let fixture: ComponentFixture<SettingsComponent>;
         let mockAuth: any;
-        let mockPrincipal: any;
 
-        beforeEach(
-            async(() => {
-                TestBed.configureTestingModule({
-                    imports: [NetflixdbTestModule],
-                    declarations: [SettingsComponent],
-                    providers: []
-                })
-                    .overrideTemplate(SettingsComponent, '')
-                    .compileComponents();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                imports: [NetflixdbTestModule],
+                declarations: [SettingsComponent],
+                providers: []
             })
-        );
+                .overrideTemplate(SettingsComponent, '')
+                .compileComponents();
+        }));
 
         beforeEach(() => {
             fixture = TestBed.createComponent(SettingsComponent);
             comp = fixture.componentInstance;
             mockAuth = fixture.debugElement.injector.get(AccountService);
-            mockPrincipal = fixture.debugElement.injector.get(Principal);
         });
 
         it('should send the current identity upon save', () => {
@@ -42,14 +38,14 @@ describe('Component Tests', () => {
                 langKey: 'pl',
                 login: 'john'
             };
-            mockPrincipal.setResponse(accountValues);
+            mockAuth.setIdentityResponse(accountValues);
 
             // WHEN
             comp.settingsAccount = accountValues;
             comp.save();
 
             // THEN
-            expect(mockPrincipal.identitySpy).toHaveBeenCalled();
+            expect(mockAuth.identitySpy).toHaveBeenCalled();
             expect(mockAuth.saveSpy).toHaveBeenCalledWith(accountValues);
             expect(comp.settingsAccount).toEqual(accountValues);
         });
@@ -60,7 +56,7 @@ describe('Component Tests', () => {
                 firstName: 'John',
                 lastName: 'Doe'
             };
-            mockPrincipal.setResponse(accountValues);
+            mockAuth.setIdentityResponse(accountValues);
 
             // WHEN
             comp.save();

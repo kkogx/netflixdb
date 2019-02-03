@@ -13,10 +13,10 @@ type EntityArrayResponseType = HttpResponse<IPrzelewy24Trx[]>;
 
 @Injectable({ providedIn: 'root' })
 export class Przelewy24TrxService {
-    private resourceUrl = SERVER_API_URL + 'api/przelewy-24-trxes';
-    private resourceSearchUrl = SERVER_API_URL + 'api/_search/przelewy-24-trxes';
+    public resourceUrl = SERVER_API_URL + 'api/przelewy-24-trxes';
+    public resourceSearchUrl = SERVER_API_URL + 'api/_search/przelewy-24-trxes';
 
-    constructor(private http: HttpClient) {}
+    constructor(protected http: HttpClient) {}
 
     create(przelewy24Trx: IPrzelewy24Trx): Observable<EntityResponseType> {
         const copy = this.convertDateFromClient(przelewy24Trx);
@@ -56,7 +56,7 @@ export class Przelewy24TrxService {
             .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
     }
 
-    private convertDateFromClient(przelewy24Trx: IPrzelewy24Trx): IPrzelewy24Trx {
+    protected convertDateFromClient(przelewy24Trx: IPrzelewy24Trx): IPrzelewy24Trx {
         const copy: IPrzelewy24Trx = Object.assign({}, przelewy24Trx, {
             createdDate:
                 przelewy24Trx.createdDate != null && przelewy24Trx.createdDate.isValid() ? przelewy24Trx.createdDate.toJSON() : null,
@@ -66,17 +66,21 @@ export class Przelewy24TrxService {
         return copy;
     }
 
-    private convertDateFromServer(res: EntityResponseType): EntityResponseType {
-        res.body.createdDate = res.body.createdDate != null ? moment(res.body.createdDate) : null;
-        res.body.confirmedDate = res.body.confirmedDate != null ? moment(res.body.confirmedDate) : null;
+    protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
+        if (res.body) {
+            res.body.createdDate = res.body.createdDate != null ? moment(res.body.createdDate) : null;
+            res.body.confirmedDate = res.body.confirmedDate != null ? moment(res.body.confirmedDate) : null;
+        }
         return res;
     }
 
-    private convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
-        res.body.forEach((przelewy24Trx: IPrzelewy24Trx) => {
-            przelewy24Trx.createdDate = przelewy24Trx.createdDate != null ? moment(przelewy24Trx.createdDate) : null;
-            przelewy24Trx.confirmedDate = przelewy24Trx.confirmedDate != null ? moment(przelewy24Trx.confirmedDate) : null;
-        });
+    protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+        if (res.body) {
+            res.body.forEach((przelewy24Trx: IPrzelewy24Trx) => {
+                przelewy24Trx.createdDate = przelewy24Trx.createdDate != null ? moment(przelewy24Trx.createdDate) : null;
+                przelewy24Trx.confirmedDate = przelewy24Trx.confirmedDate != null ? moment(przelewy24Trx.confirmedDate) : null;
+            });
+        }
         return res;
     }
 }

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Renderer, ElementRef, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, Renderer } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { JhiEventManager } from 'ng-jhipster';
@@ -39,7 +39,7 @@ export class JhiLoginModalComponent implements AfterViewInit, OnInit {
     }
 
     ngAfterViewInit() {
-        this.renderer.invokeElementMethod(this.elementRef.nativeElement.querySelector('#username'), 'focus', []);
+        setTimeout(() => this.renderer.invokeElementMethod(this.elementRef.nativeElement.querySelector('#username'), 'focus', []), 0);
     }
 
     cancel() {
@@ -71,8 +71,8 @@ export class JhiLoginModalComponent implements AfterViewInit, OnInit {
                     content: 'Sending Authentication Success'
                 });
 
-                // // previousState was set in the authExpiredInterceptor before being redirected to login modal.
-                // // since login is succesful, go to stored previousState and clear previousState
+                // previousState was set in the authExpiredInterceptor before being redirected to login modal.
+                // since login is successful, go to stored previousState and clear previousState
                 const redirect = this.stateStorageService.getUrl();
                 if (redirect) {
                     this.stateStorageService.storeUrl(null);

@@ -1,10 +1,11 @@
 import './vendor.ts';
 
-import { Injector, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { LocalStorageService, Ng2Webstorage, SessionStorageService } from 'ngx-webstorage';
-import { JhiEventManager } from 'ng-jhipster';
+import { Ng2Webstorage } from 'ngx-webstorage';
+import { NgJhipsterModule } from 'ng-jhipster';
+import { NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 
 import { AuthInterceptor } from './blocks/interceptor/auth.interceptor';
 import { AuthExpiredInterceptor } from './blocks/interceptor/auth-expired.interceptor';
@@ -17,6 +18,7 @@ import { NetflixdbHomeModule } from './home/home.module';
 import { NetflixdbAccountModule } from './account/account.module';
 import { NetflixdbEntityModule } from './entities/entity.module';
 import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
+import * as moment from 'moment';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import {
     ActiveMenuDirective,
@@ -32,15 +34,22 @@ import {
 @NgModule({
     imports: [
         BrowserModule,
-        NetflixdbAppRoutingModule,
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-' }),
-        NetflixdbSharedModule,
+        NgJhipsterModule.forRoot({
+            // set below to true to make alerts look like toast
+            alertAsToast: false,
+            alertTimeout: 5000,
+            i18nEnabled: true,
+            defaultI18nLang: 'pl'
+        }),
+        NetflixdbSharedModule.forRoot(),
         NetflixdbCoreModule,
         NetflixdbHomeModule,
         NetflixdbAccountModule,
         NetflixdbEntityModule,
-        Ng4LoadingSpinnerModule.forRoot()
+        NetflixdbAppRoutingModule,
         // jhipster-needle-angular-add-module JHipster will add new module here
+        Ng4LoadingSpinnerModule.forRoot()
     ],
     declarations: [
         JhiMainComponent,
@@ -57,28 +66,28 @@ import {
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
-            multi: true,
-            deps: [LocalStorageService, SessionStorageService]
+            multi: true
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthExpiredInterceptor,
-            multi: true,
-            deps: [Injector]
+            multi: true
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: ErrorHandlerInterceptor,
-            multi: true,
-            deps: [JhiEventManager]
+            multi: true
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: NotificationInterceptor,
-            multi: true,
-            deps: [Injector]
+            multi: true
         }
     ],
     bootstrap: [JhiMainComponent]
 })
-export class NetflixdbAppModule {}
+export class NetflixdbAppModule {
+    constructor(private dpConfig: NgbDatepickerConfig) {
+        this.dpConfig.minDate = { year: moment().year() - 100, month: 1, day: 1 };
+    }
+}

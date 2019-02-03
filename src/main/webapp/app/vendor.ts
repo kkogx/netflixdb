@@ -13,9 +13,8 @@ import {
     faClock,
     faCloud,
     faDonate,
-    faTv,
-    faFilm,
     faEye,
+    faFilm,
     faFlag,
     faHdd,
     faHeart,
@@ -29,12 +28,15 @@ import {
     faSignInAlt,
     faSignOutAlt,
     faSort,
+    faSortDown,
+    faSortUp,
     faSync,
     faTachometerAlt,
     faTasks,
     faThList,
     faTimes,
     faTrashAlt,
+    faTv,
     faUser,
     faUserPlus,
     faWrench
@@ -45,6 +47,8 @@ import {
 // Adds the SVG icon to the library so you can use it in your page
 library.add(faUser);
 library.add(faSort);
+library.add(faSortUp);
+library.add(faSortDown);
 library.add(faSync);
 library.add(faEye);
 library.add(faBan);

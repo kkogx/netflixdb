@@ -14,7 +14,7 @@ import { VideoService } from './video.service';
 export class VideoDeleteDialogComponent {
     video: IVideo;
 
-    constructor(private videoService: VideoService, public activeModal: NgbActiveModal, private eventManager: JhiEventManager) {}
+    constructor(protected videoService: VideoService, public activeModal: NgbActiveModal, protected eventManager: JhiEventManager) {}
 
     clear() {
         this.activeModal.dismiss('cancel');
@@ -36,31 +36,22 @@ export class VideoDeleteDialogComponent {
     template: ''
 })
 export class VideoDeletePopupComponent implements OnInit, OnDestroy {
-    private ngbModalRef: NgbModalRef;
+    protected ngbModalRef: NgbModalRef;
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal) {}
+    constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected modalService: NgbModal) {}
 
     ngOnInit() {
         this.activatedRoute.data.subscribe(({ video }) => {
             setTimeout(() => {
-                this.ngbModalRef = this.modalService.open(VideoDeleteDialogComponent as Component, {
-                    size: 'lg',
-                    backdrop: 'static'
-                });
+                this.ngbModalRef = this.modalService.open(VideoDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
                 this.ngbModalRef.componentInstance.video = video;
                 this.ngbModalRef.result.then(
                     result => {
-                        this.router.navigate([{ outlets: { popup: null } }], {
-                            replaceUrl: true,
-                            queryParamsHandling: 'merge'
-                        });
+                        this.router.navigate(['/video', { outlets: { popup: null } }]);
                         this.ngbModalRef = null;
                     },
                     reason => {
-                        this.router.navigate([{ outlets: { popup: null } }], {
-                            replaceUrl: true,
-                            queryParamsHandling: 'merge'
-                        });
+                        this.router.navigate(['/video', { outlets: { popup: null } }]);
                         this.ngbModalRef = null;
                     }
                 );

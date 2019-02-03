@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Account, LoginModalService, Principal } from 'app/core';
+import { Account, AccountService, LoginModalService } from 'app/core';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { ActivatedRoute } from '@angular/router';
 import { DonateModalContentComponent } from 'app/layouts/navbar/donate.component';
@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
     showThanks: boolean;
 
     constructor(
-        private principal: Principal,
+        private accountService: AccountService,
         private loginModalService: LoginModalService,
         private eventManager: JhiEventManager,
         private profileService: ProfileService,
@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.principal.identity().then(account => {
+        this.accountService.identity().then((account: Account) => {
             this.account = account;
         });
         this.registerAuthenticationSuccess();
@@ -45,14 +45,14 @@ export class HomeComponent implements OnInit {
 
     registerAuthenticationSuccess() {
         this.eventManager.subscribe('authenticationSuccess', message => {
-            this.principal.identity().then(account => {
+            this.accountService.identity().then(account => {
                 this.account = account;
             });
         });
     }
 
     isAuthenticated() {
-        return this.principal.isAuthenticated();
+        return this.accountService.isAuthenticated();
     }
 
     login() {

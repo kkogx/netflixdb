@@ -1,7 +1,5 @@
 package pl.kogx.netflixdb.security;
 
-import pl.kogx.netflixdb.domain.User;
-import pl.kogx.netflixdb.repository.UserRepository;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +10,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import pl.kogx.netflixdb.domain.User;
+import pl.kogx.netflixdb.repository.UserRepository;
 
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -36,14 +37,14 @@ public class DomainUserDetailsService implements UserDetailsService {
         log.debug("Authenticating {}", login);
 
         if (new EmailValidator().isValid(login, null)) {
-            Optional<User> userByEmailFromDatabase = userRepository.findOneWithAuthoritiesByEmail(login);
-            return userByEmailFromDatabase.map(user -> createSpringSecurityUser(login, user))
+            return userRepository.findOneWithAuthoritiesByEmail(login)
+                .map(user -> createSpringSecurityUser(login, user))
                 .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));
         }
 
         String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
-        Optional<User> userByLoginFromDatabase = userRepository.findOneWithAuthoritiesByLogin(lowercaseLogin);
-        return userByLoginFromDatabase.map(user -> createSpringSecurityUser(lowercaseLogin, user))
+        return userRepository.findOneWithAuthoritiesByLogin(lowercaseLogin)
+            .map(user -> createSpringSecurityUser(lowercaseLogin, user))
             .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
 
     }

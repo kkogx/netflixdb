@@ -5,7 +5,7 @@
             <span *ngSwitchCase="searchByType === 'show'" jhiTranslate="videos.titleshows"></span>
             <span *ngSwitchDefault jhiTranslate="videos.title"></span>
         </ng-container>
-        <small *ngIf="totalItems" class="text-muted" jhiTranslate="videos.totalcount" translateValues="{total: '{{ totalItems }}'}"></small>
+        <small *ngIf="totalItems" class="text-muted" jhiTranslate="videos.totalcount" [translateValues]="{total: totalItems}"></small>
         <button *jhiHasAnyAuthority="'ROLE_ADMIN'" id="jh-create-entity"
                 class="btn btn-primary float-right jh-create-entity create-video"
                 [routerLink]="['/video/new']">
@@ -87,10 +87,9 @@
                         <fa-icon [icon]="'sort'"></fa-icon>
                     </div>
                 </th>
-                <th jhiSortBy="genreId">
+                <th>
                     <div class="text-nowrap">
                         <span jhiTranslate="videos.entity.genre">Genre</span>
-                        <fa-icon [icon]="'sort'"></fa-icon>
                     </div>
                 </th>
                 <th jhiSortBy="fwebRating">
@@ -166,7 +165,7 @@
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'video/'+ video.id + '/delete'} }]"
+                                [routerLink]="['/', 'video', { outlets: { popup: video.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { JhiAlertService, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 
 import { IPrzelewy24Trx } from 'app/shared/model/przelewy-24-trx.model';
-import { Principal } from 'app/core';
+import { AccountService } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
 import { Przelewy24TrxService } from './przelewy-24-trx.service';
@@ -22,18 +22,17 @@ export class Przelewy24TrxComponent implements OnInit, OnDestroy {
     links: any;
     page: any;
     predicate: any;
-    queryCount: any;
     reverse: any;
     totalItems: number;
     currentSearch: string;
 
     constructor(
-        private przelewy24TrxService: Przelewy24TrxService,
-        private jhiAlertService: JhiAlertService,
-        private eventManager: JhiEventManager,
-        private parseLinks: JhiParseLinks,
-        private activatedRoute: ActivatedRoute,
-        private principal: Principal
+        protected przelewy24TrxService: Przelewy24TrxService,
+        protected jhiAlertService: JhiAlertService,
+        protected eventManager: JhiEventManager,
+        protected parseLinks: JhiParseLinks,
+        protected activatedRoute: ActivatedRoute,
+        protected accountService: AccountService
     ) {
         this.przelewy24Trxes = [];
         this.itemsPerPage = ITEMS_PER_PAGE;
@@ -116,7 +115,7 @@ export class Przelewy24TrxComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.loadAll();
-        this.principal.identity().then(account => {
+        this.accountService.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInPrzelewy24Trxes();
@@ -142,7 +141,7 @@ export class Przelewy24TrxComponent implements OnInit, OnDestroy {
         return result;
     }
 
-    private paginatePrzelewy24Trxes(data: IPrzelewy24Trx[], headers: HttpHeaders) {
+    protected paginatePrzelewy24Trxes(data: IPrzelewy24Trx[], headers: HttpHeaders) {
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
         for (let i = 0; i < data.length; i++) {
@@ -150,7 +149,7 @@ export class Przelewy24TrxComponent implements OnInit, OnDestroy {
         }
     }
 
-    private onError(errorMessage: string) {
+    protected onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
     }
 }

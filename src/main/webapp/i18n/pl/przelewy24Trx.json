@@ -1,0 +1,29 @@
+{
+    "netflixdbApp": {
+        "przelewy24Trx": {
+            "home": {
+                "title": "Przelewy 24 Trx",
+                "createLabel": "Dodaj Przelewy 24 Trx",
+                "createOrEditLabel": "Dodaj lub edytuj: Przelewy 24 Trx",
+                "search": "Szukaj Przelewy 24 Trx"
+            },
+            "created": "Utworzono nowy obiekt typu Przelewy 24 Trx z identyfikatorem {{ param }}",
+            "updated": "Uaktualniono obiekt typu Przelewy 24 Trx z identyfikatorem {{ param }}",
+            "deleted": "Usunięto obiekt typu Przelewy 24 Trx z identyfikatorem {{ param }}",
+            "delete": {
+                "question": "Czy na pewno chcesz usunąć Przelewy 24 Trx {{ id }}?"
+            },
+            "detail": {
+                "title": "Przelewy 24 Trx"
+            },
+            "createdDate": "Created Date",
+            "confirmedDate": "Confirmed Date",
+            "email": "Email",
+            "sessionId": "Session Id",
+            "description": "Description",
+            "currency": "Currency",
+            "country": "Country",
+            "amount": "Amount"
+        }
+    }
+}

@@ -9,11 +9,11 @@ const LAYOUT_ROUTES = [navbarRoute, footerRoute, ...errorRoute];
     imports: [
         RouterModule.forRoot(
             [
-                ...LAYOUT_ROUTES,
                 {
                     path: 'admin',
                     loadChildren: './admin/admin.module#NetflixdbAdminModule'
-                }
+                },
+                ...LAYOUT_ROUTES
             ],
             { useHash: true, enableTracing: DEBUG_INFO_ENABLED }
         )

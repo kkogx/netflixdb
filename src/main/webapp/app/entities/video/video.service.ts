@@ -16,7 +16,7 @@ export class VideoService {
     private resourceSearchUrl = SERVER_API_URL + 'api/_search/videos/range';
     private resourceGenresUrl = SERVER_API_URL + 'api/videos/genres';
 
-    constructor(private http: HttpClient) {}
+    constructor(protected http: HttpClient) {}
 
     create(video: IVideo): Observable<EntityResponseType> {
         return this.http.post<IVideo>(this.resourceUrl, video, { observe: 'response' });

@@ -1,0 +1,41 @@
+{
+    "netflixdbApp": {
+        "video": {
+            "home": {
+                "title": "Videos",
+                "createLabel": "Create a new Video",
+                "createOrEditLabel": "Create or edit a Video",
+                "search": "Search for Video"
+            },
+            "created": "A new Video is created with identifier {{ param }}",
+            "updated": "A Video is updated with identifier {{ param }}",
+            "deleted": "A Video is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Video {{ id }}?"
+            },
+            "detail": {
+                "title": "Video"
+            },
+            "title": "Title",
+            "fwebTitle": "Fweb Title",
+            "releaseYear": "Release Year",
+            "genre": "Genre",
+            "genreId": "Genre Id",
+            "original": "Original",
+            "type": "Type",
+            "omdbAvailable": "Omdb Available",
+            "fwebAvailable": "Fweb Available",
+            "imdbRating": "Imdb Rating",
+            "fwebRating": "Fweb Rating",
+            "imdbVotes": "Imdb Votes",
+            "fwebVotes": "Fweb Votes",
+            "metascore": "Metascore",
+            "tomatoRating": "Tomato Rating",
+            "tomatoUserRating": "Tomato User Rating",
+            "imdbID": "Imdb ID",
+            "fwebID": "Fweb ID",
+            "boxart": "Boxart",
+            "fwebPlot": "Fweb Plot"
+        }
+    }
+}

@@ -10,7 +10,7 @@ import { IPrzelewy24Trx } from 'app/shared/model/przelewy-24-trx.model';
 export class Przelewy24TrxDetailComponent implements OnInit {
     przelewy24Trx: IPrzelewy24Trx;
 
-    constructor(private activatedRoute: ActivatedRoute) {}
+    constructor(protected activatedRoute: ActivatedRoute) {}
 
     ngOnInit() {
         this.activatedRoute.data.subscribe(({ przelewy24Trx }) => {
