@@ -129,5 +129,8 @@
     "jestSonar": {
         "reportPath": "target/test-results/jest",
         "reportFile": "TESTS-results-sonar.xml"
+    },
+    "resolutions": {
+        "terser": "3.14.1"
     }
 }
