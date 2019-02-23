@@ -496,17 +496,17 @@
                 <artifactId>jib-maven-plugin</artifactId>
             </plugin>
             <!-- jhipster-needle-maven-add-plugin -->
-            <plugin>
-                <groupId>com.microsoft.azure</groupId>
-                <artifactId>azure-webapp-maven-plugin</artifactId>
-                <!-- check Maven Central for the latest version -->
-                <version>1.3.0</version>
-                <configuration>
-                    <resourceGroup>netflixdb-linux</resourceGroup>
-                    <appName>netflixdb-linux</appName>
-                    <linuxRuntime>tomcat 9.0-jre8</linuxRuntime>-->
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>com.microsoft.azure</groupId>-->
+                <!--<artifactId>azure-webapp-maven-plugin</artifactId>-->
+                <!--&lt;!&ndash; check Maven Central for the latest version &ndash;&gt;-->
+                <!--<version>1.3.0</version>-->
+                <!--<configuration>-->
+                    <!--<resourceGroup>netflixdb-linux</resourceGroup>-->
+                    <!--<appName>netflixdb-linux</appName>-->
+                    <!--<linuxRuntime>tomcat 9.0-jre8</linuxRuntime>&ndash;&gt;-->
+                <!--</configuration>-->
+            <!--</plugin>-->
         </plugins>
         <pluginManagement>
             <plugins>
