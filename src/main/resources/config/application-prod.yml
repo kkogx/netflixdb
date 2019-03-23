@@ -50,7 +50,7 @@ spring:
             hibernate.generate_statistics: false
     data:
         elasticsearch:
-            cluster-name:
+            cluster-name: elasticsearch
             cluster-nodes: localhost:9300
         jest:
             uri: http://localhost:9200
