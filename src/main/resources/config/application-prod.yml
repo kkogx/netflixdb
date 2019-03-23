@@ -149,7 +149,7 @@ application:
         status-url: "https://netflixdb.pl/api/donate/txnStatus"
     netflix-sync:
         proxy-settings:
-            user: "zhentarin"
+            user: "***REMOVED***"
             password: "***REMOVED***"
             host: "pl.vpn.mydevil.net"
             port: 8889
