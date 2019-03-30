@@ -22,6 +22,7 @@ export interface IVideo {
     boxart?: string;
     timestamp?: Date;
     fwebPlot?: string;
+    seen?: boolean;
 }
 
 export class Video implements IVideo {
@@ -48,7 +49,8 @@ export class Video implements IVideo {
         public fwebID?: number,
         public boxart?: string,
         public timestamp?: Date,
-        public fwebPlot?: string
+        public fwebPlot?: string,
+        public seen?: boolean
     ) {
         this.original = this.original || false;
         this.omdbAvailable = this.omdbAvailable || false;

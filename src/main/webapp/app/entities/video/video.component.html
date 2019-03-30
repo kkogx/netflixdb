@@ -133,14 +133,14 @@
             <tr *ngFor="let video of videos ;trackBy: trackId">
                 <td data-title="">
                     <div class="boxart-260-146"
-                         style="position: relative;"
                          lazyLoad="{{video.boxart}}" width="260px" height="146px"
                          defaultImage='../../content/images/netflixdb_260x146_blur.png'>
                         <a href="https://www.youtube.com/results?search_query={{video.title}} {{video.releaseYear}} trailer">
                             <img src="../../../content/images/youtube-play160.png" width="30" height="30" align="right">
                         </a>
-                        <img src="../../../content/images/eye_not_seen.png" width="30" height="30"
-                             style="position: absolute; bottom: 0; right: 0">
+                        <img *ngIf="isAuthenticated()" class="fav-eye"
+                             [src]="video.seen ? '../../../content/images/icons8-eye-24-yellow.png' :
+                                                 '../../../content/images/icons8-eye-24.png'">
                     </div>
                 </td>
                 <!--<td>{{video.title}}</td>-->

@@ -122,24 +122,24 @@ public class AccountResource {
             userDTO.getLangKey(), userDTO.getImageUrl());
     }
 
-    @PostMapping("/account/favourite")
-    public void addFavourite(@Valid @RequestBody String favouriteDto) {
+    @PostMapping("/account/seen")
+    public void addSeen(@Valid @RequestBody Long videoId) {
         String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new InternalServerErrorException("Current user login not found"));
         Optional<User> user = userRepository.findOneByLogin(userLogin);
         if (!user.isPresent()) {
             throw new InternalServerErrorException("User could not be found");
         }
-        userService.addUserFavourite(favouriteDto);
+        userService.addSeen(videoId);
     }
 
-    @DeleteMapping("/account/favourite")
-    public void removeFavourite(@Valid @RequestBody String favouriteDto) {
+    @DeleteMapping("/account/seen")
+    public void removeSeen(@Valid @RequestBody Long videoId) {
         String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new InternalServerErrorException("Current user login not found"));
         Optional<User> user = userRepository.findOneByLogin(userLogin);
         if (!user.isPresent()) {
             throw new InternalServerErrorException("User could not be found");
         }
-        userService.removeUserFavourite(favouriteDto);
+        userService.removeSeen(videoId);
     }
 
     /**
