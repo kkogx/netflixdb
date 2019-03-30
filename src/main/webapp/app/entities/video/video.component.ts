@@ -1,15 +1,16 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
-import { JhiAlertService, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {ActivatedRoute} from '@angular/router';
+import {Observable, Subscription} from 'rxjs';
+import {JhiAlertService, JhiEventManager, JhiParseLinks} from 'ng-jhipster';
 
-import { IVideo } from 'app/shared/model/video.model';
-import { AccountService } from 'app/core';
+import {IVideo} from 'app/shared/model/video.model';
+import {Account} from 'app/core/user/account.model';
+import {AccountService} from 'app/core';
 
-import { ITEMS_PER_PAGE } from 'app/shared';
-import { VideoService } from './video.service';
-import { IGenre } from 'app/shared/model/genre.model';
+import {ITEMS_PER_PAGE} from 'app/shared';
+import {VideoService} from './video.service';
+import {IGenre} from 'app/shared/model/genre.model';
 
 @Component({
     selector: 'jhi-video',
@@ -19,7 +20,7 @@ export class VideoComponent implements OnInit, OnDestroy {
     runtimeSortAttrs: Array<String> = ['title', 'fwebTitle', 'genre'];
 
     videos: IVideo[];
-    currentAccount: any;
+    currentAccount: Account;
     eventSubscriber: Subscription;
     itemsPerPage: number;
     links: any;
@@ -191,13 +192,21 @@ export class VideoComponent implements OnInit, OnDestroy {
                 }
             });
         }
+
+        // data transformation
+        const seenIds = new Set(this.currentAccount == null ? [] : this.currentAccount.seenVideoIds);
         for (let i = 0; i < data.length; i++) {
             data[i].fwebRating = Math.round(data[i].fwebRating * 10) / 10;
+            data[i].seen = seenIds.has(data[i].id);
             this.videos.push(data[i]);
         }
     }
 
     protected onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
+    }
+
+    isAuthenticated() {
+        return this.accountService.isAuthenticated();
     }
 }

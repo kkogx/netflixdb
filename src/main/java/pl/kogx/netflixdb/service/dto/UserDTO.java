@@ -10,7 +10,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,6 +17,8 @@ import java.util.stream.Collectors;
  * A DTO representing a user, with his authorities.
  */
 public class UserDTO {
+
+    public static final String SEEN_SEPARATOR = ";";
 
     private Long id;
 
@@ -52,7 +53,7 @@ public class UserDTO {
 
     private Instant lastModifiedDate;
 
-    private List<String> favourites;
+    private Set<Long> seenVideoIds;
 
     private Set<String> authorities;
 
@@ -73,7 +74,9 @@ public class UserDTO {
         this.createdDate = user.getCreatedDate();
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
-        this.favourites = Arrays.asList(user.getFavourites().split(";"));
+        this.seenVideoIds = Arrays.stream(user.getFavourites().split(SEEN_SEPARATOR))
+            .map(Long::parseLong)
+            .collect(Collectors.toSet());
         this.authorities = user.getAuthorities().stream()
             .map(Authority::getName)
             .collect(Collectors.toSet());
@@ -183,12 +186,12 @@ public class UserDTO {
         this.authorities = authorities;
     }
 
-    public List<String> getFavourites() {
-        return favourites;
+    public Set<Long> getSeenVideoIds() {
+        return seenVideoIds;
     }
 
-    public void setFavourites(List<String> favourites) {
-        this.favourites = favourites;
+    public void setSeenVideoIds(Set<Long> seenVideoIds) {
+        this.seenVideoIds = seenVideoIds;
     }
 
     @Override

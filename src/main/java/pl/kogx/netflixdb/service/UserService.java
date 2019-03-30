@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserService {
 
-    private static final String FAV_SEPARATOR = ";";
+    private static final String FAV_SEPARATOR = UserDTO.SEEN_SEPARATOR;
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
@@ -285,35 +285,35 @@ public class UserService {
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
     }
 
-    public void addUserFavourite(String favouriteDto) {
+    public void addSeen(Long videoId) {
         SecurityUtils.getCurrentUserLogin()
             .flatMap(userRepository::findOneByLogin)
             .ifPresent(user -> {
-                user.setFavourites(addFavourite(user.getFavourites(), favouriteDto));
+                user.setFavourites(addFavourite(user.getFavourites(), videoId));
                 userSearchRepository.save(user);
-                log.debug("Added favourite {} for User: {}", favouriteDto, user);
+                log.debug("Added favourite {} for User: {}", videoId, user);
             });
     }
 
-    public void removeUserFavourite(String favouriteDto) {
+    public void removeSeen(Long videoId) {
         SecurityUtils.getCurrentUserLogin()
             .flatMap(userRepository::findOneByLogin)
             .ifPresent(user -> {
-                user.setFavourites(removeFavourite(user.getFavourites(), favouriteDto));
+                user.setFavourites(removeFavourite(user.getFavourites(), videoId));
                 userSearchRepository.save(user);
-                log.debug("Removed favourite {} for User: {}", favouriteDto, user);
+                log.debug("Removed favourite {} for User: {}", videoId, user);
             });
     }
 
-    private String addFavourite(String favourites, String favouriteDto) {
+    private String addFavourite(String favourites, Long videoId) {
         Set<String> favs = new HashSet<>(Arrays.asList(favourites.split(FAV_SEPARATOR)));
-        favs.add(favouriteDto);
+        favs.add(videoId.toString());
         return String.join(FAV_SEPARATOR, favs);
     }
 
-    private String removeFavourite(String favourites, String favouriteDto) {
+    private String removeFavourite(String favourites, Long videoId) {
         Set<String> favs = new HashSet<>(Arrays.asList(favourites.split(FAV_SEPARATOR)));
-        favs.remove(favouriteDto);
+        favs.remove(videoId.toString());
         return String.join(FAV_SEPARATOR, favs);
     }
 }
