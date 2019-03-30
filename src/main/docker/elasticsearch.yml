@@ -1,7 +1,7 @@
 version: '2'
 services:
     netflixdb-elasticsearch:
-        image: elasticsearch:5.6.13
+        image: elasticsearch:5.6.13-alpine
         mem_limit: 1g
         # volumes:
         #     - ~/volumes/jhipster/netflixdb/elasticsearch/:/usr/share/elasticsearch/data/

@@ -122,6 +122,26 @@ public class AccountResource {
             userDTO.getLangKey(), userDTO.getImageUrl());
     }
 
+    @PostMapping("/account/favourite")
+    public void addFavourite(@Valid @RequestBody String favouriteDto) {
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new InternalServerErrorException("Current user login not found"));
+        Optional<User> user = userRepository.findOneByLogin(userLogin);
+        if (!user.isPresent()) {
+            throw new InternalServerErrorException("User could not be found");
+        }
+        userService.addUserFavourite(favouriteDto);
+    }
+
+    @DeleteMapping("/account/favourite")
+    public void removeFavourite(@Valid @RequestBody String favouriteDto) {
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new InternalServerErrorException("Current user login not found"));
+        Optional<User> user = userRepository.findOneByLogin(userLogin);
+        if (!user.isPresent()) {
+            throw new InternalServerErrorException("User could not be found");
+        }
+        userService.removeUserFavourite(favouriteDto);
+    }
+
     /**
      * POST  /account/change-password : changes the current user's password
      *

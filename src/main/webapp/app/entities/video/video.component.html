@@ -5,7 +5,8 @@
             <span *ngSwitchCase="searchByType === 'show'" jhiTranslate="videos.titleshows"></span>
             <span *ngSwitchDefault jhiTranslate="videos.title"></span>
         </ng-container>
-        <small *ngIf="totalItems" class="text-muted" jhiTranslate="videos.totalcount" [translateValues]="{total: totalItems}"></small>
+        <small *ngIf="totalItems" class="text-muted" jhiTranslate="videos.totalcount"
+               [translateValues]="{total: totalItems}"></small>
         <button *jhiHasAnyAuthority="'ROLE_ADMIN'" id="jh-create-entity"
                 class="btn btn-primary float-right jh-create-entity create-video"
                 [routerLink]="['/video/new']">
@@ -36,21 +37,25 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" jhiTranslate="videos.filter.yearmin">year min</span>
                     </div>
-                    <input type="number" id=year-min-input class="form-control" name="year-min" [(ngModel)]="releaseYearMin"
+                    <input type="number" id=year-min-input class="form-control" name="year-min"
+                           [(ngModel)]="releaseYearMin"
                            (keyup.enter)="searchBlurMin(currentSearch)" (blur)="searchBlurMin(currentSearch)"/>
                 </div>
                 <div class="input-group mt-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" jhiTranslate="videos.filter.fwebvotesmin">FilmWeb votes min</span>
+                        <span class="input-group-text"
+                              jhiTranslate="videos.filter.fwebvotesmin">FilmWeb votes min</span>
                     </div>
-                    <input type="number" id=fweb-vote-min-input class="form-control" name="fweb-vote-min" [(ngModel)]="fwebVoteMin"
+                    <input type="number" id=fweb-vote-min-input class="form-control" name="fweb-vote-min"
+                           [(ngModel)]="fwebVoteMin"
                            (keyup.enter)="searchBlurMin(currentSearch)" (blur)="searchBlurMin(currentSearch)"/>
                 </div>
                 <div class="input-group mt-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" jhiTranslate="videos.filter.imdbvotesmin">Imdb votes min</span>
                     </div>
-                    <input type="number" id=imdb-vote-min-input class="form-control" name="imdb-vote-min" [(ngModel)]="imdbVoteMin"
+                    <input type="number" id=imdb-vote-min-input class="form-control" name="imdb-vote-min"
+                           [(ngModel)]="imdbVoteMin"
                            (keyup.enter)="searchBlurMin(currentSearch)" (blur)="searchBlurMin(currentSearch)"/>
                 </div>
                 <div class="input-group mt-3 text-nowrap">
@@ -58,15 +63,15 @@
                         <span class="input-group-text" jhiTranslate="videos.filter.genres">Genres</span>
                     </div>
                     <ng-select id="genres-input"
-                        [items]="genres | async"
-                        [multiple]="true"
-                        [closeOnSelect]="false"
-                        [hideSelected]="true"
-                        placeholder=""
-                        name="genres"
-                        bindLabel="name"
-                        (change)="search(currentSearch)"
-                        [(ngModel)]="selectedGenres">
+                               [items]="genres | async"
+                               [multiple]="true"
+                               [closeOnSelect]="false"
+                               [hideSelected]="true"
+                               placeholder=""
+                               name="genres"
+                               bindLabel="name"
+                               (change)="search(currentSearch)"
+                               [(ngModel)]="selectedGenres">
                     </ng-select>
                 </div>
             </form>
@@ -127,29 +132,37 @@
                    [infiniteScrollDistance]="0">
             <tr *ngFor="let video of videos ;trackBy: trackId">
                 <td data-title="">
-                    <a href="https://www.youtube.com/results?search_query={{video.title}} {{video.releaseYear}} trailer">
-                        <div class="boxart-260-146"
-                             lazyLoad="{{video.boxart}}" width="260px" height="146px"
-                             defaultImage='../../content/images/netflixdb_260x146_blur.png'>
+                    <div class="boxart-260-146"
+                         style="position: relative;"
+                         lazyLoad="{{video.boxart}}" width="260px" height="146px"
+                         defaultImage='../../content/images/netflixdb_260x146_blur.png'>
+                        <a href="https://www.youtube.com/results?search_query={{video.title}} {{video.releaseYear}} trailer">
                             <img src="../../../content/images/youtube-play160.png" width="30" height="30" align="right">
-                        </div>
-                    </a>
+                        </a>
+                        <img src="../../../content/images/eye_not_seen.png" width="30" height="30"
+                             style="position: absolute; bottom: 0; right: 0">
+                    </div>
                 </td>
                 <!--<td>{{video.title}}</td>-->
                 <td data-title="{{'videos.entity.fwebtitle' | translate}}:">
                     <div *ngIf="video.fwebTitle" placement="right" class="underline-on-hover"
-                            ngbPopover="{{video.fwebPlot}}" triggers="click:mouseleave">
+                         ngbPopover="{{video.fwebPlot}}" triggers="click:mouseleave">
                         {{video.fwebTitle}}
                     </div>
                     <!--<div>{{video.fwebTitle}}</div>-->
                     <div class="text-muted">{{video.title}}</div>
                 </td>
-                <td data-title="{{'videos.entity.releaseyear' | translate}}:" class="text-right">{{video.releaseYear}}</td>
+                <td data-title="{{'videos.entity.releaseyear' | translate}}:"
+                    class="text-right">{{video.releaseYear}}</td>
                 <td data-title="{{'videos.entity.genre' | translate}}:">{{video.genres}}</td>
-                <td data-title="{{'videos.entity.fwebratingfull' | translate}}:" class="text-right">{{video.fwebRating}}</td>
-                <td data-title="{{'videos.entity.fwebvotesfull' | translate}}:" class="text-right">{{video.fwebVotes}}</td>
-                <td data-title="{{'videos.entity.imdbratingfull' | translate}}:" class="text-right">{{video.imdbRating}}</td>
-                <td data-title="{{'videos.entity.imdbvotesfull' | translate}}:" class="text-right">{{video.imdbVotes}}</td>
+                <td data-title="{{'videos.entity.fwebratingfull' | translate}}:"
+                    class="text-right">{{video.fwebRating}}</td>
+                <td data-title="{{'videos.entity.fwebvotesfull' | translate}}:"
+                    class="text-right">{{video.fwebVotes}}</td>
+                <td data-title="{{'videos.entity.imdbratingfull' | translate}}:"
+                    class="text-right">{{video.imdbRating}}</td>
+                <td data-title="{{'videos.entity.imdbvotesfull' | translate}}:"
+                    class="text-right">{{video.imdbVotes}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit"
