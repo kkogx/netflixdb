@@ -141,6 +141,8 @@ jhipster:
 # ===================================================================
 
 application:
+    sendgrid:
+        api-key: "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"
     alias-by-title: "\
         Seven=Se7en,\"
         Treehouse Detectives=SKIP"

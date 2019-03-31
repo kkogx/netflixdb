@@ -108,8 +108,6 @@ jhipster:
 # ===================================================================
 
 application:
-    sendgrid:
-        api-key: "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"
     omdb-sync:
         api-key: "***REMOVED***"
         force-query-search: true
