@@ -1,16 +1,18 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {ActivatedRoute} from '@angular/router';
-import {Observable, Subscription} from 'rxjs';
-import {JhiAlertService, JhiEventManager, JhiParseLinks} from 'ng-jhipster';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { JhiAlertService, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 
-import {IVideo} from 'app/shared/model/video.model';
-import {Account} from 'app/core/user/account.model';
-import {AccountService} from 'app/core';
+import { IVideo } from 'app/shared/model/video.model';
+import { Account } from 'app/core/user/account.model';
+import { AccountService } from 'app/core';
 
-import {ITEMS_PER_PAGE} from 'app/shared';
-import {VideoService} from './video.service';
-import {IGenre} from 'app/shared/model/genre.model';
+import { ITEMS_PER_PAGE } from 'app/shared';
+import { VideoService } from './video.service';
+import { IGenre } from 'app/shared/model/genre.model';
+import { ISeenOption, SeenOption, SeenOptionId } from 'app/shared/model/seen-option.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'jhi-video',
@@ -38,13 +40,20 @@ export class VideoComponent implements OnInit, OnDestroy {
     genres: Observable<IGenre[]>;
     selectedGenres: IGenre[] = [];
 
+    seenOptions: ISeenOption[] = [
+        new SeenOption(SeenOptionId.YES, this.translateService.instant('videos.filter.seenYes')),
+        new SeenOption(SeenOptionId.NO, this.translateService.instant('videos.filter.seenNo'))
+    ];
+    selectedSeen: ISeenOption;
+
     constructor(
         protected videoService: VideoService,
         protected jhiAlertService: JhiAlertService,
         protected eventManager: JhiEventManager,
         protected parseLinks: JhiParseLinks,
         protected activatedRoute: ActivatedRoute,
-        protected accountService: AccountService
+        protected accountService: AccountService,
+        private translateService: TranslateService
     ) {
         this.videos = [];
         this.itemsPerPage = ITEMS_PER_PAGE;
@@ -70,6 +79,7 @@ export class VideoComponent implements OnInit, OnDestroy {
                     imdbMin: this.imdbVoteMin ? this.imdbVoteMin : 0,
                     yearMin: this.releaseYearMin ? this.releaseYearMin : 0,
                     genres: this.selectedGenres.map(value => value.id),
+                    seen: this.selectedSeen ? this.selectedSeen.id : SeenOptionId.ANY,
                     page: this.page,
                     size: this.itemsPerPage,
                     sort: this.sort()
@@ -208,5 +218,20 @@ export class VideoComponent implements OnInit, OnDestroy {
 
     isAuthenticated() {
         return this.accountService.isAuthenticated();
+    }
+
+    toggleSeen(video: IVideo) {
+        video.seenAnim = true;
+        const endpoint = video.seen ? this.accountService.addSeen : this.accountService.removeSeen;
+        endpoint
+            .call(this.accountService, video.id)
+            .subscribe(response => {
+                if (response.status === 200) {
+                    video.seen = !video.seen;
+                }
+            })
+            .add(() => {
+                video.seenAnim = false;
+            });
     }
 }

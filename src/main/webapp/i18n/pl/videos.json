@@ -29,7 +29,11 @@
             "imdbvotesmin": "Imdb głosy od",
             "imdbvotesmax": "do",
             "genres": "Gatunki",
-            "type": "Typ"
+            "type": "Typ",
+            "seen": "Obejrzane",
+            "seenYes": "Tak",
+            "seenNo": "Nie",
+            "seenAny": "Wszystkie"
         }
     }
 }

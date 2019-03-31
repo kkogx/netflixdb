@@ -39,7 +39,11 @@
 }
 
 #imdb-vote-min-input {
-    width: 120px;
+    width: 100px;
+}
+
+#seen-combo-input {
+    width: 100px;
 }
 
 #genres-input {

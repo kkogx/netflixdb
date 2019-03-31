@@ -1,5 +1,7 @@
 package pl.kogx.netflixdb.service;
 
+import lombok.Builder;
+import lombok.ToString;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -12,15 +14,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.kogx.netflixdb.domain.User;
 import pl.kogx.netflixdb.domain.Video;
 import pl.kogx.netflixdb.repository.search.VideoSearchRepository;
+import pl.kogx.netflixdb.service.dto.SeenOption;
 import pl.kogx.netflixdb.service.dto.VideoDTO;
 import pl.kogx.netflixdb.service.util.NullAwareBeanUtilsBean;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
@@ -35,8 +36,11 @@ public class VideoService {
 
     private final VideoSearchRepository videoSearchRepository;
 
-    public VideoService(VideoSearchRepository videoSearchRepository) {
+    private final UserService userService;
+
+    public VideoService(VideoSearchRepository videoSearchRepository, UserService userService) {
         this.videoSearchRepository = videoSearchRepository;
+        this.userService = userService;
     }
 
     public VideoDTO updateVideo(VideoDTO videoDTO) {
@@ -131,27 +135,48 @@ public class VideoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Video> search(String query, Integer fwebMin, Integer imdbMin, Integer yearMin, String[] types, Integer[] genres, Pageable pageable) {
-        log.info("Request to search for a page of Videos for query={} fs={} is={} ym={} t={}, g={}", query, fwebMin, imdbMin, yearMin, types, genres);
+    public Page<Video> search(SearchParams params) {
+        log.info("Request to search for a page of Videos for params={}", params.toString());
+        Page<Video> page = doSearch(params);
+        if (params.seen != null && params.seen != SeenOption.ANY) {
+            Optional<User> user = userService.getUserWithAuthorities();
+            if (user.isPresent()) {
+                Set<Long> seen = User.collectSeenIds(user.get());
+                page.filter(video -> {
+                    switch (params.seen) {
+                        case YES:
+                            return seen.contains(video.getId());
+                        case NO:
+                            return !seen.contains(video.getId());
+                        default:
+                            throw new RuntimeException("Invalid seen value");
+                    }
+                });
+            }
+        }
+        return page;
+    }
+
+    public Page<Video> doSearch(SearchParams params) {
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
-        if (StringUtils.isEmpty(query)) {
-            query = "*";
+        if (StringUtils.isEmpty(params.query)) {
+            params.query = "*";
         }
-        builder = builder.must(queryStringQuery(query).field("title").field("fwebTitle"));
-        builder = applyMustBetween(builder, fwebMin, -1, "fwebVotes");
-        builder = applyMustBetween(builder, imdbMin, -1, "imdbVotes");
-        builder = applyMustBetween(builder, yearMin, -1, "releaseYear");
-        if (!ArrayUtils.isEmpty(genres)) {
-            builder = builder.must(QueryBuilders.termsQuery("genreIds", genres));
+        builder = builder.must(queryStringQuery(params.query).field("title").field("fwebTitle"));
+        builder = applyMustBetween(builder, params.fwebMin, -1, "fwebVotes");
+        builder = applyMustBetween(builder, params.imdbMin, -1, "imdbVotes");
+        builder = applyMustBetween(builder, params.yearMin, -1, "releaseYear");
+        if (!ArrayUtils.isEmpty(params.genres)) {
+            builder = builder.must(QueryBuilders.termsQuery("genreIds", params.genres));
         }
-        if (!ArrayUtils.isEmpty(types)) {
-            builder = builder.must(QueryBuilders.termsQuery("type", types));
+        if (!ArrayUtils.isEmpty(params.types)) {
+            builder = builder.must(QueryBuilders.termsQuery("type", params.types));
         }
 
         // filter out results without imdb and fweb ratings
         builder.should(QueryBuilders.existsQuery("omdbAvailable"));
         builder.should(QueryBuilders.existsQuery("fwebAvailable"));
-        return videoSearchRepository.search(builder, pageable);
+        return videoSearchRepository.search(builder, params.pageable);
     }
 
     private BoolQueryBuilder applyMustBetween(BoolQueryBuilder builder, Integer min, Integer max, String name) {
@@ -183,5 +208,18 @@ public class VideoService {
         List<Video> result = new ArrayList<>();
         videoSearchRepository.search(builder).forEach(result::add);
         return result;
+    }
+
+    @Builder
+    @ToString
+    public static final class SearchParams {
+        String query;
+        Integer fwebMin;
+        Integer imdbMin;
+        Integer yearMin;
+        String[] types;
+        Integer[] genres;
+        SeenOption seen;
+        Pageable pageable;
     }
 }
