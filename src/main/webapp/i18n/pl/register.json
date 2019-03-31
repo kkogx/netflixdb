@@ -13,7 +13,7 @@
                     "pattern": "Twój login może zawierać tylko małe litery i cyfry"
                 }
             },
-            "success": "<strong>Rejestracja udała się!</strong> Wysłaliśmy do Ciebie email z linkiem do weryfikacji konta i prosimy abyś sprawdził swoją skrzynkę pocztową.",
+            "success": "<strong>Rejestracja udała się!</strong> Wysłaliśmy do Ciebie email z linkiem do weryfikacji konta i prosimy abyś sprawdził swoją skrzynkę pocztową (w tym katalog Spam).",
             "error": {
                 "fail": "<strong>Rejestracja nieudana!</strong> Prosimy spróbować później.",
                 "userexists": "<strong>Użytkownik z taką nazwą już istnieje!</strong> Prosimy wybrać inną nazwę.",
