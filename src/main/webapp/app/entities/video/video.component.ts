@@ -222,12 +222,19 @@ export class VideoComponent implements OnInit, OnDestroy {
 
     toggleSeen(video: IVideo) {
         video.seenAnim = true;
-        const endpoint = video.seen ? this.accountService.addSeen : this.accountService.removeSeen;
-        endpoint
+
+        const isMarkAsSeen = !video.seen;
+        (isMarkAsSeen ? this.accountService.addSeen : this.accountService.removeSeen)
             .call(this.accountService, video.id)
             .subscribe(response => {
                 if (response.status === 200) {
-                    video.seen = !video.seen;
+                    if (isMarkAsSeen) {
+                        video.seen = true;
+                        this.currentAccount.seenVideoIds.push(video.id);
+                    } else {
+                        video.seen = false;
+                        this.currentAccount.seenVideoIds = this.currentAccount.seenVideoIds.filter(v => v != video.id);
+                    }
                 }
             })
             .add(() => {
