@@ -233,7 +233,7 @@ export class VideoComponent implements OnInit, OnDestroy {
                         this.currentAccount.seenVideoIds.push(video.id);
                     } else {
                         video.seen = false;
-                        this.currentAccount.seenVideoIds = this.currentAccount.seenVideoIds.filter(v => v != video.id);
+                        this.currentAccount.seenVideoIds = this.currentAccount.seenVideoIds.filter(v => v !== video.id);
                     }
                 }
             })
