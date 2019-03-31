@@ -74,6 +74,23 @@
                                [(ngModel)]="selectedGenres">
                     </ng-select>
                 </div>
+                <div *ngIf="isAuthenticated()" class="input-group mt-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"
+                              jhiTranslate="videos.filter.seen">Seen</span>
+                    </div>
+                    <ng-select id="seen-combo-input"
+                               [items]="seenOptions"
+                               [multiple]="false"
+                               [closeOnSelect]="true"
+                               [hideSelected]="false"
+                               placeholder=""
+                               name="seen-combo"
+                               bindLabel="name"
+                               (change)="search(currentSearch)"
+                               [(ngModel)]="selectedSeen">
+                    </ng-select>
+                </div>
             </form>
         </div>
     </div>
@@ -139,7 +156,9 @@
                             <img src="../../../content/images/youtube-play160.png" width="30" height="30" align="right">
                         </a>
                         <img *ngIf="isAuthenticated()" class="fav-eye"
-                             [src]="video.seen ? '../../../content/images/icons8-eye-24-yellow.png' :
+                             (click)="toggleSeen(video)"
+                             [src]="video.seenAnim ? '../../../content/images/icons8-eye-24-blend1.gif' :
+                                        video.seen ? '../../../content/images/icons8-eye-24-yellow.png' :
                                                  '../../../content/images/icons8-eye-24.png'">
                     </div>
                 </td>

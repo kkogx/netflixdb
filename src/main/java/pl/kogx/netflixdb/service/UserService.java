@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserService {
 
-    private static final String FAV_SEPARATOR = UserDTO.SEEN_SEPARATOR;
+    private static final String FAV_SEPARATOR = User.SEEN_SEPARATOR;
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 

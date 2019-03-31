@@ -12,10 +12,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A user.
@@ -27,6 +25,8 @@ import java.util.Set;
 public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    public static final String SEEN_SEPARATOR = ";";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -239,5 +239,12 @@ public class User extends AbstractAuditingEntity implements Serializable {
             ", langKey='" + langKey + '\'' +
             ", activationKey='" + activationKey + '\'' +
             "}";
+    }
+
+    public static Set<Long> collectSeenIds(User user) {
+        return Arrays.stream(user.getFavourites().split(SEEN_SEPARATOR))
+            .filter(f -> StringUtils.isNotBlank(f))
+            .map(Long::parseLong)
+            .collect(Collectors.toSet());
     }
 }

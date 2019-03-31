@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.kogx.netflixdb.domain.Genre;
 import pl.kogx.netflixdb.domain.Video;
 import pl.kogx.netflixdb.service.VideoService;
+import pl.kogx.netflixdb.service.dto.SeenOption;
 import pl.kogx.netflixdb.service.dto.VideoDTO;
 import pl.kogx.netflixdb.service.util.GenreResolver;
 import pl.kogx.netflixdb.web.rest.errors.BadRequestAlertException;
@@ -162,10 +163,19 @@ public class VideoResource {
 
     @GetMapping("/_search/videos/range")
     public ResponseEntity<List<VideoDTO>> searchVideos(@RequestParam String query, @RequestParam Integer fwebMin,
-                                                    @RequestParam Integer imdbMin, @RequestParam Integer yearMin,
-                                                    @RequestParam Integer[] genres, Pageable pageable) {
+                                                       @RequestParam Integer imdbMin, @RequestParam Integer yearMin,
+                                                       @RequestParam Integer[] genres, @RequestParam SeenOption seen,
+                                                       Pageable pageable) {
         log.debug("REST request to search for a page of Videos for query {}", query);
-        Page<Video> page = videoService.search(query, fwebMin, imdbMin, yearMin, null, genres, pageable);
+        VideoService.SearchParams params = VideoService.SearchParams.builder()
+            .query(query)
+            .fwebMin(fwebMin)
+            .imdbMin(imdbMin)
+            .yearMin(yearMin)
+            .genres(genres)
+            .seen(seen)
+            .pageable(pageable).build();
+        Page<Video> page = videoService.search(params);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/videos/range");
         return new ResponseEntity<>(page.getContent()
             .stream()
@@ -175,10 +185,20 @@ public class VideoResource {
 
     @GetMapping("/_search/videos/range/film")
     public ResponseEntity<List<VideoDTO>> searchFilms(@RequestParam String query, @RequestParam Integer fwebMin,
-                                                   @RequestParam Integer imdbMin, @RequestParam Integer yearMin,
-                                                   @RequestParam Integer[] genres, Pageable pageable) {
+                                                      @RequestParam Integer imdbMin, @RequestParam Integer yearMin,
+                                                      @RequestParam Integer[] genres, @RequestParam SeenOption seen,
+                                                      Pageable pageable) {
         log.debug("REST request to search for a page of Films for query {}", query);
-        Page<Video> page = videoService.search(query, fwebMin, imdbMin, yearMin, new String[]{"movie"}, genres, pageable);
+        VideoService.SearchParams params = VideoService.SearchParams.builder()
+            .query(query)
+            .fwebMin(fwebMin)
+            .imdbMin(imdbMin)
+            .yearMin(yearMin)
+            .types(new String[]{"movie"})
+            .seen(seen)
+            .genres(genres)
+            .pageable(pageable).build();
+        Page<Video> page = videoService.search(params);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/videos/range/film");
         return new ResponseEntity<>(page.getContent()
             .stream()
@@ -188,10 +208,20 @@ public class VideoResource {
 
     @GetMapping("/_search/videos/range/show")
     public ResponseEntity<List<VideoDTO>> searchShows(@RequestParam String query, @RequestParam Integer fwebMin,
-                                                   @RequestParam Integer imdbMin, @RequestParam Integer yearMin,
-                                                   @RequestParam Integer[] genres, Pageable pageable) {
+                                                      @RequestParam Integer imdbMin, @RequestParam Integer yearMin,
+                                                      @RequestParam Integer[] genres, @RequestParam SeenOption seen,
+                                                      Pageable pageable) {
         log.debug("REST request to search for a page of Shows for query {}", query);
-        Page<Video> page = videoService.search(query, fwebMin, imdbMin, yearMin, new String[]{"show"}, genres, pageable);
+        VideoService.SearchParams params = VideoService.SearchParams.builder()
+            .query(query)
+            .fwebMin(fwebMin)
+            .imdbMin(imdbMin)
+            .yearMin(yearMin)
+            .types(new String[]{"show"})
+            .seen(seen)
+            .genres(genres)
+            .pageable(pageable).build();
+        Page<Video> page = videoService.search(params);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/videos/range/show");
         return new ResponseEntity<>(page.getContent()
             .stream()

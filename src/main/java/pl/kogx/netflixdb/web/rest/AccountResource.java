@@ -122,8 +122,8 @@ public class AccountResource {
             userDTO.getLangKey(), userDTO.getImageUrl());
     }
 
-    @PostMapping("/account/seen")
-    public void addSeen(@Valid @RequestBody Long videoId) {
+    @PostMapping("/account/seen/{videoId}")
+    public void addSeen(@PathVariable Long videoId) {
         String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new InternalServerErrorException("Current user login not found"));
         Optional<User> user = userRepository.findOneByLogin(userLogin);
         if (!user.isPresent()) {
@@ -132,8 +132,8 @@ public class AccountResource {
         userService.addSeen(videoId);
     }
 
-    @DeleteMapping("/account/seen")
-    public void removeSeen(@Valid @RequestBody Long videoId) {
+    @DeleteMapping("/account/seen/{videoId}")
+    public void removeSeen(@PathVariable Long videoId) {
         String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new InternalServerErrorException("Current user login not found"));
         Optional<User> user = userRepository.findOneByLogin(userLogin);
         if (!user.isPresent()) {

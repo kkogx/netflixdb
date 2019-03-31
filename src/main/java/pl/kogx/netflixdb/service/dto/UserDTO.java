@@ -9,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,8 +16,6 @@ import java.util.stream.Collectors;
  * A DTO representing a user, with his authorities.
  */
 public class UserDTO {
-
-    public static final String SEEN_SEPARATOR = ";";
 
     private Long id;
 
@@ -74,9 +71,7 @@ public class UserDTO {
         this.createdDate = user.getCreatedDate();
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
-        this.seenVideoIds = Arrays.stream(user.getFavourites().split(SEEN_SEPARATOR))
-            .map(Long::parseLong)
-            .collect(Collectors.toSet());
+        this.seenVideoIds = User.collectSeenIds(user);
         this.authorities = user.getAuthorities().stream()
             .map(Authority::getName)
             .collect(Collectors.toSet());
