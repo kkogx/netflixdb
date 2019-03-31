@@ -31,6 +31,8 @@ public class ApplicationProperties {
 
     public final OmdbSync omdbSync = new OmdbSync();
 
+    public final Sendgrid sendgrid = new Sendgrid();
+
     public final FwebSync fwebSync = new FwebSync();
 
     public final Przelewy24 przelewy24 = new Przelewy24();
@@ -49,6 +51,10 @@ public class ApplicationProperties {
 
     public OmdbSync getOmdbSync() {
         return omdbSync;
+    }
+
+    public Sendgrid getSendgrid() {
+        return sendgrid;
     }
 
     public static class Przelewy24 {
@@ -120,6 +126,19 @@ public class ApplicationProperties {
         public void setForceQuerySearch(Boolean forceQuerySearch) {
             this.forceQuerySearch = forceQuerySearch;
         }
+
+        public String getApiKey() {
+            return apiKey;
+        }
+
+        public void setApiKey(String apiKey) {
+            this.apiKey = apiKey;
+        }
+    }
+
+    public static class Sendgrid {
+
+        private String apiKey;
 
         public String getApiKey() {
             return apiKey;

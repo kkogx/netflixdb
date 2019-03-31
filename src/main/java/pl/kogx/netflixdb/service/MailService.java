@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.domain.User;
 
 import java.io.IOException;
@@ -22,13 +23,11 @@ import java.util.Locale;
 @Service
 public class MailService {
 
-    private static final String SENDGRID_API_KEY = "***REMOVED***";
-
-    private final Logger log = LoggerFactory.getLogger(MailService.class);
-
     private static final String USER = "user";
 
     private static final String BASE_URL = "baseUrl";
+
+    private final Logger log = LoggerFactory.getLogger(MailService.class);
 
     private final JHipsterProperties jHipsterProperties;
 
@@ -36,11 +35,15 @@ public class MailService {
 
     private final SpringTemplateEngine templateEngine;
 
+    private final ApplicationProperties properties;
+
     public MailService(JHipsterProperties jHipsterProperties,
-            MessageSource messageSource, SpringTemplateEngine templateEngine) {
+                       MessageSource messageSource, SpringTemplateEngine templateEngine,
+                       ApplicationProperties properties) {
         this.jHipsterProperties = jHipsterProperties;
         this.messageSource = messageSource;
         this.templateEngine = templateEngine;
+        this.properties = properties;
     }
 
     @Async
@@ -58,7 +61,7 @@ public class MailService {
         Content sgcontent = new Content(mime, content);
         Mail mail = new Mail(from, subject, to, sgcontent);
 
-        SendGrid sg = new SendGrid(SENDGRID_API_KEY);
+        SendGrid sg = new SendGrid(properties.getSendgrid().getApiKey());
         Request request = new Request();
         try {
             request.setMethod(Method.POST);
