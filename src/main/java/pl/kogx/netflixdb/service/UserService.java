@@ -24,10 +24,7 @@ import pl.kogx.netflixdb.web.rest.errors.LoginAlreadyUsedException;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +33,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class UserService {
+
+    private static final String FAV_SEPARATOR = User.SEEN_SEPARATOR;
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
@@ -284,5 +283,37 @@ public class UserService {
      */
     public List<String> getAuthorities() {
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
+    }
+
+    public void addSeen(Long videoId) {
+        SecurityUtils.getCurrentUserLogin()
+            .flatMap(userRepository::findOneByLogin)
+            .ifPresent(user -> {
+                user.setFavourites(addFavourite(user.getFavourites(), videoId));
+                userSearchRepository.save(user);
+                log.debug("Added favourite {} for User: {}", videoId, user);
+            });
+    }
+
+    public void removeSeen(Long videoId) {
+        SecurityUtils.getCurrentUserLogin()
+            .flatMap(userRepository::findOneByLogin)
+            .ifPresent(user -> {
+                user.setFavourites(removeFavourite(user.getFavourites(), videoId));
+                userSearchRepository.save(user);
+                log.debug("Removed favourite {} for User: {}", videoId, user);
+            });
+    }
+
+    private String addFavourite(String favourites, Long videoId) {
+        Set<String> favs = new HashSet<>(Arrays.asList(favourites.split(FAV_SEPARATOR)));
+        favs.add(videoId.toString());
+        return String.join(FAV_SEPARATOR, favs);
+    }
+
+    private String removeFavourite(String favourites, Long videoId) {
+        Set<String> favs = new HashSet<>(Arrays.asList(favourites.split(FAV_SEPARATOR)));
+        favs.remove(videoId.toString());
+        return String.join(FAV_SEPARATOR, favs);
     }
 }

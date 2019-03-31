@@ -1,14 +1,13 @@
 package pl.kogx.netflixdb.service.dto;
 
 import pl.kogx.netflixdb.config.Constants;
-
 import pl.kogx.netflixdb.domain.Authority;
 import pl.kogx.netflixdb.domain.User;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-
-import javax.validation.constraints.*;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -51,6 +50,8 @@ public class UserDTO {
 
     private Instant lastModifiedDate;
 
+    private Set<Long> seenVideoIds;
+
     private Set<String> authorities;
 
     public UserDTO() {
@@ -70,6 +71,7 @@ public class UserDTO {
         this.createdDate = user.getCreatedDate();
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
+        this.seenVideoIds = User.collectSeenIds(user);
         this.authorities = user.getAuthorities().stream()
             .map(Authority::getName)
             .collect(Collectors.toSet());
@@ -177,6 +179,14 @@ public class UserDTO {
 
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
+    }
+
+    public Set<Long> getSeenVideoIds() {
+        return seenVideoIds;
+    }
+
+    public void setSeenVideoIds(Set<Long> seenVideoIds) {
+        this.seenVideoIds = seenVideoIds;
     }
 
     @Override

@@ -111,4 +111,12 @@ export class AccountService {
     getImageUrl(): string {
         return this.isIdentityResolved() ? this.userIdentity.imageUrl : null;
     }
+
+    addSeen(id: number): Observable<HttpResponse<any>> {
+        return this.http.post<any>(`${SERVER_API_URL}api/account/seen/${id}`, {}, { observe: 'response' });
+    }
+
+    removeSeen(id: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(`${SERVER_API_URL}api/account/seen/${id}`, { observe: 'response' });
+    }
 }

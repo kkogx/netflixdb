@@ -122,6 +122,26 @@ public class AccountResource {
             userDTO.getLangKey(), userDTO.getImageUrl());
     }
 
+    @PostMapping("/account/seen/{videoId}")
+    public void addSeen(@PathVariable Long videoId) {
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new InternalServerErrorException("Current user login not found"));
+        Optional<User> user = userRepository.findOneByLogin(userLogin);
+        if (!user.isPresent()) {
+            throw new InternalServerErrorException("User could not be found");
+        }
+        userService.addSeen(videoId);
+    }
+
+    @DeleteMapping("/account/seen/{videoId}")
+    public void removeSeen(@PathVariable Long videoId) {
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new InternalServerErrorException("Current user login not found"));
+        Optional<User> user = userRepository.findOneByLogin(userLogin);
+        if (!user.isPresent()) {
+            throw new InternalServerErrorException("User could not be found");
+        }
+        userService.removeSeen(videoId);
+    }
+
     /**
      * POST  /account/change-password : changes the current user's password
      *

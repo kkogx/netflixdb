@@ -1,8 +1,11 @@
 package pl.kogx.netflixdb.service;
 
+import lombok.Builder;
+import lombok.ToString;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.slf4j.Logger;
@@ -12,15 +15,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.kogx.netflixdb.domain.User;
 import pl.kogx.netflixdb.domain.Video;
 import pl.kogx.netflixdb.repository.search.VideoSearchRepository;
+import pl.kogx.netflixdb.service.dto.SeenOption;
 import pl.kogx.netflixdb.service.dto.VideoDTO;
 import pl.kogx.netflixdb.service.util.NullAwareBeanUtilsBean;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
@@ -35,8 +37,11 @@ public class VideoService {
 
     private final VideoSearchRepository videoSearchRepository;
 
-    public VideoService(VideoSearchRepository videoSearchRepository) {
+    private final UserService userService;
+
+    public VideoService(VideoSearchRepository videoSearchRepository, UserService userService) {
         this.videoSearchRepository = videoSearchRepository;
+        this.userService = userService;
     }
 
     public VideoDTO updateVideo(VideoDTO videoDTO) {
@@ -131,41 +136,45 @@ public class VideoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Video> search(String query, Integer fwebMin, Integer imdbMin, Integer yearMin, String[] types, Integer[] genres, Pageable pageable) {
-        log.info("Request to search for a page of Videos for query={} fs={} is={} ym={} t={}, g={}", query, fwebMin, imdbMin, yearMin, types, genres);
-        BoolQueryBuilder builder = QueryBuilders.boolQuery();
-        if (StringUtils.isEmpty(query)) {
-            query = "*";
+    public Page<Video> search(SearchParams params) {
+        log.info("Request to search for a page of Videos for params={}", params.toString());
+        Page<Video> page = doSearch(params);
+        return page;
+    }
+
+    public Page<Video> doSearch(SearchParams params) {
+        NdbBoolQueryBuilder builder = new NdbBoolQueryBuilder();
+        if (StringUtils.isEmpty(params.query)) {
+            params.query = "*";
         }
-        builder = builder.must(queryStringQuery(query).field("title").field("fwebTitle"));
-        builder = applyMustBetween(builder, fwebMin, -1, "fwebVotes");
-        builder = applyMustBetween(builder, imdbMin, -1, "imdbVotes");
-        builder = applyMustBetween(builder, yearMin, -1, "releaseYear");
-        if (!ArrayUtils.isEmpty(genres)) {
-            builder = builder.must(QueryBuilders.termsQuery("genreIds", genres));
+        builder = builder.must(queryStringQuery(params.query).field("title").field("fwebTitle"));
+        builder = builder.mustBetween(params.fwebMin, -1, "fwebVotes");
+        builder = builder.mustBetween(params.imdbMin, -1, "imdbVotes");
+        builder = builder.mustBetween(params.yearMin, -1, "releaseYear");
+        if (!ArrayUtils.isEmpty(params.genres)) {
+            builder = builder.must(QueryBuilders.termsQuery("genreIds", params.genres));
         }
-        if (!ArrayUtils.isEmpty(types)) {
-            builder = builder.must(QueryBuilders.termsQuery("type", types));
+        if (!ArrayUtils.isEmpty(params.types)) {
+            builder = builder.must(QueryBuilders.termsQuery("type", params.types));
         }
 
         // filter out results without imdb and fweb ratings
         builder.should(QueryBuilders.existsQuery("omdbAvailable"));
         builder.should(QueryBuilders.existsQuery("fwebAvailable"));
-        return videoSearchRepository.search(builder, pageable);
-    }
 
-    private BoolQueryBuilder applyMustBetween(BoolQueryBuilder builder, Integer min, Integer max, String name) {
-        if (min <= 0 && max <= 0) {
-            return builder;
+        //filter by seen attribute
+        if (EnumSet.of(SeenOption.YES, SeenOption.NO).contains(params.seen)) {
+            Optional<User> user = userService.getUserWithAuthorities();
+            if (user.isPresent()) {
+                Set<Long> seen = User.collectSeenIds(user.get());
+                if(params.seen == SeenOption.YES) {
+                    builder = builder.must(QueryBuilders.termsQuery("id", seen));
+                } else if(params.seen == SeenOption.NO) {
+                    builder = builder.mustNot(QueryBuilders.termsQuery("id", seen));
+                }
+            }
         }
-        RangeQueryBuilder betweenBuilder = QueryBuilders.rangeQuery(name);
-        if (min > 0) {
-            betweenBuilder = betweenBuilder.gte(min);
-        }
-        if (max > 0) {
-            betweenBuilder = betweenBuilder.lte(max);
-        }
-        return builder.must(betweenBuilder);
+        return videoSearchRepository.search(builder, params.pageable);
     }
 
     public void deleteAll() {
@@ -183,5 +192,45 @@ public class VideoService {
         List<Video> result = new ArrayList<>();
         videoSearchRepository.search(builder).forEach(result::add);
         return result;
+    }
+
+    @Builder
+    @ToString
+    public static final class SearchParams {
+        String query;
+        Integer fwebMin;
+        Integer imdbMin;
+        Integer yearMin;
+        String[] types;
+        Integer[] genres;
+        SeenOption seen;
+        Pageable pageable;
+    }
+
+    private static class NdbBoolQueryBuilder extends BoolQueryBuilder {
+
+        private NdbBoolQueryBuilder mustBetween(Integer min, Integer max, String name) {
+            if (min <= 0 && max <= 0) {
+                return this;
+            }
+            RangeQueryBuilder betweenBuilder = QueryBuilders.rangeQuery(name);
+            if (min > 0) {
+                betweenBuilder = betweenBuilder.gte(min);
+            }
+            if (max > 0) {
+                betweenBuilder = betweenBuilder.lte(max);
+            }
+            return this.must(betweenBuilder);
+        }
+
+        @Override
+        public NdbBoolQueryBuilder must(QueryBuilder queryBuilder) {
+            return (NdbBoolQueryBuilder) super.must(queryBuilder);
+        }
+
+        @Override
+        public NdbBoolQueryBuilder mustNot(QueryBuilder queryBuilder) {
+            return (NdbBoolQueryBuilder) super.mustNot(queryBuilder);
+        }
     }
 }

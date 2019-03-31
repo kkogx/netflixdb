@@ -1,22 +1,19 @@
 package pl.kogx.netflixdb.domain;
 
-import pl.kogx.netflixdb.config.Constants;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.BatchSize;
-import javax.validation.constraints.Email;
+import pl.kogx.netflixdb.config.Constants;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Set;
 import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A user.
@@ -28,6 +25,8 @@ import java.time.Instant;
 public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    public static final String SEEN_SEPARATOR = ";";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,6 +81,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @Column(name = "reset_date")
     private Instant resetDate = null;
+
+    @Column(name = "favourites", columnDefinition = "CLOB NOT NULL")
+    @Lob
+    private String favourites;
 
     @JsonIgnore
     @ManyToMany
@@ -190,6 +193,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.langKey = langKey;
     }
 
+    public String getFavourites() {
+        return favourites == null ? "" : favourites;
+    }
+
+    public void setFavourites(String favourites) {
+        this.favourites = favourites;
+    }
+
     public Set<Authority> getAuthorities() {
         return authorities;
     }
@@ -228,5 +239,12 @@ public class User extends AbstractAuditingEntity implements Serializable {
             ", langKey='" + langKey + '\'' +
             ", activationKey='" + activationKey + '\'' +
             "}";
+    }
+
+    public static Set<Long> collectSeenIds(User user) {
+        return Arrays.stream(user.getFavourites().split(SEEN_SEPARATOR))
+            .filter(f -> StringUtils.isNotBlank(f))
+            .map(Long::parseLong)
+            .collect(Collectors.toSet());
     }
 }
