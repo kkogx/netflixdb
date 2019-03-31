@@ -68,7 +68,7 @@ public class MailService {
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
             Response response = sg.api(request);
-            log.info("Mail sent to {}, response code {}", recipient, response.getStatusCode());
+            log.info("Mail sent to {}, response code {}, body {}", recipient, response.getStatusCode(), response.getBody());
         } catch (IOException e) {
             if (log.isDebugEnabled()) {
                 log.warn("Email could not be sent to user '{}'", to, e);
