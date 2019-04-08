@@ -116,8 +116,8 @@ public class NetflixSyncService extends AbstractSyncService {
                 videoDTO.setGenreIds(genreIds);
                 videoDTO.setGenre(genre);
                 videoService.updateVideo(videoDTO);
+                count += 1;
             }
-            count += 1;
         }
 
         return count;

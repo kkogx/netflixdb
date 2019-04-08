@@ -23,6 +23,8 @@ import pl.kogx.netflixdb.service.dto.VideoDTO;
 import pl.kogx.netflixdb.service.util.NullAwareBeanUtilsBean;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
@@ -86,7 +88,8 @@ public class VideoService {
     @Transactional(readOnly = true)
     public List<Long> getAllIds() {
         log.debug("Request to get all Video ids");
-        return videoSearchRepository.getAllIds();
+        return StreamSupport.stream(videoSearchRepository.findAll().spliterator(), false)
+            .map(v -> v.getId()).collect(Collectors.toList());
     }
 
     /**
