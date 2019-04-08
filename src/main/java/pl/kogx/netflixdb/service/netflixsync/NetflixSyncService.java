@@ -14,6 +14,7 @@ import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.service.VideoService;
 import pl.kogx.netflixdb.service.dto.VideoDTO;
 import pl.kogx.netflixdb.service.sync.AbstractSyncService;
+import pl.kogx.netflixdb.service.sync.AllowedByIdPolicy;
 import pl.kogx.netflixdb.service.util.GenreResolver;
 import pl.kogx.netflixdb.service.util.JsonObject;
 
@@ -34,10 +35,10 @@ public class NetflixSyncService extends AbstractSyncService {
     }
 
     @Override
-    public Tuple<Long, Long> doSyncAll() throws InterruptedException {
+    public Tuple<Long, Long> doSyncAll(AllowedByIdPolicy allowedById) throws InterruptedException {
         Date timestamp = new Date();
-        Tuple<Long, Long> countTotal = super.doSyncAll();
-        videoService.deleteByTimestampBefore(timestamp);
+        Tuple<Long, Long> countTotal = super.doSyncAll(allowedById);
+        videoService.deleteByTimestampBefore(timestamp); // remove old videos
         return countTotal;
     }
 
@@ -51,22 +52,22 @@ public class NetflixSyncService extends AbstractSyncService {
     }
 
     @Override
-    protected Tuple<Integer, Integer> syncByGenre(String genreId, String genreName) throws InterruptedException {
+    protected Tuple<Integer, Integer> syncByGenre(AllowedByIdPolicy allowedById, String genreId, String genreName) throws InterruptedException {
         try {
-            return doSyncByGenre(genreId, genreName);
+            return doSyncByGenre(allowedById, genreId, genreName);
         } catch (JsonObject.JsonUnmarshallException e) {
             log.error("Unable to process the response, API has changed?", e);
             throw new RuntimeException(e);
         }
     }
 
-    private Tuple<Integer, Integer> doSyncByGenre(String genreId, String genreName) throws JsonObject.JsonUnmarshallException, InterruptedException {
+    private Tuple<Integer, Integer> doSyncByGenre(AllowedByIdPolicy allowedById, String genreId, String genreName) throws JsonObject.JsonUnmarshallException, InterruptedException {
         log.info("Fetching by genre id={}, name={}", genreId, genreName);
         final int BLOCK_SIZE = applicationProperties.getNetflixSync().getRequestBlockSize();
         int from = 0, countTotal = 0, count;
         int to = BLOCK_SIZE;
         do {
-            count = syncByGenre(genreId, genreName, from, to);
+            count = syncByGenre(allowedById, genreId, genreName, from, to);
             from = to;
             to += BLOCK_SIZE;
             if (count > 0) {
@@ -81,9 +82,8 @@ public class NetflixSyncService extends AbstractSyncService {
         return Tuple.tuple(countTotal, 0);
     }
 
-    private int syncByGenre(String genreId, String genre, int from, int to) throws JsonObject.JsonUnmarshallException, InterruptedException {
+    private int syncByGenre(AllowedByIdPolicy allowedById, String genreId, String genre, int from, int to) throws JsonObject.JsonUnmarshallException, InterruptedException {
 
-        int count = 0;
 
         HttpEntity<String> request = requestBuilder.body(genreId, from, to).build();
 
@@ -92,12 +92,18 @@ public class NetflixSyncService extends AbstractSyncService {
             HttpMethod.POST, request, String.class);
 
         // Process the result
-        if (response.getStatusCode() == HttpStatus.OK) {
-            JSONArray videos = JsonPath.read(response.getBody(), "$..videos.*");
-            for (Object video : videos) {
-                super.checkIfNotInterrupted();
-                JsonObject json = new JsonObject(video);
-                Long id = json.get("summary").get("value").getLong("id");
+        if (response.getStatusCode() != HttpStatus.OK) {
+            log.warn("Invalid HttpStatus retrieved when fetching by genre, status={}", response.getStatusCode());
+            return 0;
+        }
+
+        JSONArray videos = JsonPath.read(response.getBody(), "$..videos.*");
+        int count = 0;
+        for (Object video : videos) {
+            super.checkIfNotInterrupted();
+            JsonObject json = new JsonObject(video);
+            Long id = json.get("summary").get("value").getLong("id");
+            if (allowedById.test(id)) {
                 VideoDTO videoDTO = Optional.ofNullable(videoService.findById(id)).orElse(new VideoDTO());
                 mapToVideoDTO(json, videoDTO);
                 List<Long> genreIds = new ArrayList<>(videoDTO.getGenreIds());
@@ -105,10 +111,8 @@ public class NetflixSyncService extends AbstractSyncService {
                 videoDTO.setGenreIds(genreIds);
                 videoDTO.setGenre(genre);
                 videoService.updateVideo(videoDTO);
-                count += 1;
             }
-        } else {
-            log.warn("Invalid HttpStatus retrieved when fetching by genre, status={}", response.getStatusCode());
+            count += 1;
         }
 
         return count;

@@ -4,7 +4,10 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+import org.springframework.data.jpa.repository.Query;
 import pl.kogx.netflixdb.domain.Video;
+
+import java.util.List;
 
 /**
  * Spring Data Elasticsearch repository for the Video entity.
@@ -20,5 +23,8 @@ public interface VideoSearchRepository extends ElasticsearchRepository<Video, Lo
     void deleteByTimestampBefore(long timestamp);
 
     long countByGenreIds(long genreId);
+
+    @Query("select p.id from #{#entityName} p")
+    List<Long> getAllIds();
 }
 

@@ -14,8 +14,11 @@ import pl.kogx.netflixdb.service.fwebsync.FwebSyncService;
 import pl.kogx.netflixdb.service.netflixsync.NetflixSyncService;
 import pl.kogx.netflixdb.service.omdbsync.OmdbSyncService;
 import pl.kogx.netflixdb.service.sync.AbstractSyncService;
+import pl.kogx.netflixdb.service.sync.AllowedByIdPolicy;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing syncAll service.
@@ -77,9 +80,22 @@ public class SyncController {
     public void sync() {
         log.info("all");
         netflixSyncService.deleteAll();
-        netflixSyncService.syncAll();
-        omdbSyncService.syncAll();
-        fwebSyncService.syncAll();
+        this.doSync(AllowedByIdPolicy.ALL_ALLOWED);
+    }
+
+    @Async
+    @PostMapping("/sync/new")
+    //@Secured(AuthoritiesConstants.ADMIN)
+    public void syncNew() {
+        log.info("new");
+        Set<Long> ids = new HashSet<>(videoService.getAllIds());
+        this.doSync(id -> !ids.contains(id));
+    }
+
+    private void doSync(AllowedByIdPolicy policy) {
+        netflixSyncService.syncAll(policy);
+        omdbSyncService.syncAll(policy);
+        fwebSyncService.syncAll(policy);
     }
 
     @Async

@@ -71,7 +71,7 @@ public abstract class AbstractRepoSyncService extends AbstractSyncService {
     protected abstract boolean doSyncVideo(VideoDTO video, String title);
 
     @Override
-    protected Tuple<Integer, Integer> syncByGenre(String genreId, String genreName) throws InterruptedException {
+    protected Tuple<Integer, Integer> syncByGenre(AllowedByIdPolicy allowedById, String genreId, String genreName) throws InterruptedException {
         log.info("Fetching by genre id={}, name={} ...", genreId, genreName);
 
         int syncedCount = 0;
@@ -81,7 +81,7 @@ public abstract class AbstractRepoSyncService extends AbstractSyncService {
         Page<VideoDTO> page;
         do {
             page = videoService.findByGenreId(Long.valueOf(genreId), PageRequest.of(pageNum, PAGE_SIZE));
-            for (VideoDTO video : page) {
+            for (VideoDTO video : page.filter(v -> allowedById.test(v.getId()))) {
                 boolean result = syncVideo(video);
                 if (result) {
                     syncedCount += 1;

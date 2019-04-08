@@ -83,6 +83,12 @@ public class VideoService {
         return videoSearchRepository.findAll(pageable);
     }
 
+    @Transactional(readOnly = true)
+    public List<Long> getAllIds() {
+        log.debug("Request to get all Video ids");
+        return videoSearchRepository.getAllIds();
+    }
+
     /**
      * Get all the videos.
      *
