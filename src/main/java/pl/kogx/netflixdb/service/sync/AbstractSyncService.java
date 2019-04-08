@@ -45,11 +45,15 @@ public abstract class AbstractSyncService {
     }
 
     public void syncAll() {
+        this.syncAll(AllowedByIdPolicy.ALL_ALLOWED);
+    }
+
+    public void syncAll(AllowedByIdPolicy allowedById) {
         this.execute = true;
         long time = System.currentTimeMillis();
         log.info("Starting syncAll");
         try {
-            Tuple<Long, Long> countTotal = doSyncAll();
+            Tuple<Long, Long> countTotal = doSyncAll(allowedById);
             log.info("Sync complete, syncedCount={}, failedCount={}, took {} millis",
                 countTotal.v1(), countTotal.v2(), System.currentTimeMillis() - time);
         } catch (InterruptedException e) {
@@ -57,18 +61,18 @@ public abstract class AbstractSyncService {
         }
     }
 
-    protected Tuple<Long, Long> doSyncAll() throws InterruptedException {
+    protected Tuple<Long, Long> doSyncAll(AllowedByIdPolicy allowedById) throws InterruptedException {
         Tuple<Long, Long> countTotal = Tuple.tuple(0L, 0L);
         List<String> keys = new ArrayList<>(genreResolver.getGenreByIdMap().keySet());
         Collections.shuffle(keys);
         for (String genreId : keys) {
-            Tuple<Integer, Integer> count = syncByGenre(genreId.trim(), genreResolver.getGenreById(genreId).trim());
+            Tuple<Integer, Integer> count = syncByGenre(allowedById, genreId.trim(), genreResolver.getGenreById(genreId).trim());
             countTotal = Tuple.tuple(countTotal.v1() + count.v1(), countTotal.v2() + count.v2());
         }
         return countTotal;
     }
 
-    protected abstract Tuple<Integer, Integer> syncByGenre(String genreId, String genreName) throws InterruptedException;
+    protected abstract Tuple<Integer, Integer> syncByGenre(AllowedByIdPolicy allowedById, String genreId, String genreName) throws InterruptedException;
 
     public abstract void doSync(long id);
 

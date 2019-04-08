@@ -83,6 +83,12 @@ public class VideoService {
         return videoSearchRepository.findAll(pageable);
     }
 
+    @Transactional(readOnly = true)
+    public List<Long> getAllIds() {
+        log.debug("Request to get all Video ids");
+        return videoSearchRepository.getAllIds();
+    }
+
     /**
      * Get all the videos.
      *
@@ -120,6 +126,11 @@ public class VideoService {
     public void deleteByTimestampBefore(Date timestamp) {
         log.debug("Request to delete Video timestamp before: {}", timestamp);
         videoSearchRepository.deleteByTimestampBefore(timestamp.getTime());
+    }
+
+    public Iterable<Video> findAllByTimestampBefore(Date timestamp) {
+        log.debug("Request to get Video timestamp before: {}", timestamp);
+        return videoSearchRepository.findAllByTimestampBefore(timestamp.getTime());
     }
 
     /**
