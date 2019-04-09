@@ -40,10 +40,7 @@ export class VideoComponent implements OnInit, OnDestroy {
     genres: Observable<IGenre[]>;
     selectedGenres: IGenre[] = [];
 
-    seenOptions: ISeenOption[] = [
-        new SeenOption(SeenOptionId.YES, this.translateService.instant('videos.filter.seenYes')),
-        new SeenOption(SeenOptionId.NO, this.translateService.instant('videos.filter.seenNo'))
-    ];
+    seenOptions: ISeenOption[];
     selectedSeen: ISeenOption;
 
     constructor(
@@ -156,6 +153,11 @@ export class VideoComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.seenOptions = [
+            new SeenOption(SeenOptionId.YES, this.translateService.instant('videos.filter.seenYes')),
+            new SeenOption(SeenOptionId.NO, this.translateService.instant('videos.filter.seenNo'))
+        ];
+
         this.genres = this.videoService.genres(this.searchByType);
 
         this.loadAll();
