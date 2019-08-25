@@ -57,7 +57,7 @@ spring:
     liquibase:
         contexts: prod
     mail:
-        host: serwer1817841.home.pl
+        host: mx.zoho.eu
         port: 25
         username: admin@netflixdb.pl
         password: ***REMOVED***
