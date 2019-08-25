@@ -1,0 +1,8 @@
+mx
+netflixdb.pl. serwer1817841.home.pl.	
+
+A
+netflixdb.pl. 35.204.153.159
+
+CNAME
+www.netflixdb.pl. netflixdb.pl.
