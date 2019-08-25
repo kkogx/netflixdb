@@ -118,6 +118,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/swagger-resources/configuration/ui").permitAll()
             .antMatchers("/swagger-ui/index.html").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/sitemap.xml").permitAll()
+            .antMatchers("/zohoverify/verifyforzoho.html").permitAll()
         .and()
             .apply(securityConfigurerAdapter());
 
