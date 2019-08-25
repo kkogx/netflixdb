@@ -75,7 +75,8 @@ module.exports = (options) => ({
             { from: './src/main/webapp/favicon.png', to: 'favicon.png' },
             { from: './src/main/webapp/manifest.webapp', to: 'manifest.webapp' },
             // jhipster-needle-add-assets-to-webpack - JHipster will add/remove third-party resources in this array
-            { from: './src/main/webapp/robots.txt', to: 'robots.txt' }
+            { from: './src/main/webapp/robots.txt', to: 'robots.txt' },
+            { from: './src/main/webapp/zohoverify', to: 'zohoverify' }
         ]),
         new MergeJsonWebpackPlugin({
             output: {
