@@ -2,38 +2,39 @@
     "paths": [
         [
             "genres",
-            $genreid
-            "za",
+                $genreid,
+            "az",
             "requestId"
         ],
         [
             "genres",
             $genreid,
-            "za",
+            "az",
             {
-                "from": 0,
-                "to": 48
+                "from": $from,
+                "to": $to
             },
             [
                 "summary",
                 "title",
                 "titleMaturity",
                 "userRating",
-                "userRatingRequestId"
+                "userRatingRequestId",
+                "releaseYear"
             ]
         ],
         [
             "genres",
             $genreid,
-            "za",
+            "az",
             {
-                "from": 0,
-                "to": 48
+                "from": $from,
+                "to": $to
             },
             "boxarts",
             "_260x146",
             "jpg"
         ]
     ],
-    "authURL": "1531571306282.5IO0v3FsO4YjmS610xs2bmcRrII="
+     "authURL": "1585857212714.KbaJ/thjXQH240n2Xn9hN7AnLCw="
 }

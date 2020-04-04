@@ -154,8 +154,8 @@ application:
     fweb-sync:
         force-query-search: true
     netflix-sync:
-        session-cookie: "memclid=a0c72348-32ff-4c22-b162-8be8bfa8544b; didUserInteractWithPage=true; hasSeenCookieDisclosure=true; dsca=customer; netflix-sans-normal-2-loaded=true; nfvdid=BQFmAAEBEN8bKTyPhC9ahD%2Bq8ytvR3Vgz5e%2FsZ8XDEdAnqw9882maazXxeBU43IvqZ1K5FKGbyByw3EJReuGuo1ffwIXcn5pGkWnD%2F9LfGbPnDz1KvX8naS4iD5Ra8J3fseISfTHOMAqiOhFxwc1aQwsTgx%2Bjbsf; netflix-sans-bold-2-loaded=true; _ga=GA1.2.1057021227.1531852465; VisitorId=002~a0c72348-32ff-4c22-b162-8be8bfa8544b~1531852465110~true~1531852465411~; clSharedContext=9560e2ce-9cf8-421e-96e4-8cfed309c98d; SecureNetflixId=v%3D2%26mac%3DAQEAEQABABQzLzmLr4rtiwLPwNW2FgkW-igx5JxqLMQ.%26dt%3D1536785427940; NetflixId=ct%3DBQAOAAEBEAeT3CKWTtNsZfkIRXMKQveCYLAoJ8frdA8OWuMSYh39SmUpTEGwDnQiVpORtB75HRm5YLFqUuNUr1MH6cyEUUk19dmpfbRJs_x7frVVl1F-BJBXJclpFmzunlhIqPnowqIYQm714vf4W_GgCLZfR5oj2rwyFY5rGafdpM_XH4K0Su10ezrvDyT0Z9P_RK0ioDCcBjfQAepMb_ThAzcyqYYFOGG6DRCFB1lxt4LIGXE8nGAWnc21l9AmmyZBLMBStzjZ9nJSBBsJwVVYmiyVC1sj95RYtFY67D7Z5MuThUkHP5FyoZENe0nCW3gJeSDTfgOuUfOZYS6cQQzM_2nHnu5YAGmiX8-Pcpe3R9R2jClLvNJUdQpVn22-XZs02XD-KHDMCLlvXlcRDrWrp_RGFoMEd8AoLqqPBR4Eu44DtDYvJmxdJN-_Zjy25WfP3yB-8H2loGHWiKmfU3_qQTTRJrEF6TJXsc2NYquUPiP9R31D_O16gA0geYTj0E9fJRJ6OHgz7IoRp70oX7y3QqLrRQZsr0zO77BtiTKuRTxL2c3RiAwXr4mHJqLjdDVoKiMHUdJyuGUv36tKNlIiC-5waArmsRFp3fDWWyuefvQM-MnFZFA107maQV4huMMxNdTwACxRMRY8Vz0_jTMYSOjWKJuN0EcJRE4BsisVnRz9VNisC8CbBzIW9PMM_vTILxoR3J9upu5M5F5KxfAtET3iG31l5RcgZVdVJBg_zCP4DVxp7MAF-XAh4K6-hbC2Qd5klMPGOla3FnKpRQ3T1an4hs9PbDMyZu47h-nwSBKtqelDKd7cq7VIaSCNNEkfkYKnQNvw%26bt%3Ddbl%26ch%3DAQEAEAABABSg1EhIJS7kIOX1MEXVK6b25p8_w8dgoOU.%26v%3D2%26mac%3DAQEAEAABABTWNTpis-MWsyOsZeTtZa8sOvros8Admjk.; profilesNewSession=0; lhpuuidh-browse-74Z72JFGLFD2HO4TSM3Q3WAJNE=PL%3AEN-PL%3Ab3b02c9c-41d8-49a0-b3dc-c83d2226ec82_ROOT; lhpuuidh-browse-74Z72JFGLFD2HO4TSM3Q3WAJNE-T=1536785438097"
-        shakti-url: "https://www.netflix.com/api/shakti/v83012c76/pathEvaluator?isWatchlistEnabled=false&isShortformEnabled=false&isVolatileBillboardsEnabled=false&falcor_server=0.1.0&withSize=true&materialize=true"
+        session-cookie: "***REMOVED***"
+        shakti-url: "https://www.netflix.com/nq/website/memberapi/v1b6f8cb8/pathEvaluator?isVolatileBillboardsEnabled=true&routeAPIRequestsThroughFTL=false&isTop10Supported=true&falcor_server=0.1.0&withSize=true&materialize=true&original_path=/shakti/v1b6f8cb8/pathEvaluator"
         request-sleep-millis: 2000
         request-block-size: 48
         film-genre-by-id: "\
@@ -189,6 +189,8 @@ application:
             10105=Docuseries,\
             11714=TV Dramas,\
             83181=Historical TV Shows,\
+            81268388=History Documentaries,\
+            52780=Science & Nature TV,\
             83059=TV Horror,\
             27346=Kids TV,\
             4366=TV Mysteries,\

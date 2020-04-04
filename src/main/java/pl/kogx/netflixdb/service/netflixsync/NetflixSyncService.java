@@ -9,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 import pl.kogx.netflixdb.service.VideoService;
@@ -90,15 +91,20 @@ public class NetflixSyncService extends AbstractSyncService {
     private int syncByGenre(AllowedByIdPolicy allowedById, String genreId, String genre, int from, int to) throws JsonObject.JsonUnmarshallException, InterruptedException {
 
 
-        HttpEntity<String> request = requestBuilder.body(genreId, from, to).build();
+        HttpEntity<MultiValueMap<String, String>> request = requestBuilder.body(genreId, from, to).build();
 
+        ResponseEntity<String> response;
         // Invoke Shakti endpoint
-        ResponseEntity<String> response = shaktiRestTemplate.exchange(applicationProperties.getNetflixSync().getShaktiUrl(),
-            HttpMethod.POST, request, String.class);
-
-        // Process the result
-        if (response.getStatusCode() != HttpStatus.OK) {
-            log.warn("Invalid HttpStatus retrieved when fetching by genre, status={}", response.getStatusCode());
+        try {
+            response = shaktiRestTemplate.postForEntity(applicationProperties.getNetflixSync().getShaktiUrl(),
+                request, String.class);
+            // Process the result
+            if (response.getStatusCode() != HttpStatus.OK) {
+                log.warn("Invalid HttpStatus retrieved when fetching by genre, status={}, body={}", response.getStatusCode(), response.getBody());
+                return 0;
+            }
+        } catch (Exception e) {
+            log.warn("Exception retrieved when fetching by genre", e);
             return 0;
         }
 
@@ -137,7 +143,7 @@ public class NetflixSyncService extends AbstractSyncService {
     @Override
     public void doSync(long id) {
 
-        HttpEntity<String> request = requestBuilder.body(id).build();
+        HttpEntity<?> request = requestBuilder.body(id).build();
 
         // Invoke Shakti endpoint
         ResponseEntity<String> response = shaktiRestTemplate.exchange(applicationProperties.getNetflixSync().getShaktiUrl(),

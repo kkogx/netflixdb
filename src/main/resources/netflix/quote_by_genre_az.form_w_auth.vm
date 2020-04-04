@@ -1,0 +1,4 @@
+path: ["genres",$genreid,"name"]
+path: ["genres",$genreid,"az",{"from": $from, "to": $to }, ["summary", "title", "titleMaturity",  "userRating", "userRatingRequestId", "releaseYear"]]
+path: ["genres",$genreid,"az",{"from": $from, "to": $to }, "boxarts", "_260x146", "jpg" ]
+authURL: 1585857212714.KbaJ/thjXQH240n2Xn9hN7AnLCw=

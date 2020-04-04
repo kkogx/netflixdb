@@ -6,8 +6,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import pl.kogx.netflixdb.config.ApplicationProperties;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +23,7 @@ class NetflixRequestBuilder {
     @Autowired
     private final VelocityEngine velocityEngine;
 
-    private String body;
+    private MultiValueMap<String, String> body;
 
     private HttpHeaders headers;
 
@@ -29,7 +32,7 @@ class NetflixRequestBuilder {
         this.velocityEngine = velocityEngine;
     }
 
-    public HttpEntity<String> build() {
+    public HttpEntity<MultiValueMap<String, String>> build() {
         headers();
         return new HttpEntity<>(body, headers);
     }
@@ -37,7 +40,8 @@ class NetflixRequestBuilder {
     public NetflixRequestBuilder body(long id) {
         Map<String, Object> context = new HashMap<>();
         context.put("id", id);
-        this.body = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "netflix/quote_by_id.json.vm", context);
+        String tmp = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "netflix/quote_by_id.json.vm", context);
+        body = toValueMap(tmp);
         return this;
     }
 
@@ -46,20 +50,30 @@ class NetflixRequestBuilder {
         context.put("genreid", genreId);
         context.put("from", from);
         context.put("to", to);
-        this.body = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "netflix/quote_by_genre_az.json.vm", context);
+        String tmp = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "netflix/quote_by_genre_az.form_w_auth.vm", context);
+        body = toValueMap(tmp);
         return this;
+    }
+
+    private MultiValueMap<String, String> toValueMap(String tmp) {
+        LinkedMultiValueMap<String, String> result = new LinkedMultiValueMap<>();
+        Arrays.stream(tmp.split("\n")).forEach(s -> {
+            int idx = s.indexOf(":");
+            result.add(s.substring(0, idx).trim(), s.substring(idx + 1));
+        });
+        return result;
     }
 
     private NetflixRequestBuilder headers() {
         this.headers = new HttpHeaders();
-        headers.add(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0");
+        headers.add(HttpHeaders.USER_AGENT, "PostmanRuntime/7.24.0");
         headers.add(HttpHeaders.COOKIE, applicationProperties.getNetflixSync().getSessionCookie());
         headers.add(HttpHeaders.ACCEPT, "application/json, text/javascript, */*");
         headers.add(HttpHeaders.ACCEPT_LANGUAGE, "en-GB,en;q=0.5");
         headers.add(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate, br");
-        headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
+        headers.add(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded");
         headers.add("DNT", "1");
-        headers.add(HttpHeaders.REFERER, "https://www.netflix.com");
+        headers.add(HttpHeaders.ORIGIN, "https://www.netflix.com");
         return this;
     }
 }
